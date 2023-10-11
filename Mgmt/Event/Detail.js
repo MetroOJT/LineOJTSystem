@@ -1,7 +1,8 @@
 ﻿let Ajax_File = "Detail.ashx";
 
 $(function () {
-    document.getElementById("Savebtn").addEventListener("mouseup", SavebtnClick, false)
+    document.getElementById("Insertbtn").addEventListener("mouseup", InsertbtnClick, false);
+    document.getElementById("Deletebtn").addEventListener("mouseup", DeletebtnClick, false);
     document.getElementById("Backbtn").addEventListener("mouseup", BackbtnClick, false);
 })
 
