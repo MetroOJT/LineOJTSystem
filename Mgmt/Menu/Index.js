@@ -8,6 +8,7 @@ function btnLogOutClick() {
 // イベント登録
 function btnEventRegClick() {
     console.log("イベント登録");
+    window.location = "http://localhost:808/LineSampleSystem/Sample/hirashima/EventRegistration/EventReg.aspx";
 }
 
 // イベント検索
