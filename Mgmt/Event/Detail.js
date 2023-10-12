@@ -1,8 +1,10 @@
 ﻿let Ajax_File = "Detail.ashx";
 
 $(function () {
-    document.getElementById("Savebtn").addEventListener("mouseup", SavebtnClick, false)
+    document.getElementById("Savebtn").addEventListener("mouseup", SavetbtnClick, false);
+    document.getElementById("Deletebtn").addEventListener("mouseup", DeletebtnClick, false);
     document.getElementById("Backbtn").addEventListener("mouseup", BackbtnClick, false);
+    document.getElementById("MessageAddbtn").addEventListener("mouseup", MessageAddbtnClick, false);
 })
 
 function SavebtnClick() {
@@ -61,4 +63,25 @@ function BackbtnClick() {
     let f = document.forms["main"];
     f.submit();
     return true;
-}
+};
+
+function MessageAddbtnClick() {
+
+    $.ajax({
+        url: Ajax_File,
+        method: "POST",
+        data: {
+            "mode": "MessageAdd",
+        },
+        dataType: "json",
+        success: function (data) {
+            if (data != "") {
+                if (data.status == "OK") {
+                    alert("登録が完了しました。");
+                } else {
+                    alert("エラーが発生しました。");
+                };
+            };
+        }
+    });
+};

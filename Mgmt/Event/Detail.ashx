@@ -10,6 +10,8 @@ Public Class Detail : Implements IHttpHandler
         Select Case context.Request.Item("mode")
             Case "Save"
                 context.Response.Write(Save(context))
+            Case "MessageAdd"
+                context.Response.Write(MessageAdd(context))
         End Select
     End Sub
 
@@ -97,6 +99,21 @@ Public Class Detail : Implements IHttpHandler
         End Try
 
         Return sJSON
+
+    End Function
+
+    Public Function MessageAdd(ByVal context As HttpContext) As String
+        Dim sHTML As New StringBuilder
+
+        sHTML.Append("<div class=""MessageContainer"">")
+        sHTML.Append("<div class=""MessagebtnArea"">")
+        sHTML.Append("<input type=""button"" value=""△""/>")
+        sHTML.Append("<input type=""button"" value=""▽""/>")
+        sHTML.Append("<input type=""button"" value=""×""/>")
+        sHTML.Append("</div>")
+        sHTML.Append("<textarea class=""txtMessage""></textarea>")
+        sHTML.Append("<div class=""txtCount"">0/500</div>")
+        sHTML.Append("</div>")
 
     End Function
 

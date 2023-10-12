@@ -25,9 +25,9 @@
             </div>
             <div>
                 <label>ステータス</label>
-                <input type="radio" id="EventStatusOn" name="EventStatus" value="On"/>
+                <input type="radio" id="EventStatusOn" name="EventStatus" value="1"/>
                 <label for="EventStatusOn">オン</label>
-                <input type="radio" id="EventStatusOff" name="EventStatus" value="Off"/>
+                <input type="radio" id="EventStatusOff" name="EventStatus" value="0"/>
                 <label for="EventStatusOff">オフ</label>
             </div>
             <div class="d-flex">

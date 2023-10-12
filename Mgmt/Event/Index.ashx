@@ -60,11 +60,11 @@ Public Class Index : Implements IHttpHandler
             sSQL.Append("CREATE TABLE " & sTempTable)
             sSQL.Append(" (")
             sSQL.Append("  wRowNo       INT NOT NULL AUTO_INCREMENT")
-            sSQL.Append("  ,wUserID     INT NOT NULL")
-            sSQL.Append("  ,wName       VARCHAR(40) NOT NULL")
-            sSQL.Append("  ,wAge        INT NOT NULL")
-            sSQL.Append("  ,wAddress    VARCHAR(200) NOT NULL")
-            sSQL.Append("  ,wUpdateTime DATETIME NOT NULL ")
+            sSQL.Append("  ,wEventID     INT NOT NULL")
+            sSQL.Append("  ,wEventName       VARCHAR(50) NOT NULL")
+            sSQL.Append("  ,wStatus       BIT NOT NULL")
+            sSQL.Append("  ,wScheduleFm  DATE NOT NULL")
+            sSQL.Append("  ,wScheduleTo  DATE NOT NULL")
             sSQL.Append("  ,PRIMARY KEY (wRowNo) ")
             sSQL.Append("  )")
             cDB.ExecuteSQL(sSQL.ToString)
@@ -73,50 +73,52 @@ Public Class Index : Implements IHttpHandler
             cDB.ParameterClear()
 
             If sEvent <> "" Then
-                sWhere.Append(" AND um_Name LIKE @Event")
+                sWhere.Append(" AND EventName LIKE @Event")
                 cDB.AddWithValue("@Event", "%" & sEvent & "%")
 
             End If
 
             If sEventStatus <> "" Then
-                sWhere.Append(" AND um_Age = @EventStatus")
+                sWhere.Append(" AND Status = @EventStatus")
                 cDB.AddWithValue("@EventStatus", sEventStatus)
             End If
 
             If sDateFm <> "" Then
-                sWhere.Append(" AND um_Age >= @DateFm")
+                sWhere.Append(" AND ScheduleFm >= @DateFm")
                 cDB.AddWithValue("@DateFm", sDateFm)
             End If
 
 
             If sDateTo <> "" Then
-                sWhere.Append(" AND um_Age <= @DateTo")
+                sWhere.Append(" AND ScheduleTo <= @DateTo")
                 cDB.AddWithValue("@DateTo", sDateTo)
             End If
 
             If sKeyword <> "" Then
-                sWhere.Append(" AND um_Address LIKE @Keyword")
+                sWhere.Append(" AND Keyword LIKE @Keyword")
                 cDB.AddWithValue("@Keyword", "%" & sKeyword & "%")
             End If
 
             sSQL.Clear()
             sSQL.Append(" INSERT INTO " & sTempTable)
             sSQL.Append(" (")
-            sSQL.Append("  wUserID")
-            sSQL.Append(" ,wName")
-            sSQL.Append(" ,wAge")
-            sSQL.Append(" ,wAddress")
-            sSQL.Append(" ,wUpdateTime")
+            sSQL.Append("  wEventID")
+            sSQL.Append(" ,wEventName")
+            sSQL.Append(" ,wStatus")
+            sSQL.Append(" ,wScheduleFm")
+            sSQL.Append(" ,wScheduleTo")
+            sSQL.Append(" ,wKeyword")
             sSQL.Append(" )")
             sSQL.Append(" SELECT")
-            sSQL.Append("  um_UserID")
-            sSQL.Append(" ,um_Name")
-            sSQL.Append(" ,um_Age")
-            sSQL.Append(" ,um_Address")
-            sSQL.Append(" ,um_UpdateTime")
+            sSQL.Append("  EventID")
+            sSQL.Append(" ,EventName")
+            sSQL.Append(" ,Status")
+            sSQL.Append(" ,ScheduleFm")
+            sSQL.Append(" ,ScheduleTo")
+            sSQL.Append(" ,wKeyword")
             sSQL.Append(" FROM " & cCom.gctbl_UserMst)
             sSQL.Append(" WHERE 1=1" & sWhere.ToString)
-            sSQL.Append(" ORDER BY um_UpdateTime")
+            sSQL.Append(" ORDER BY EventID")
             iCount = cDB.ExecuteSQL(sSQL.ToString)
 
 
