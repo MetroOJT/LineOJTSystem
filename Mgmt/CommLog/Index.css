@@ -1,0 +1,23 @@
+﻿#Header{
+    margin: 100px auto 50px auto;
+    width: 60%;
+    text-align: center;
+}
+#SystemTitle{
+    margin: 0;
+}
+#LogOut{
+    width: 160px;
+}
+
+#btnOption input, #btnOption div{
+    margin: 0 20px 12px 20px;
+}
+
+#Condition div{
+    margin-bottom: 12px;
+}
+#DateFm, #DateTo{
+    width: 25%;
+    display: inline-block;
+}
