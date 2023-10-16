@@ -15,6 +15,7 @@ Public Class Detail : Implements IHttpHandler
         End Select
     End Sub
 
+
     Public Function Save(ByVal context As HttpContext) As String
         Dim cCom As New Common
         Dim cDB As New CommonDB
@@ -27,15 +28,19 @@ Public Class Detail : Implements IHttpHandler
         Dim sMode As String = ""
 
         Dim sUserID As String = ""
-        Dim sName As String = ""
-        Dim sAge As String = ""
-        Dim sAddress As String = ""
+        Dim sEvent As String = ""
+        Dim sEventStatus As String = ""
+        Dim sDateFm As String = ""
+        Dim sDateTo As String = ""
+        Dim sKeyword As String = ""
 
         Try
             sUserID = context.Request.Item("UserID")
-            sName = context.Request.Item("Name")
-            sAge = context.Request.Item("Age")
-            sAddress = context.Request.Item("Address")
+            sEvent = context.Request.Item("Event")
+            sEventStatus = context.Request.Item("EventStatus")
+            sDateFm = context.Request.Item("DateFm")
+            sDateTo = context.Request.Item("DateTo")
+            sKeyword = context.Request.Item("Keyword")
 
             If sUserID = "" Then
                 sMode = "Ins"
@@ -44,9 +49,9 @@ Public Class Detail : Implements IHttpHandler
             End If
 
             cDB.AddWithValue("@UserID", sUserID)
-            cDB.AddWithValue("@Name", sName)
-            cDB.AddWithValue("@Age", sAge)
-            cDB.AddWithValue("@Address", sAddress)
+            'cDB.AddWithValue("@Name", sName)
+            'cDB.AddWithValue("@Age", sAge)
+            'cDB.AddWithValue("@Address", sAddress)
 
             cDB.BeginTran()
 
@@ -103,17 +108,54 @@ Public Class Detail : Implements IHttpHandler
     End Function
 
     Public Function MessageAdd(ByVal context As HttpContext) As String
+        Dim cCom As New Common
+        Dim Cki As New Cookie
+        Dim sStatus As String = "OK"
         Dim sHTML As New StringBuilder
+        Dim hHash As New Hashtable
+        Dim jJSON As New JavaScriptSerializer
+        Dim sJSON As String = ""
+        Dim sRet As String = ""
+        Dim iCnt As String = ""
 
-        sHTML.Append("<div class=""MessageContainer"">")
-        sHTML.Append("<div class=""MessagebtnArea"">")
-        sHTML.Append("<input type=""button"" value=""△""/>")
-        sHTML.Append("<input type=""button"" value=""▽""/>")
-        sHTML.Append("<input type=""button"" value=""×""/>")
-        sHTML.Append("</div>")
-        sHTML.Append("<textarea class=""txtMessage""></textarea>")
-        sHTML.Append("<div class=""txtCount"">0/500</div>")
-        sHTML.Append("</div>")
+        Try
+            iCnt = Cki.Get_Cookies("iCnt")
+
+            If (iCnt = "") Then
+                iCnt = "0"
+                Cki.Set_Cookies("iCnt", iCnt, 1)
+            End If
+
+            sHTML.Clear()
+            sHTML.Append("<div class=""MessageContainer"" id=""MessageContainer" & iCnt & """>")
+            sHTML.Append("<div class=""MessagebtnArea"">")
+            sHTML.Append("<input type=""button"" id =""MessageUpbtn" & iCnt & """value=""△"" onclick=""MessageUpbtnClick()""/>")
+            sHTML.Append("<input type=""button"" id =""MessageDownbtn" & iCnt & """value=""▽"" onclick=""MessageDownbtnClick()""/>")
+            sHTML.Append("<input type=""button"" id =""MessageDeletebtn" & iCnt & """value=""×"" onclick=""MessageDeletebtnClick()""/>")
+            sHTML.Append("</div>")
+            sHTML.Append("<textarea class=""txtMessage"" id=""txtMessage" & iCnt & """ maxlength=500 onkeyup=""txtCountUpd()""></textarea>")
+            sHTML.Append("<div class=""txtCount"" id=""txtCount" & iCnt & """>0/500</div>")
+            sHTML.Append("</div>")
+
+            iCnt = CStr(CInt(iCnt) + 1)
+            Cki.Set_Cookies("iCnt", iCnt, 1)
+
+        Catch ex As Exception
+            sRet = ex.Message
+        Finally
+            If sRet <> "" Then
+                sStatus = "NG"
+                cCom.CmnWriteStepLog(sRet)
+            End If
+
+            hHash.Add("status", sStatus)
+            hHash.Add("html", sHTML.ToString)
+
+            sJSON = jJSON.Serialize(hHash)
+        End Try
+
+        Return sJSON
+
 
     End Function
 

@@ -10,15 +10,7 @@ Partial Class Sample_Detail
         Dim sRet As String = ""
 
         Try
-
-            sSQL.Clear()
-            sSQL.Append(" SELECT")
-            sSQL.Append("  um_Name")
-            sSQL.Append(" ,um_Age")
-            sSQL.Append(" ,um_Address")
-            sSQL.Append(" FROM " & cCom.gctbl_UserMst)
-            sSQL.Append(" WHERE um_UserID = @UserID")
-            cDB.SelectSQL(sSQL.ToString)
+            Cki.Set_Cookies("iCnt", "0", 1)
 
         Catch ex As Exception
             sRet = ex.Message

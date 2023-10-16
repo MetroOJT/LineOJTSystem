@@ -32,8 +32,8 @@ Public Class Index : Implements IHttpHandler
 
         Dim sEvent As String = ""
         Dim sEventStatus As String = ""
-        Dim sDateFm As String = ""
-        Dim sDateTo As String = ""
+        Dim sScheduleFm As String = ""
+        Dim sScheduleTo As String = ""
         Dim sKeyword As String = ""
 
         Dim iCount As Integer = 0
@@ -42,8 +42,8 @@ Public Class Index : Implements IHttpHandler
 
             sEvent = context.Request.Item("Event")
             sEventStatus = context.Request.Item("EventStatus")
-            sDateFm = context.Request.Item("DateFm")
-            sDateTo = context.Request.Item("DateTo")
+            sScheduleFm = context.Request.Item("ScheduleFm")
+            sScheduleTo = context.Request.Item("ScheduleTo")
             sKeyword = context.Request.Item("Keyword")
 
             sTempTable = cCom.CmnGet_TableName("Itiran")
@@ -51,21 +51,22 @@ Public Class Index : Implements IHttpHandler
 
             Cki.Set_Cookies("Event", sEvent, 1)
             Cki.Set_Cookies("EventStatus", sEventStatus, 1)
-            Cki.Set_Cookies("DateFm", sDateFm, 1)
-            Cki.Set_Cookies("DateTo", sDateTo, 1)
+            Cki.Set_Cookies("ScheduleFm", sScheduleFm, 1)
+            Cki.Set_Cookies("ScheduleTo", sScheduleTo, 1)
             Cki.Set_Cookies("Keyword", sKeyword, 1)
             Cki.Set_Cookies("TempTable", sTempTable, 1)
 
             sSQL.Clear()
             sSQL.Append("CREATE TABLE " & sTempTable)
             sSQL.Append(" (")
-            sSQL.Append("  wRowNo       INT NOT NULL AUTO_INCREMENT")
-            sSQL.Append("  ,wEventID     INT NOT NULL")
+            sSQL.Append("  wEventID         INT NOT NULL")
             sSQL.Append("  ,wEventName       VARCHAR(50) NOT NULL")
-            sSQL.Append("  ,wStatus       BIT NOT NULL")
-            sSQL.Append("  ,wScheduleFm  DATE NOT NULL")
-            sSQL.Append("  ,wScheduleTo  DATE NOT NULL")
-            sSQL.Append("  ,PRIMARY KEY (wRowNo) ")
+            sSQL.Append("  ,wEventStatus     BIT NOT NULL")
+            sSQL.Append("  ,wScheduleFm      DATE NOT NULL")
+            sSQL.Append("  ,wScheduleTo      DATE NOT NULL")
+            sSQL.Append("  ,wUpdate_date     DATE NOT NULL")
+            sSQL.Append("  ,wUpdate_UserID   INT NOT NULL")
+            sSQL.Append("  ,PRIMARY KEY (wEventID) ")
             sSQL.Append("  )")
             cDB.ExecuteSQL(sSQL.ToString)
 
@@ -83,15 +84,15 @@ Public Class Index : Implements IHttpHandler
                 cDB.AddWithValue("@EventStatus", sEventStatus)
             End If
 
-            If sDateFm <> "" Then
-                sWhere.Append(" AND ScheduleFm >= @DateFm")
-                cDB.AddWithValue("@DateFm", sDateFm)
+            If sScheduleFm <> "" Then
+                sWhere.Append(" AND ScheduleFm >= @ScheduleFm")
+                cDB.AddWithValue("@ScheduleFm", sScheduleFm)
             End If
 
 
-            If sDateTo <> "" Then
-                sWhere.Append(" AND ScheduleTo <= @DateTo")
-                cDB.AddWithValue("@DateTo", sDateTo)
+            If sScheduleTo <> "" Then
+                sWhere.Append(" AND ScheduleTo <= @ScheduleTo")
+                cDB.AddWithValue("@ScheduleTo", sScheduleTo)
             End If
 
             If sKeyword <> "" Then
