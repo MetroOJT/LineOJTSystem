@@ -13,6 +13,11 @@ Public Class Common
     Public gcDate_EndDate As Date = #12/31/2099#
 
 #Region "Table"
+    Public gctbl_EventMst As String = ""
+    Public gctbl_LogMst As String = ""
+    Public gctbl_MenuMst As String = ""
+    Public gctbl_MessageMst As String = ""
+    Public gctbl_UsedKeyword As String = ""
     Public gctbl_UserMst As String = ""
 #End Region
 
@@ -87,6 +92,11 @@ Public Class Common
             scfg_LineMsg = CmnGet_AppSetting("LineOJTDB")
             scfg_LineMsg = scfg_LineMsg & "."
 
+            gctbl_EventMst = scfg_LineMsg & "eventmst"
+            gctbl_LogMst = scfg_LineMsg & "logmst"
+            gctbl_MenuMst = scfg_LineMsg & "menumst"
+            gctbl_MessageMst = scfg_LineMsg & "messagemst"
+            gctbl_UsedKeyword = scfg_LineMsg & "usedkeyword"
             gctbl_UserMst = scfg_LineMsg & "usermst"
 
         Catch ex As Exception
