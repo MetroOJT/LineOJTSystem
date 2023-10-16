@@ -57,8 +57,7 @@ function btnLoginClick() {
                             sessionStorage.setItem('UserName', data.UserName);
                             sessionStorage.setItem('Admin', Admin);
 
-                            console.log(sessionStorage.getItem("UserID"));
-                            //window.location.href = "http://localhost:808/LineOJTSystem/Mgmt/Menu/Index.aspx";
+                            window.location.href = "http://localhost:808/LineOJTSystem/Mgmt/Menu/Index.aspx";
                         } else {
                             alert("該当するユーザーが存在しません。");
                         };
