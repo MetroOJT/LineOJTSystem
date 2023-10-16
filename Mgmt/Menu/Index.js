@@ -1,6 +1,6 @@
 ﻿var Ajax_File = "Index.ashx"
 
-const sesi = sessionStorage.getItem("UserId");
+const sesi = sessionStorage.getItem("UserID");
 console.log(sesi)
 //window.onload = function () {
 //    let MenuID = $("#txtMenuID").val();
