@@ -14,7 +14,7 @@
     <div>
         <div id="Header" class="row">
             <label class="h1 col-6" id="SystemTitle">メニュー</label>
-            <div class="col-6"><input type="button" value="ログアウト" name="LogOut" class="col-6" id="btnLogOut" /></div>
+            <div class="col-6"><input type="button" value="ログアウト" name="btnLogOut" id="btnLogOut" class="btn btn-warning w-50" /></div>
             <div class="w-100"></div>
             <div class="col-6"></div>
             <label class="col-6 h6" id="Manager">担当者名: サムズ・アップ</label>
