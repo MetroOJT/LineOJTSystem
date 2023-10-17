@@ -17,13 +17,9 @@
             <div class="col-6"><input type="button" value="ログアウト" name="btnLogOut" id="btnLogOut" class="btn btn-warning w-50" /></div>
             <div class="w-100"></div>
             <div class="col-6"></div>
-            <label class="col-6 h6" id="Manager">担当者名: サムズ・アップ</label>
+            <label class="col-6 h6" id="Manager"></label>
         </div>
-        <div id="option">
-            <input type="button" value="イベント登録" class="" name="btnEventReg" id="btnEventReg" />
-            <input type="button" value="イベント検索" class="" name="btnEventSearch" id="btnEventSearch" />
-            <input type="button" value="通信ログ" class="" name="btnComLog" id="btnComLog" />
-        </div>
+        <div id="option"></div>
     </div>
     </form>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
