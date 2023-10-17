@@ -27,7 +27,7 @@ function btnLoginClick() {
         error_div.appendChild(error_p);
     } else if (Password == "") {
         const error_p = document.createElement('p');
-        error_p.textContent = "Passwordを入力してください";
+        error_p.textContent = "パスワードを入力してください";
         error_p.style.color = "red";
         error_div.appendChild(error_p);
     } else if (User_ID.match(/^[^\x01-\x7E\uFF61-\uFF9F]+$/)) {
