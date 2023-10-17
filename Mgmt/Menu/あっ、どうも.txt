@@ -1,0 +1,9 @@
+<div id="Header" class="row">
+    <label class="h1 col-7" id="SystemTitle">クーポン発行サービス</label>
+    <div class="col-5"><input type="button" value="ログアウト" name="btnLogOut" id="btnLogOut" class="btn btn-warning w-75" /></div>
+    <div class="w-100"></div>
+    <div class="col-7"></div>
+    <label class="col-5 h6" id="Manager"></label>
+</div>
+
+id=form1のwidthが80%前提で作ってるので各自調節お願いします！
