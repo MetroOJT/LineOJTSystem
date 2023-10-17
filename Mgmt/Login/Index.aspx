@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous" />
     <link rel="stylesheet" href="Index.css" />
     <title>ログイン</title>
 </head>
@@ -13,10 +13,10 @@
     <form id="form1" runat="server" style="width: 80%; margin: 0 auto">
     <div>
         <div id="Header" class="row">
-            <label class="h1" id="SystemTitle">ログイン</label>
+            <label class="h1" id="SystemTitle">クーポン発行サービス</label>
         </div>
         <div id="option">
-            <p id="option_title">ログイン</p>
+            <p id="option_title">ログイン画面</p>
             <table>
                 <tr>
                     <th>ユーザーID</th>
