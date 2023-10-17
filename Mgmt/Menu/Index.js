@@ -60,6 +60,7 @@ function MakeMenu() {
 // ログアウト
 function btnLogOutClick() {
     console.log("ログアウト");
+    window.location = "http://localhost:808/LineOJTSystem/Mgmt/Login/Index.aspx";
 }
 
 // イベント登録
