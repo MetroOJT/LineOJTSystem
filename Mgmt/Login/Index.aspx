@@ -29,6 +29,7 @@
             </table>
             <div class="error_div" style="margin-top: 10px; text-align: center"></div>
             <input type="button" value="ログイン" id="login_button" class="btn btn-primary shadow" />
+            <div class="unauthorized_access_div" style="margin-top: 10px; text-align: center;"></div>
         </div>
 
     </div>

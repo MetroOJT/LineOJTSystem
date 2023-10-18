@@ -1,5 +1,18 @@
 ﻿var Ajax_File = "Index.ashx";
 
+const login_check = 1;
+sessionStorage.setItem("login_check", login_check);
+
+const unauthorized_access = sessionStorage.getItem("unauthorized_access");
+if (unauthorized_access == 1) {
+    const unauthorized_access_div = document.querySelector(".unauthorized_access_div");
+    const unauthorized_access_p = document.CreateElement('p');
+    unauthorized_access_p.textContent = "不正なアクセスです。ログイン画面からアクセスしなおしてください。";
+    unauthorized_access_p.style.color = "red";
+    unauthorized_access_p.style.fontSize = "30px";
+    unauthorized_access_div.appendChild(unauthorized_access_p);
+}
+
 $(function () {
     document.getElementById("login_button").addEventListener("click", btnLoginClick, false);
 });
