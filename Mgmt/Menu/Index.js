@@ -23,6 +23,9 @@ window.onload = function () {
             if (data != "") {
                 if (data.status == "OK") {
                     console.log("ct実行完了")
+                    console.log("UserID: ", uid);
+                    console.log("Admin: ", u_admin);
+                    console.log("UserName: ", u_name);
                     document.getElementById("Manager").textContent = "担当者名: " + u_name;
                     MakeMenu();
                 } else {
