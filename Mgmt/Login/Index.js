@@ -1,8 +1,5 @@
 ﻿var Ajax_File = "Index.ashx";
 
-const login_check = 1;
-sessionStorage.setItem("login_check", login_check);
-
 const unauthorized_access = sessionStorage.getItem("unauthorized_access");
 if (unauthorized_access == 1) {
     const unauthorized_access_div = document.querySelector(".unauthorized_access_div");
@@ -69,6 +66,10 @@ function btnLoginClick() {
                             sessionStorage.setItem('UserID', UserID);
                             sessionStorage.setItem('UserName', data.UserName);
                             sessionStorage.setItem('Admin', Admin);
+
+
+                            const login_check = 1;
+                            sessionStorage.setItem("login_check", login_check);
 
                             window.location.href = "http://localhost:808/LineOJTSystem/Mgmt/Menu/Index.aspx";
                         } else {
