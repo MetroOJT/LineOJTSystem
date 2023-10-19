@@ -1,4 +1,4 @@
-﻿//function_login_check();
+﻿function_login_check();
 
 let Ajax_File = "Detail.ashx";
 let Referrer = document.referrer;
