@@ -47,3 +47,13 @@ function createElementFromHTML(html) {
     tempEl.innerHTML = html;
     return tempEl.firstElementChild;
 }
+
+// ログインして画面を開いたかを確認する関数
+function function_login_check(){
+    const login_check = sessionStorage.getItem("login_check");
+    if (login_check != 1) {
+        const unauthorized_access = 1;
+        sessionStorage.setItem("unauthorized_access", unauthorized_access);
+        window.location.href = "http://localhost:808/LineOJTSystem/Mgmt/Login/Index.aspx";
+    }
+}
