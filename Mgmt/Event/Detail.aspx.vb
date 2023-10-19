@@ -11,6 +11,7 @@ Partial Class Sample_Detail
 
         Try
             Cki.Set_Cookies("iCnt", "0", 1)
+            Cki.Set_Cookies("CouponCode", cCom.gcFormatCouponCode, 1)
 
         Catch ex As Exception
             sRet = ex.Message

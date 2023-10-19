@@ -12,6 +12,8 @@ Public Class Common
     Public gcDate_DefaultDate As Date = #1/1/1900#
     Public gcDate_EndDate As Date = #12/31/2099#
 
+    Public gcFormatCouponCode As String = "{CouponCode}"
+
 #Region "Table"
     Public gctbl_EventMst As String = ""
     Public gctbl_LogMst As String = ""

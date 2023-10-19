@@ -14,6 +14,8 @@ Public Class Detail : Implements IHttpHandler
                 context.Response.Write(Load(context))
             Case "Save"
                 context.Response.Write(Save(context))
+            Case "Check"
+                context.Response.Write(Check(context))
             Case "Delete"
                 context.Response.Write(Delete(context))
             Case "MessageAdd"
@@ -276,6 +278,10 @@ Public Class Detail : Implements IHttpHandler
 
     End Function
 
+    Public Function Check(ByVal context As HttpContext) As String
+
+    End Function
+
     Public Function Delete(ByVal context As HttpContext) As String
         Dim cCom As New Common
         Dim cDB As New CommonDB
@@ -356,7 +362,10 @@ Public Class Detail : Implements IHttpHandler
             sHTML.Append("<input type=""button"" id =""MessageDeletebtn" & iCnt & """value=""×"" onclick=""MessageDeletebtnClick()""/>")
             sHTML.Append("</div>")
             sHTML.Append("<textarea class=""txtMessage"" id=""txtMessage" & iCnt & """ maxlength=500 onkeyup=""txtCountUpd()""></textarea>")
-            sHTML.Append("<div class=""txtCount"" id=""txtCount" & iCnt & """>0/500</div>")
+            sHTML.Append("<div class=""d-flex"">")
+            sHTML.Append("<input type=""button"" id =""CouponCodeAddbtn" & iCnt & """value=""クーポンコード追加"" onclick=""CouponCodeAddbtnClick()""/>")
+            sHTML.Append("<p class=""txtCount"" id=""txtCount" & iCnt & """>0/500</p>")
+            sHTML.Append("</div>")
             sHTML.Append("</div>")
 
             iCnt = CStr(CInt(iCnt) + 1)
