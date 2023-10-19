@@ -63,23 +63,25 @@ function MakeMenu() {
 // ログアウト
 function btnLogOutClick() {
     console.log("ログアウト");
-    window.location = "http://localhost:808/LineOJTSystem/Mgmt/Login/Index.aspx";
+    window.location = "../Login/Index.aspx";
 }
 
 // イベント登録
 function btnEventRegClick() {
     console.log("イベント登録");
+    window.location = "../Event/Detail.aspx";
 }
 
 // イベント検索
 function btnEventSearchClick() {
     console.log("イベント検索");
+    window.location = "../Event/Index.aspx";
 }
 
 // 通信ログ
 function btnComLogClick() {
     console.log("通信ログ");
-    window.location = "http://localhost:808/LineSampleSystem/Sample/hirashima/CommLog/Index.aspx";
+    window.location = "../CommLog/Index.aspx";
 }
 
 $(function () {
