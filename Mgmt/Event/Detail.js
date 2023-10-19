@@ -1,13 +1,68 @@
 ﻿let Ajax_File = "Detail.ashx";
+let Referrer = document.referrer;
+console.log(Referrer);
 
 $(function () {
+   
     document.getElementById("Savebtn").addEventListener("mouseup", SavebtnClick, false);
     document.getElementById("Deletebtn").addEventListener("mouseup", DeletebtnClick, false);
     document.getElementById("Backbtn").addEventListener("mouseup", BackbtnClick, false);
     document.getElementById("MessageAddbtn").addEventListener("mouseup", MessageAddbtnClick, false);
-    MessageAddbtnClick();
+    if (sessionStorage.getItem("EventID") != null) {
+        EventLoad();
+    } else {
+        MessageAddbtnClick();
+    }
+    
     
 })
+
+function EventLoad() {
+    $.ajax({
+        url: Ajax_File,
+        method: "POST",
+        data: {
+            "mode": "Load",
+            "EventID": sessionStorage.getItem("EventID")
+        },
+        dataType: "json",
+        success: function (data) {
+            if (data != "") {
+                if (data.status == "OK") {
+                    alert("Load成功");
+                    $("#txtEventName").val(data.EventName);
+                    if (data.EventStatus == 1) {
+                        $('input[value="1"]').prop('checked', true);
+                    } else if (data.EventStatus === 0) {
+                        $('input[value="0"]').prop('checked', true);
+                    }
+                    let ScheduleFm = data.ScheduleFm.replaceAll("/", "-");
+                    
+                    if (ScheduleFm != "1900-01-01") {
+                        $("#txtScheduleFm").val(ScheduleFm);
+                    } else {
+                        $("#txtScheduleFm").val("");
+                    }
+
+                    let ScheduleTo = data.ScheduleTo.replaceAll("/", "-");
+                    if (ScheduleTo != "2099-12-31") {
+                        $("#txtScheduleTo").val(ScheduleTo);
+                    } else {
+                        $("#txtScheduleTo").val("");
+                    }
+                    
+                    $("#txtKeyword").val(data.Keyword);
+
+                    document.getElementById("MessageArea").innerHTML = data.Html;
+
+                } else {
+                    alert("エラーが発生しました。");
+                };
+            };
+        }
+    });
+};
+
 
 function SavebtnClick() {
 
@@ -67,9 +122,10 @@ function SavebtnClick() {
     }
 
     for(ele of document.getElementsByClassName("txtMessage")){
-        Messages.push(ele.value);
+        Messages.push(ele.value)
     }
-    
+    console.log(Messages)
+  
 
     if (!window.confirm("登録を行いますか？")) {
         return false;
@@ -85,13 +141,16 @@ function SavebtnClick() {
             "ScheduleFm": ScheduleFm,
             "ScheduleTo": ScheduleTo,
             "Keyword": Keyword,
-            "Messages":Messages
+            "Messages": Messages,
+            "Update_UserID": sessionStorage.getItem("UserID")
         },
         dataType: "json",
         success: function (data) {
             if (data != "") {
                 if (data.status == "OK") {
                     alert("登録が完了しました。");
+                    sessionStorage.setItem("EventID", data.EventID);
+                    $('#Savebtn').prop('disabled', true);
                 } else {
                     alert("エラーが発生しました。");
                 };
@@ -101,7 +160,32 @@ function SavebtnClick() {
 };
 
 function DeletebtnClick() {
-    console.log("Delete");
+
+    if (!window.confirm("本当に削除しますか？")) {
+        return false;
+    };
+
+    $.ajax({
+        url: Ajax_File,
+        method: "POST",
+        data: {
+            "mode": "Delete",
+            "EventID": sessionStorage.getItem("EventID")
+        },
+        dataType: "json",
+        success: function (data) {
+            if (data != "") {
+                if (data.status == "OK") {
+                    alert("データを削除しました。");
+
+                    location.href = Referrer
+
+                } else {
+                    alert("エラーが発生しました。");
+                };
+            };
+        }
+    });
 };
 
 function BackbtnClick() {
