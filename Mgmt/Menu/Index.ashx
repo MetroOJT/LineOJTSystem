@@ -27,7 +27,6 @@ Public Class Index : Implements IHttpHandler
         Dim sRet As String = ""
         Dim sStatus As String = "OK"
         Dim sTempTable As String = ""
-        Dim test As String = ""
 
         Dim sMenuID As String = ""
         Dim sMenuName As String = ""
