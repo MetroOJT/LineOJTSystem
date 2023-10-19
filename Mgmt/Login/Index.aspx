@@ -20,11 +20,11 @@
             <div class="mx-auto" style="margin-top: 10px;">
                 <div>
                     <label style="width: 80px;">ユーザーID</label>
-                    <input type="text" id="user_ID" autofocus />
+                    <input type="text" id="user_ID" onkeydown="go_next()" autofocus />
                 </div>
                 <div>
                     <label style="width: 80px">パスワード</label>
-                    <input type="password" id="user_password" onkeydown="go();" />
+                    <input type="password" id="user_password" onkeydown="go_login();" />
                 </div>
                 
             </div>

@@ -66,11 +66,12 @@ Public Class Index : Implements IHttpHandler
 
             If cDB.ReadDr Then
                 iCount = 1
+                rUserID.Append(cDB.DRData("UserID"))
+                rUserName.Append(cDB.DRData("UserName"))
+                rAdmin.Append(cDB.DRData("Admin"))
             End If
 
-            rUserID.Append(cDB.DRData("UserID"))
-            rUserName.Append(cDB.DRData("UserName"))
-            rAdmin.Append(cDB.DRData("Admin"))
+
         Catch ex As Exception
             sRet = ex.Message
         Finally

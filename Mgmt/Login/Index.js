@@ -14,7 +14,14 @@ $(function () {
     document.getElementById("login_button").addEventListener("click", btnLoginClick, false);
 });
 
-function go() {
+function go_next() {
+    if (window.event.keyCode == 13) {
+        const user_password_button = document.querySelector('#user_password');
+        user_password_button.focus();
+    }
+}
+
+function go_login() {
     if (window.event.keyCode == 13) {
         btnLoginClick();
     }
@@ -71,13 +78,12 @@ function btnLoginClick() {
                             const login_check = 1;
                             sessionStorage.setItem("login_check", login_check);
 
-                            window.location.href = "http://localhost:808/LineOJTSystem/Mgmt/Menu/Index.aspx";
+                            window.location.href = "../Menu/Index.aspx";
                         } else {
                             alert("該当するユーザーが存在しません。");
                         };
                     } else {
-                        //alert("エラーが発生しました。");
-                        alert("該当するユーザーが存在しません。");
+                        alert("エラーが発生しました。");
                     };
                 };
             }
