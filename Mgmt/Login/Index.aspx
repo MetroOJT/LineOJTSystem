@@ -16,22 +16,22 @@
             <label class="h1" id="SystemTitle">クーポン発行サービス</label>
         </div>
         <div id="option">
-            <p id="option_title">ログイン画面</p>
-            <table>
-                <tr>
-                    <th>ユーザーID</th>
-                    <td><input type="text" id="user_ID" autofocus /></td>
-                </tr>
-                <tr>
-                    <th>パスワード</th>
-                    <td><input type="password" id="user_password" onkeydown="go();" /></td>
-                </tr>
-            </table>
+            <p id="option_title" class="h4">ログイン画面</p>
+            <div class="mx-auto" style="margin-top: 10px;">
+                <div>
+                    <label style="width: 80px;">ユーザーID</label>
+                    <input type="text" id="user_ID" autofocus />
+                </div>
+                <div>
+                    <label style="width: 80px">パスワード</label>
+                    <input type="password" id="user_password" onkeydown="go();" />
+                </div>
+                
+            </div>
             <div class="error_div" style="margin-top: 10px; text-align: center"></div>
             <input type="button" value="ログイン" id="login_button" class="btn btn-primary shadow" />
             <div class="unauthorized_access_div" style="margin-top: 10px; text-align: center;"></div>
         </div>
-
     </div>
     </form>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
