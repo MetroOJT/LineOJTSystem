@@ -1,5 +1,15 @@
 ﻿var Ajax_File = "Index.ashx";
 
+const unauthorized_access = sessionStorage.getItem("unauthorized_access");
+if (unauthorized_access == 1) {
+    const unauthorized_access_div = document.querySelector(".unauthorized_access_div");
+    const unauthorized_access_p = document.createElement('p');
+    unauthorized_access_p.textContent = "不正なアクセスです。ログインをしてください。";
+    unauthorized_access_p.style.color = "red";
+    unauthorized_access_p.style.fontSize = "30px";
+    unauthorized_access_div.appendChild(unauthorized_access_p);
+}
+
 $(function () {
     document.getElementById("login_button").addEventListener("click", btnLoginClick, false);
 });
@@ -27,7 +37,7 @@ function btnLoginClick() {
         error_div.appendChild(error_p);
     } else if (Password == "") {
         const error_p = document.createElement('p');
-        error_p.textContent = "Passwordを入力してください";
+        error_p.textContent = "パスワードを入力してください";
         error_p.style.color = "red";
         error_div.appendChild(error_p);
     } else if (User_ID.match(/^[^\x01-\x7E\uFF61-\uFF9F]+$/)) {
@@ -57,12 +67,17 @@ function btnLoginClick() {
                             sessionStorage.setItem('UserName', data.UserName);
                             sessionStorage.setItem('Admin', Admin);
 
+
+                            const login_check = 1;
+                            sessionStorage.setItem("login_check", login_check);
+
                             window.location.href = "http://localhost:808/LineOJTSystem/Mgmt/Menu/Index.aspx";
                         } else {
                             alert("該当するユーザーが存在しません。");
                         };
                     } else {
-                        alert("エラーが発生しました。");
+                        //alert("エラーが発生しました。");
+                        alert("該当するユーザーが存在しません。");
                     };
                 };
             }
