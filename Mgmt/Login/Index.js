@@ -14,7 +14,14 @@ $(function () {
     document.getElementById("login_button").addEventListener("click", btnLoginClick, false);
 });
 
-function go() {
+function go_next() {
+    if (window.event.keyCode == 13) {
+        const user_password_button = document.querySelector('#user_password');
+        user_password_button.focus();
+    }
+}
+
+function go_login() {
     if (window.event.keyCode == 13) {
         btnLoginClick();
     }
