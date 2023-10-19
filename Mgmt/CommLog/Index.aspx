@@ -10,15 +10,15 @@
     <title>通信ログ</title>
 </head>
 <body>
-    <form runat="server" id="form1" style="width: 70%; margin: 0 auto;">
+    <form runat="server" id="form1" style="width: 80%; margin: 0 auto;">
     <div>
         <%-- type > value > name > id > class > style --%>
         <div id="Header" class="row">
-            <label id="SystemTitle" class="h1 col-6" >通信ログ</label>
-            <div class="col-6"><input type="button" value="ログアウト" name="btnLogOut" id="btnLogOut" class="btn btn-warning w-50" /></div>
+            <label class="h1 col-7" id="SystemTitle">クーポン発行サービス</label>
+            <div class="col-5"><input type="button" value="ログアウト" name="btnLogOut" id="btnLogOut" class="btn btn-warning w-75" /></div>
             <div class="w-100"></div>
-            <div class="col-6"></div>
-            <label id="Manager" class="col-6 h6">担当者名: サムズ・アップ</label>
+            <div class="col-7"></div>
+            <label class="col-5 h6" id="Manager">担当者名: </label>
         </div>
 
         <div class="accordion">
@@ -41,8 +41,8 @@
                             <label class="col-sm-2 col-form-label">送信/受信</label>
                             <select aria-label="全て" class="form-select form-select-sm" style="display: inline-block; width: 20%;" id="Sere">
                                 <option value="all" selected>全て</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
+                                <option value="send">送信</option>
+                                <option value="reception">受信</option>
                             </select>
                         </div>
                         
@@ -50,8 +50,8 @@
                             <label class="col-sm-2 col-form-label">ステータス</label>
                             <select aria-label="全て" class="form-select form-select-sm" style="display: inline-block; width: 20%;" id="Status">
                                 <option value="all" selected>全て</option>
-                                <option value="on">オン</option>
-                                <option value="off">オフ</option>
+                                <option value="normal">正常</option>
+                                <option value="abnormality">異常</option>
                             </select>
                         </div>
                     </div>
@@ -69,64 +69,27 @@
 
         <%-- データベースから取得したデータを表示 --%>
         <div id="DB_Result">
-            <p id="DB_Result_Number">件数: 〇件</p>
+            <div id="CntArea" style="margin-bottom: 20px;"></div>
             <nav aria-label="Page navigation example">
                 <ul class="pagination">
-                    <li class="page-item">
+                    <li class="page-item" id="pista">
                         <a class="page-link" href="#" aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Back">‹</a>
-                    </li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Next">›</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="End">
-                        <span aria-hidden="true">&raquo;</span>
+                    <li class="page-item" id="piback"><a class="page-link" href="#">‹</a></li>
+                    <li class="page-item" id="pi1"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item" id="pi2"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item" id="pi3"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item" id="pinext"><a class="page-link" href="#">›</a></li>
+                    <li class="page-item" id="piend">
+                        <a class="page-link" href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>
                 </ul>
             </nav>
-            <table class="table table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th scope="col">詳細</th>
-                        <th scope="col">送信/受信</th>
-                        <th scope="col">ステータス</th>
-                        <th scope="col">メッセージ</th>
-                        <th scope="col">通信時間</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><input type="button" value="詳細" name="detail" class="btn btn-success btn-sm" /></td>
-                        <td class="text-center">送信</td>
-                        <td class="text-center">101</td>
-                        <td>てってて</td>
-                        <td class="text-center">YYYY/MM/DD hh:mm:ss</td>
-                    </tr>
-                    <tr>
-                        <td><input type="button" value="詳細" name="detail" class="btn btn-success btn-sm" /></td>
-                        <td class="text-center">受信</td>
-                        <td class="text-center">220</td>
-                        <td>すーーー</td>
-                        <td class="text-center">YYYY/MM/DD hh:mm:ss</td>
-                    </tr>
-                    <tr>
-                        <td><input type="button" value="詳細" name="detail" class="btn btn-success btn-sm" /></td>
-                        <td class="text-center">送信</td>
-                        <td class="text-center">300</td>
-                        <td>とおおおおおおおおおおおお</td>
-                        <td class="text-center">YYYY/MM/DD hh:mm:ss</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div id="ResultArea"></div>
         </div>
     </div>
     </form>
