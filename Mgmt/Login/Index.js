@@ -71,13 +71,12 @@ function btnLoginClick() {
                             const login_check = 1;
                             sessionStorage.setItem("login_check", login_check);
 
-                            window.location.href = "http://localhost:808/LineOJTSystem/Mgmt/Menu/Index.aspx";
+                            window.location.href = "../Menu/Index.aspx";
                         } else {
                             alert("該当するユーザーが存在しません。");
                         };
                     } else {
-                        //alert("エラーが発生しました。");
-                        alert("該当するユーザーが存在しません。");
+                        alert("エラーが発生しました。");
                     };
                 };
             }
