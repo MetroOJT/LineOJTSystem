@@ -1,7 +1,12 @@
-﻿// var Ajax_File = "Detail.ashx"
+﻿// ＜jsの最初に追加＞
+// function_login_check();
+
+// var Ajax_File = "Detail.ashx"
 
 // ログアウト
 function btnLogOutClick() {
+    // ＜ログアウトをしたときの処理に追加＞
+    sessionStorage.removeItem("unauthorized_access");
     window.location = "http://localhost:808/LineOJTSystem/Mgmt/Login/Index.aspx";
     console.log("ログアウト");
 }
