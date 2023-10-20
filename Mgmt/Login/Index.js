@@ -14,6 +14,9 @@ $(function () {
     document.getElementById("login_button").addEventListener("click", btnLoginClick, false);
 });
 
+const user_ID_input = document.querySelector('#user_ID');
+user_ID_input.focus();
+
 function go_next() {
     if (window.event.keyCode == 13) {
         const user_password_button = document.querySelector('#user_password');

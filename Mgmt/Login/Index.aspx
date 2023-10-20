@@ -20,7 +20,7 @@
             <div class="mx-auto" style="margin-top: 10px;">
                 <div>
                     <label style="width: 80px;">ユーザーID</label>
-                    <input type="text" id="user_ID" onkeydown="go_next()" autofocus />
+                    <input type="text" id="user_ID" onkeydown="go_next()" />
                 </div>
                 <div>
                     <label style="width: 80px">パスワード</label>
