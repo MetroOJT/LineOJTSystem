@@ -6,7 +6,6 @@
 #SystemTitle{
     margin: 0;
 }
-
 #option{
     width: 100%;
     display: flex;
@@ -15,17 +14,6 @@
 }
 #option_title{
     text-align: center;
-}
-tr{
-    height: 30px;
-}
-th{
-    width: 42%;
-    text-align: right;
-    padding-right: 30px;
-}
-td{
-    width:58%;
 }
 #user_ID, #user_password{
     height: 25px;

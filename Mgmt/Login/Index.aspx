@@ -7,6 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous" />
     <link rel="stylesheet" href="Index.css" />
+    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
     <title>ログイン</title>
 </head>
 <body>
@@ -17,7 +18,7 @@
         </div>
         <div id="option">
             <p id="option_title" class="h4">ログイン画面</p>
-            <div class="mx-auto" style="margin-top: 10px;">
+            <div class="mx-auto" style="margin-top: 10px;" id="Input_field">
                 <div>
                     <label style="width: 80px;">ユーザーID</label>
                     <input type="text" id="user_ID" onkeydown="go_next()" />
@@ -26,7 +27,6 @@
                     <label style="width: 80px">パスワード</label>
                     <input type="password" id="user_password" onkeydown="go_login();" />
                 </div>
-                
             </div>
             <div class="error_div" style="margin-top: 10px; text-align: center"></div>
             <input type="button" value="ログイン" id="login_button" class="btn btn-primary shadow" />
