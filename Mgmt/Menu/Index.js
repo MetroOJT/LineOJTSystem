@@ -1,4 +1,7 @@
-﻿var Ajax_File = "Index.ashx"
+﻿// ＜jsの最初に追加＞
+// function_login_check();
+
+var Ajax_File = "Index.ashx"
 
 const uid = sessionStorage.getItem("UserID");
 const u_admin = sessionStorage.getItem("Admin");
@@ -62,6 +65,8 @@ function MakeMenu() {
 
 // ログアウト
 function btnLogOutClick() {
+    // ＜ログアウトをしたときの処理に追加＞
+    sessionStorage.removeItem("unauthorized_access");
     console.log("ログアウト");
     window.location = "../Login/Index.aspx";
 }
