@@ -1,8 +1,7 @@
-﻿function_login_check();
+﻿//function_login_check();
 
 let Ajax_File = "Detail.ashx";
 let Referrer = document.referrer;
-console.log(Referrer);
 
 $(function () {
    
@@ -67,6 +66,8 @@ function EventLoad() {
 
 
 function SavebtnClick() {
+    
+    //FormCheck()
 
     let EventName = $("#txtEventName").val();
     let EventStatus = "";
@@ -161,6 +162,33 @@ function SavebtnClick() {
     });
 };
 
+function FormCheck() {
+    let EventName = $("#txtEventName").val();
+    let Keyword = $("#txtKeyword").val();
+
+    $.ajax({
+        url: Ajax_File,
+        method: "POST",
+        data: {
+            "mode": "Check",
+            "EventName": EventName,
+            "Keyword": Keyword     
+        },
+        dataType: "json",
+        success: function (data) {
+            if (data != "") {
+                if (data.status == "OK") {
+                    alert("データを削除しました。");
+                    window.location.href = Referrer;
+                } else {
+                    alert("エラーが発生しました。");
+                };
+            };
+        }
+    });
+
+}
+
 function DeletebtnClick() {
 
     if (!window.confirm("本当に削除しますか？")) {
@@ -179,9 +207,7 @@ function DeletebtnClick() {
             if (data != "") {
                 if (data.status == "OK") {
                     alert("データを削除しました。");
-
-                    location.href = Referrer
-
+                    window.location.href = Referrer;
                 } else {
                     alert("エラーが発生しました。");
                 };
@@ -241,6 +267,12 @@ function MessageUpbtnClick() {
    
 }
 
+function CouponCodeAddbtnClick() {
+    let ID = $(event.target).attr("id").slice(-1);
+    let CouponCode = getCookie("CouponCode");
+    document.getElementById("txtMessage" + ID).value += CouponCode;
+}
+
 function MessageDownbtnClick() {
     console.log("test")
     let DownIndex;
@@ -274,9 +306,9 @@ function MessageDeletebtnClick() {
 }
 
 function txtCountUpd() {
-    console.log("test")
     let txtMessagelength = $(event.target).val().length;
-    $(event.target).next().text(txtMessagelength + "/500")
+    let ID = $(event.target).attr("id").slice(-1);
+    $("#txtCount" + ID).text(txtMessagelength + "/500")
 }
     
 
