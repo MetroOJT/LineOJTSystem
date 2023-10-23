@@ -1,27 +1,4 @@
-﻿#Header{
-    margin: 100px auto 0 auto;
-    width: 60%;
-    text-align: center;
-}
-#SystemTitle{
-    margin: 0;
-}
-#option{
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    margin-top: 50px;
-}
-#option_title{
-    text-align: center;
-}
-#login_button{
-    height: 40px;
-    margin: 30px auto;
-    width: 250px;
-    font-size: 120%;
-}
-label{
+﻿label{
     width: 80px;
 }
 .InputField_div{
@@ -29,4 +6,10 @@ label{
     border: 1px solid black;
     margin-left: 5px;
     width: 200px;
+}
+#buttonEye{
+    margin: auto;
+}
+.error_div{
+    margin: auto;
 }

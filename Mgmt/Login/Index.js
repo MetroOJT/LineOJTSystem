@@ -13,6 +13,8 @@ if (unauthorized_access == 1) {
 $(function () {
     document.getElementById("login_button").addEventListener("click", btnLoginClick, false);
     document.getElementById("buttonEye").addEventListener("click", btnEyeClock, false);
+    document.getElementById("user_ID").addEventListener("keydown", go_next, false);
+    document.getElementById("user_password").addEventListener("keydown", go_login, false);
 });
 
 const user_ID_input = document.querySelector('#user_ID');
