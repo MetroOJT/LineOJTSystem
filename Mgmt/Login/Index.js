@@ -56,6 +56,7 @@ function btnLoginClick() {
         error_p.textContent = "ユーザーIDは半角で入力してください";
         error_p.style.color = "red";
         error_div.appendChild(error_p);
+        user_ID_input.focus();
     } else {
         $.ajax({
             url: Ajax_File,
