@@ -12,6 +12,7 @@ if (unauthorized_access == 1) {
 
 $(function () {
     document.getElementById("login_button").addEventListener("click", btnLoginClick, false);
+    document.getElementById("buttonEye").addEventListener("click", btnEyeClock, false);
 });
 
 const user_ID_input = document.querySelector('#user_ID');
@@ -92,4 +93,17 @@ function btnLoginClick() {
             }
         });
     }
+};
+
+function btnEyeClock() {
+    const user_password = document.querySelector("#user_password");
+    const buttonEye = document.querySelector("#buttonEye");
+
+    if (user_password.type == "password") {
+        user_password.type = "text";
+        buttonEye.className = "fa fa-eye";
+    } else {
+        user_password.type = "password";
+        buttonEye.className = "fa fa-eye-slash";
+    };
 };

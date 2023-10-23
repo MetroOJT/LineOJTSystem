@@ -15,14 +15,18 @@
 #option_title{
     text-align: center;
 }
-#user_ID, #user_password{
-    height: 25px;
-    width: 250px;
-    margin: 10px auto;
-}
 #login_button{
     height: 40px;
     margin: 30px auto;
     width: 250px;
     font-size: 120%;
+}
+label{
+    width: 80px;
+}
+.InputField_div{
+    display: flex;
+    border: 1px solid black;
+    margin-left: 5px;
+    width: 200px;
 }
