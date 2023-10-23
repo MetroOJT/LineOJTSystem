@@ -46,6 +46,7 @@ function btnLoginClick() {
         error_p.textContent = "ユーザーIDを入力してください";
         error_p.style.color = "red";
         error_div.appendChild(error_p);
+        user_ID_input.focus();
     } else if (Password == "") {
         const error_p = document.createElement('p');
         error_p.textContent = "パスワードを入力してください";
