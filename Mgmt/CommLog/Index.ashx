@@ -331,7 +331,7 @@ Public Class Index : Implements IHttpHandler
                 sHTML.Append("<td><input type=""button""name=""detail"" value=""詳細"" class=""btn btn-success btn-sm btnDetail"" id=""detail" & iCnt & """ value=""" & cDB.DRData("wRowNo") & """ /></td>")
                 sHTML.Append("<td class=""text-center"">&nbsp;" & cDB.DRData("wSendRecv") & "</td>")
                 sHTML.Append("<td class=""text-center"">" & cDB.DRData("wStatusNumber") & "</td>")
-                sHTML.Append("<td align=""left"">&nbsp;" & cDB.DRData("wLog") & "</td>")
+                sHTML.Append("<td align=""left"" class=""text-truncate"">&nbsp;" & cDB.DRData("wLog") & "</td>")
                 sHTML.Append("<td class=""text-center"">" & cDB.DRData("wDatetime") & "</td>")
                 sHTML.Append("</tr>")
 
