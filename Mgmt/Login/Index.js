@@ -1,5 +1,6 @@
 ﻿var Ajax_File = "Index.ashx";
 
+// ログインをせずに他の画面を表示しようとした時に、ログイン画面に戻ってきてメッセージを表示する
 const unauthorized_access = sessionStorage.getItem("unauthorized_access");
 if (unauthorized_access == 1) {
     const unauthorized_access_div = document.querySelector(".unauthorized_access_div");
@@ -17,9 +18,11 @@ $(function () {
     document.getElementById("user_password").addEventListener("keydown", go_login, false);
 });
 
+// 画面を表示したときにユーザーID入力欄に自動でフォーカスする
 const user_ID_input = document.querySelector('#user_ID');
 user_ID_input.focus();
 
+// ユーザーID入力欄でエンターキーを押すと、パスワード入力欄にフォーカスが移動する
 function go_next() {
     if (window.event.keyCode == 13) {
         const user_password_button = document.querySelector('#user_password');
@@ -27,6 +30,7 @@ function go_next() {
     }
 }
 
+// パスワード入力欄でエンターキーを押すと、ログインボタンを押したときと同じ動きをする
 function go_login() {
     if (window.event.keyCode == 13) {
         btnLoginClick();
@@ -43,6 +47,7 @@ function btnLoginClick() {
     const error_div = document.querySelector('.error_div');
     error_div.innerHTML = '';
 
+    // 入力値のチェック
     if (User_ID == "") {
         const error_p = document.createElement('p');
         error_p.textContent = "ユーザーIDを入力してください";
@@ -54,6 +59,7 @@ function btnLoginClick() {
         error_p.textContent = "パスワードを入力してください";
         error_p.style.color = "red";
         error_div.appendChild(error_p);
+    // 全角で入力していた場合
     } else if (User_ID.match(/^[^\x01-\x7E\uFF61-\uFF9F]+$/)) {
         const error_p = document.createElement('p');
         error_p.textContent = "ユーザーIDは半角で入力してください";
@@ -75,6 +81,7 @@ function btnLoginClick() {
                 if (data != "") {
                     if (data.status == "OK") {
                         if (Number(data.count) > 0) {
+                            // セッションに追加（メニュー画面で必要な情報）
                             var UserID = Number(data.UserID);
                             var Admin = Number(data.Admin);
 
@@ -82,7 +89,7 @@ function btnLoginClick() {
                             sessionStorage.setItem('UserName', data.UserName);
                             sessionStorage.setItem('Admin', Admin);
 
-
+                            // セッションに追加（全画面で必要なログインをしているかを識別する変数）
                             const login_check = 1;
                             sessionStorage.setItem("login_check", login_check);
 
@@ -99,6 +106,7 @@ function btnLoginClick() {
     }
 };
 
+// パスワード入力欄の横にある目のアイコンを押すと、入力したものが見えたり、●になる
 function btnEyeClock() {
     const user_password = document.querySelector("#user_password");
     const buttonEye = document.querySelector("#buttonEye");
