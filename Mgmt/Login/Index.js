@@ -81,7 +81,7 @@ function btnLoginClick() {
                 if (data != "") {
                     if (data.status == "OK") {
                         if (Number(data.count) > 0) {
-                            // セッションに追加（メニュー画面で必要な情報）
+                            // セッションに追加（ユーザーIDとユーザーネームと管理者権限があるかどうか）
                             var UserID = Number(data.UserID);
                             var Admin = Number(data.Admin);
 
@@ -89,7 +89,7 @@ function btnLoginClick() {
                             sessionStorage.setItem('UserName', data.UserName);
                             sessionStorage.setItem('Admin', Admin);
 
-                            // セッションに追加（全画面で必要なログインをしているかを識別する変数）
+                            // セッションに追加（ログインをしてから他の画面に遷移したか）
                             const login_check = 1;
                             sessionStorage.setItem("login_check", login_check);
 
@@ -106,7 +106,7 @@ function btnLoginClick() {
     }
 };
 
-// パスワード入力欄の横にある目のアイコンを押すと、入力したものが見えたり、●になる
+// パスワード入力欄の横にある👁を押すと、入力したパスワードが見えるようになったり見えなくなったりするようになる
 function btnEyeClock() {
     const user_password = document.querySelector("#user_password");
     const buttonEye = document.querySelector("#buttonEye");
