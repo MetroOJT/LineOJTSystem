@@ -6,7 +6,7 @@
     <label class="col-5 h6" id="Manager"></label>
 </div>
 
-id=form1のwidthが80%前提で作ってるので各自調節お願いします！
+下の方のコードのコピペお願いします
 
 <div id="HeaderArea" class="d-flex p-3" style="height:150px">
                 <div class="w-50  h1 text-center m-0" style="vertical-align:middle">クーポン発行サービス</div>

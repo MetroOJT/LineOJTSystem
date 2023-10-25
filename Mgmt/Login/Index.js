@@ -20,12 +20,12 @@ $(function () {
 
 // 画面を表示したときにユーザーID入力欄に自動でフォーカスする
 const user_ID_input = document.querySelector('#user_ID');
+const user_password_button = document.querySelector('#user_password');
 user_ID_input.focus();
 
 // ユーザーID入力欄でエンターキーを押すと、パスワード入力欄にフォーカスが移動する
 function go_next() {
     if (window.event.keyCode == 13) {
-        const user_password_button = document.querySelector('#user_password');
         user_password_button.focus();
     }
 }
@@ -59,8 +59,9 @@ function btnLoginClick() {
         error_p.textContent = "パスワードを入力してください";
         error_p.style.color = "red";
         error_div.appendChild(error_p);
+        user_password_button.focus();
     // 全角で入力していた場合
-    } else if (User_ID.match(/^[^\x01-\x7E\uFF61-\uFF9F]+$/)) {
+    } else if (User_ID.match(/[^\x01-\x7E\uFF61-\uFF9F]+/)) {
         const error_p = document.createElement('p');
         error_p.textContent = "ユーザーIDは半角で入力してください";
         error_p.style.color = "red";

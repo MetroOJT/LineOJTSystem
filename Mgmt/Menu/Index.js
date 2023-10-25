@@ -1,6 +1,4 @@
 ﻿// ＜jsの最初に追加＞
-// function_login_check();
-
 var Ajax_File = "Index.ashx"
 
 const uid = sessionStorage.getItem("UserID");
@@ -8,6 +6,7 @@ const u_admin = sessionStorage.getItem("Admin");
 const u_name = sessionStorage.getItem("UserName");
 
 window.onload = function () {
+    function_login_check();
     let MenuID = $("#txtMenuID").val();
     let MenuName = $("#txtMenuName").val();
     let Admin = $("#txtAdmin").val();
@@ -25,14 +24,9 @@ window.onload = function () {
         success: function (data) {
             if (data != "") {
                 if (data.status == "OK") {
-                    console.log("ct実行完了")
-                    console.log("UserID: ", uid);
-                    console.log("Admin: ", u_admin);
-                    console.log("UserName: ", u_name);
                     document.getElementById("Manager").textContent = "担当者名: " + u_name;
                     MakeMenu();
                 } else {
-                    console.log("ctエラー")
                     alert(data.status); 
                 };
             };

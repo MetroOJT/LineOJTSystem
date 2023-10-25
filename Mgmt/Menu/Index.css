@@ -1,17 +1,4 @@
-﻿#Header{
-    margin: 100px auto 0 auto;
-    width: 60%;
-    text-align: center;
-}
-#SystemTitle{
-    margin: 0;
-}
-#LogOut{
-    width: 150px;
-    height: 30px;
-}
-
-#option{
+﻿#option{
     width: 100%;
     display: flex;
     flex-direction: column;

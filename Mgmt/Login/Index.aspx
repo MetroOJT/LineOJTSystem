@@ -12,7 +12,7 @@
 </head>
 <body>
     <form id="form1" runat="server" style="width: 80%; margin: 0 auto">
-    <div>
+    <div class="container">
         <div id="Header" class="row mt-5 ms-auto mb-0 me-auto w-100 text-center">
             <label class="h1 m-0" id="SystemTitle">クーポン発行サービス</label>
         </div>
@@ -24,7 +24,6 @@
                     <div class="InputField_div">
                         <input type="text" id="user_ID" class="border-0 w-100"/>
                     </div>
-                    
                 </div>
                 <div class="d-flex mt-2">
                     <label>パスワード</label>
