@@ -1,5 +1,5 @@
 ﻿// ＜jsの最初に追加＞
-// function_login_check();
+function_login_check();
 
 var Ajax_File = "Index.ashx"
 
@@ -25,14 +25,9 @@ window.onload = function () {
         success: function (data) {
             if (data != "") {
                 if (data.status == "OK") {
-                    console.log("ct実行完了")
-                    console.log("UserID: ", uid);
-                    console.log("Admin: ", u_admin);
-                    console.log("UserName: ", u_name);
                     document.getElementById("Manager").textContent = "担当者名: " + u_name;
                     MakeMenu();
                 } else {
-                    console.log("ctエラー")
                     alert(data.status); 
                 };
             };

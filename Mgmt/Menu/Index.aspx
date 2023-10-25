@@ -12,18 +12,19 @@
 <body>
     <form id="form1" runat="server" style="width: 80%; margin: 0 auto;">
     <div>
-        <div id="Header" class="row">
-            <label class="h1 col-7" id="SystemTitle">クーポン発行サービス</label>
-            <div class="col-5"><input type="button" value="ログアウト" name="btnLogOut" id="btnLogOut" class="btn btn-warning w-75" /></div>
-            <div class="w-100"></div>
-            <div class="col-7"></div>
-            <label class="col-5 h6" id="Manager"></label>
+        <div id="HeaderArea" class="d-flex p-3" style="height:150px">
+                <div class="w-50  h1 text-center m-0" style="vertical-align:middle">クーポン発行サービス</div>
+                <div class="w-50 text-end">
+                    <input type="button" id="btnLogOut" value="ログアウト" class="btn btn-warning"/>
+                    <p id="Manager" class="h5 m-0"></p>
+                </div>
         </div>
+            <hr class="m-0"/>
         <div id="option"></div>
     </div>
     </form>
     <%--＜aspsファイルのheadタグの中に追加＞--%>
-    <script src="../../Common/js/Common.js">
+    <script src="../../Common/js/Common.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="Index.js"></script>
