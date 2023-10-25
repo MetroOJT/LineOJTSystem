@@ -14,8 +14,6 @@ Public Class Detail : Implements IHttpHandler
                 context.Response.Write(Load(context))
             Case "Save"
                 context.Response.Write(Save(context))
-            Case "Check"
-                context.Response.Write(Check(context))
             Case "Delete"
                 context.Response.Write(Delete(context))
             Case "MessageAdd"
@@ -89,7 +87,10 @@ Public Class Detail : Implements IHttpHandler
                     sHTML.Append("<input type=""button"" id =""MessageDeletebtn" & iCnt & """value=""×"" onclick=""MessageDeletebtnClick()""/>")
                     sHTML.Append("</div>")
                     sHTML.Append("<textarea class=""txtMessage"" id=""txtMessage" & iCnt & """ maxlength=500 onkeyup=""txtCountUpd()"">" & cDB.DRData("Message") & "</textarea>")
-                    sHTML.Append("<div class=""txtCount"" id=""txtCount" & iCnt & """>0/500</div>")
+                    sHTML.Append("<div class=""d-flex"">")
+                    sHTML.Append("<input type=""button"" id =""CouponCodeAddbtn" & iCnt & """value=""クーポンコード追加"" onclick=""CouponCodeAddbtnClick()""/>")
+                    sHTML.Append("<p class=""txtCount"" id=""txtCount" & iCnt & """>0/500</p>")
+                    sHTML.Append("</div>")
                     sHTML.Append("</div>")
                     iCnt += 1
                 Loop
@@ -126,6 +127,7 @@ Public Class Detail : Implements IHttpHandler
         Dim cCom As New Common
         Dim cDB As New CommonDB
         Dim sSQL As New StringBuilder
+        Dim sWhere As New StringBuilder
         Dim jJSON As New JavaScriptSerializer
         Dim sJSON As String = ""
         Dim hHash As New Hashtable
@@ -133,6 +135,7 @@ Public Class Detail : Implements IHttpHandler
         Dim sStatus As String = "OK"
         Dim sMode As String = ""
         Dim sUserID As String = ""
+        Dim sEventID As String = ""
         Dim sEventName As String = ""
         Dim sEventStatus As String = ""
         Dim sScheduleFm As String = ""
@@ -141,9 +144,11 @@ Public Class Detail : Implements IHttpHandler
         Dim lMessages() As String
         Dim MaxID As Integer = 0
         Dim CurrentID As Integer = 0
+        Dim sErrorMessage As String = ""
 
         Try
             sUserID = context.Request.Item("UserID")
+            sEventID = context.Request.Item("Update_EventID")
             sEventName = context.Request.Item("EventName")
             sEventStatus = context.Request.Item("EventStatus")
             sScheduleFm = context.Request.Item("ScheduleFm")
@@ -151,14 +156,13 @@ Public Class Detail : Implements IHttpHandler
             sKeyword = context.Request.Item("Keyword")
             lMessages = context.Request.Item("Messages[]").Split(",")
 
-            If sUserID = "" Then
+            If sEventID = "" Then
                 sMode = "Ins"
             Else
                 sMode = "Upd"
+                cDB.AddWithValue("@EventID", sEventID)
             End If
 
-
-            cDB.AddWithValue("@EventName", sEventName)
             cDB.AddWithValue("@EventStatus", sEventStatus)
 
             If sScheduleFm = "" Then
@@ -173,7 +177,6 @@ Public Class Detail : Implements IHttpHandler
                 cDB.AddWithValue("@ScheduleTo", sScheduleTo)
             End If
 
-            cDB.AddWithValue("@Keyword", sKeyword)
 
             If sUserID = "" Then
                 cDB.AddWithValue("@UserID", "99999")
@@ -181,81 +184,135 @@ Public Class Detail : Implements IHttpHandler
                 cDB.AddWithValue("@UserID", sUserID)
             End If
 
-            cDB.BeginTran()
+            sWhere.Clear()
+            sWhere.Append(" WHERE EventName = @EventName")
+            If sMode = "Upd" Then
+                sWhere.Append(" AND EventID <> @EventID")
+            End If
+            cDB.AddWithValue("@EventName", sEventName)
 
-            Select Case sMode
-                Case "Ins"
-                    sSQL.Clear()
+            sSQL.Clear()
+            sSQL.Append("SELECT COUNT(*) AS SameEN")
+            sSQL.Append(" FROM " & cCom.gctbl_EventMst)
+            sSQL.Append(sWhere)
+            cDB.SelectSQL(sSQL.ToString)
 
-                    sSQL.Append("Select MAX(EventID) As MaxID")
-                    sSQL.Append(" FROM " & cCom.gctbl_EventMst)
-                    cDB.SelectSQL(sSQL.ToString)
+            If cDB.ReadDr Then
+                If cDB.DRData("SameEN") <> 0 Then
+                    sErrorMessage = "同じイベント名は登録できません。"
+                End If
+            End If
 
-                    If cDB.ReadDr Then
-                        MaxID = cDB.DRData("MaxID")
+            If sErrorMessage = "" Then
+                sWhere.Clear()
+                sWhere.Append(" WHERE Keyword = @Keyword")
+                If sMode = "Upd" Then
+                    sWhere.Append(" AND EventID <> @EventID")
+                End If
+                cDB.AddWithValue("@Keyword", sKeyword)
 
+                sSQL.Clear()
+                sSQL.Append("SELECT COUNT(*) AS SameKW")
+                sSQL.Append(" FROM " & cCom.gctbl_EventMst)
+                sSQL.Append(sWhere)
+                cDB.SelectSQL(sSQL.ToString)
+
+                If cDB.ReadDr Then
+                    If cDB.DRData("SameKW") <> 0 Then
+                        sErrorMessage = "同じキーワードは登録できません。"
                     End If
-                    CurrentID = MaxID + 1
-                    cDB.AddWithValue("@EventID", CurrentID)
+                End If
+            End If
 
-                    sSQL.Clear()
-                    sSQL.Append(" INSERT INTO " & cCom.gctbl_EventMst)
-                    sSQL.Append(" (")
-                    sSQL.Append("  EventID")
-                    sSQL.Append(" ,EventName")
-                    sSQL.Append(" ,Status")
-                    sSQL.Append(" ,ScheduleFm")
-                    sSQL.Append(" ,ScheduleTo")
-                    sSQL.Append(" ,Keyword")
-                    sSQL.Append(" ,Update_Date")
-                    sSQL.Append(" ,Update_UserID")
-                    sSQL.Append(" )")
-                    sSQL.Append(" VALUES")
-                    sSQL.Append(" (")
-                    sSQL.Append("  @EventID")
-                    sSQL.Append(" ,@EventName")
-                    sSQL.Append(" ,b" & "'" & sEventStatus & "'")
-                    sSQL.Append(" ,@ScheduleFm")
-                    sSQL.Append(" ,@ScheduleTo")
-                    sSQL.Append(" ,@Keyword")
-                    sSQL.Append(" ,NOW()")
-                    sSQL.Append(" ,@UserID")
-                    sSQL.Append(" )")
-                    cDB.ExecuteSQL(sSQL.ToString)
+            If sErrorMessage = "" Then
+                cDB.BeginTran()
 
-                    For MessageID As Integer = 1 To lMessages.Length
-                        cDB.AddWithValue("@Message" & MessageID, lMessages(MessageID - 1))
+                Select Case sMode
+                    Case "Ins"
+                        sSQL.Clear()
+
+                        sSQL.Append("Select MAX(EventID) As MaxID")
+                        sSQL.Append(" FROM " & cCom.gctbl_EventMst)
+                        cDB.SelectSQL(sSQL.ToString)
+
+                        If cDB.ReadDr Then
+                            MaxID = cDB.DRData("MaxID")
+
+                        End If
+
+                        sEventID = MaxID + 1
+                        cDB.AddWithValue("@EventID", sEventID)
 
                         sSQL.Clear()
-                        sSQL.Append(" INSERT INTO " & cCom.gctbl_MessageMst)
+                        sSQL.Append(" INSERT INTO " & cCom.gctbl_EventMst)
                         sSQL.Append(" (")
                         sSQL.Append("  EventID")
-                        sSQL.Append(" ,MessageID")
-                        sSQL.Append(" ,Message")
+                        sSQL.Append(" ,EventName")
+                        sSQL.Append(" ,Status")
+                        sSQL.Append(" ,ScheduleFm")
+                        sSQL.Append(" ,ScheduleTo")
+                        sSQL.Append(" ,Keyword")
+                        sSQL.Append(" ,Update_Date")
+                        sSQL.Append(" ,Update_UserID")
                         sSQL.Append(" )")
                         sSQL.Append(" VALUES")
                         sSQL.Append(" (")
                         sSQL.Append("  @EventID")
-                        sSQL.Append(" ," & MessageID)
-                        sSQL.Append(" ,@Message" & MessageID)
+                        sSQL.Append(" ,@EventName")
+                        sSQL.Append(" ,b" & "'" & sEventStatus & "'")
+                        sSQL.Append(" ,@ScheduleFm")
+                        sSQL.Append(" ,@ScheduleTo")
+                        sSQL.Append(" ,@Keyword")
+                        sSQL.Append(" ,NOW()")
+                        sSQL.Append(" ,@UserID")
                         sSQL.Append(" )")
                         cDB.ExecuteSQL(sSQL.ToString)
-                    Next
 
-                Case "Upd"
+                    Case "Upd"
+                        'cDB.AddWithValue("@EventID", sEventID)
+
+                        sSQL.Clear()
+                        sSQL.Append(" UPDATE " & cCom.gctbl_EventMst)
+                        sSQL.Append(" SET")
+                        sSQL.Append("  EventName      = @EventName")
+                        sSQL.Append(" ,Status         = " & "b" & "'" & sEventStatus & "'")
+                        sSQL.Append(" ,ScheduleFm     = @ScheduleFm")
+                        sSQL.Append(" ,ScheduleTo     = @ScheduleTo")
+                        sSQL.Append(" ,Keyword        = @Keyword")
+                        sSQL.Append(" ,Update_Date    = NOW()")
+                        sSQL.Append(" ,Update_UserID  = @UserID")
+                        sSQL.Append(" WHERE EventID   = @EventID")
+                        cDB.ExecuteSQL(sSQL.ToString)
+
+                        sSQL.Clear()
+                        sSQL.Append(" DELETE FROM " & cCom.gctbl_MessageMst)
+                        sSQL.Append(" WHERE EventID = @EventID")
+                        cDB.ExecuteSQL(sSQL.ToString)
+
+                End Select
+
+                For MessageID As Integer = 1 To lMessages.Length
+                    cDB.AddWithValue("@Message" & MessageID, lMessages(MessageID - 1))
+
                     sSQL.Clear()
-                    sSQL.Append(" UPDATE " & cCom.gctbl_UserMst)
-                    sSQL.Append(" SET")
-                    sSQL.Append("  um_Name        = @Name")
-                    sSQL.Append(" ,um_Age         = @Age")
-                    sSQL.Append(" ,um_Address     = @Address")
-                    sSQL.Append(" ,um_UpdateTime  = NOW()")
-                    sSQL.Append(" WHERE um_UserID = @UserID")
+                    sSQL.Append(" INSERT INTO " & cCom.gctbl_MessageMst)
+                    sSQL.Append(" (")
+                    sSQL.Append("  EventID")
+                    sSQL.Append(" ,MessageID")
+                    sSQL.Append(" ,Message")
+                    sSQL.Append(" )")
+                    sSQL.Append(" VALUES")
+                    sSQL.Append(" (")
+                    sSQL.Append("  @EventID")
+                    sSQL.Append(" ," & MessageID)
+                    sSQL.Append(" ,@Message" & MessageID)
+                    sSQL.Append(" )")
                     cDB.ExecuteSQL(sSQL.ToString)
+                Next
 
-            End Select
+                cDB.CommitTran()
 
-            cDB.CommitTran()
+            End If
 
         Catch ex As Exception
             cDB.RollBackTran()
@@ -269,8 +326,9 @@ Public Class Detail : Implements IHttpHandler
                 cCom.CmnWriteStepLog(sRet)
             End If
 
+            hHash.Add("ErrorMessage", sErrorMessage)
             hHash.Add("status", sStatus)
-            hHash.Add("EventID", CurrentID)
+            hHash.Add("EventID", sEventID)
             sJSON = jJSON.Serialize(hHash)
         End Try
 
@@ -278,9 +336,6 @@ Public Class Detail : Implements IHttpHandler
 
     End Function
 
-    Public Function Check(ByVal context As HttpContext) As String
-
-    End Function
 
     Public Function Delete(ByVal context As HttpContext) As String
         Dim cCom As New Common
@@ -311,8 +366,6 @@ Public Class Detail : Implements IHttpHandler
             sSQL.Append(" DELETE FROM " & cCom.gctbl_EventMst)
             sSQL.Append(" WHERE EventID = @EventID ")
             cDB.ExecuteSQL(sSQL.ToString)
-
-
 
             cDB.CommitTran()
 

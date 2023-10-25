@@ -2,9 +2,10 @@
 
 let Ajax_File = "Detail.ashx";
 let Referrer = document.referrer;
+const LoginUserName = sessionStorage.getItem("UserName");
 
 $(function () {
-   
+    document.getElementById("LoginUserName").textContent = "担当者名：" + LoginUserName;
     document.getElementById("Savebtn").addEventListener("mouseup", SavebtnClick, false);
     document.getElementById("Deletebtn").addEventListener("mouseup", DeletebtnClick, false);
     document.getElementById("Backbtn").addEventListener("mouseup", BackbtnClick, false);
@@ -14,8 +15,8 @@ $(function () {
     } else {
         MessageAddbtnClick();
     }
-    
-    
+
+
 })
 
 function EventLoad() {
@@ -38,7 +39,7 @@ function EventLoad() {
                         $('input[value="0"]').prop('checked', true);
                     }
                     let ScheduleFm = data.ScheduleFm.replaceAll("/", "-");
-                    
+
                     if (ScheduleFm != "1900-01-01") {
                         $("#txtScheduleFm").val(ScheduleFm);
                     } else {
@@ -51,9 +52,10 @@ function EventLoad() {
                     } else {
                         $("#txtScheduleTo").val("");
                     }
-                    
+
                     $("#txtKeyword").val(data.Keyword);
 
+                    console.log(data.Html)
                     document.getElementById("MessageArea").innerHTML = data.Html;
 
                 } else {
@@ -66,8 +68,6 @@ function EventLoad() {
 
 
 function SavebtnClick() {
-    
-    //FormCheck()
 
     let EventName = $("#txtEventName").val();
     let EventStatus = "";
@@ -111,7 +111,7 @@ function SavebtnClick() {
         alert("キーワードを入力して下さい。");
         return false;
     };
-   
+
     if (document.getElementsByClassName("txtMessage").length != 0) {
         for(ele of document.getElementsByClassName("txtMessage")) {
             if (ele.value == "") {
@@ -124,11 +124,11 @@ function SavebtnClick() {
         return false;
     }
 
-    for(ele of document.getElementsByClassName("txtMessage")){
+    for(ele of document.getElementsByClassName("txtMessage")) {
         Messages.push(ele.value)
     }
     console.log(Messages)
-  
+
 
     if (!window.confirm("登録を行いますか？")) {
         return false;
@@ -145,15 +145,21 @@ function SavebtnClick() {
             "ScheduleTo": ScheduleTo,
             "Keyword": Keyword,
             "Messages": Messages,
-            "Update_UserID": sessionStorage.getItem("UserID")
+            "Update_UserID": sessionStorage.getItem("UserID"),
+            "Update_EventID": sessionStorage.getItem("EventID")
         },
         dataType: "json",
         success: function (data) {
             if (data != "") {
                 if (data.status == "OK") {
-                    alert("登録が完了しました。");
-                    sessionStorage.setItem("EventID", data.EventID);
-                    $('#Savebtn').prop('disabled', true);
+
+                    if (data.ErrorMessage != "") {
+                        alert(data.ErrorMessage);
+                    } else {
+                        alert("登録が完了しました。");
+                        sessionStorage.setItem("EventID", data.EventID)
+                    }
+
                 } else {
                     alert("エラーが発生しました。");
                 };
@@ -161,33 +167,6 @@ function SavebtnClick() {
         }
     });
 };
-
-function FormCheck() {
-    let EventName = $("#txtEventName").val();
-    let Keyword = $("#txtKeyword").val();
-
-    $.ajax({
-        url: Ajax_File,
-        method: "POST",
-        data: {
-            "mode": "Check",
-            "EventName": EventName,
-            "Keyword": Keyword     
-        },
-        dataType: "json",
-        success: function (data) {
-            if (data != "") {
-                if (data.status == "OK") {
-                    alert("データを削除しました。");
-                    window.location.href = Referrer;
-                } else {
-                    alert("エラーが発生しました。");
-                };
-            };
-        }
-    });
-
-}
 
 function DeletebtnClick() {
 
@@ -207,6 +186,7 @@ function DeletebtnClick() {
             if (data != "") {
                 if (data.status == "OK") {
                     alert("データを削除しました。");
+                    sessionStorage.removeItem("EventID");
                     window.location.href = Referrer;
                 } else {
                     alert("エラーが発生しました。");
@@ -245,7 +225,7 @@ function MessageAddbtnClick() {
         alert("メッセージは5つまでしか追加できません。")
     }
 
-   
+
 };
 
 function MessageUpbtnClick() {
@@ -264,7 +244,7 @@ function MessageUpbtnClick() {
     if (UpIndex != 0) {
         MessageArea.insertBefore(MessageContainer[UpIndex], MessageContainer[UpIndex - 1])
     }
-   
+
 }
 
 function CouponCodeAddbtnClick() {
@@ -302,7 +282,7 @@ function MessageDeletebtnClick() {
             document.getElementsByClassName("MessageContainer")[i].id = "MessageContainer" + i;
         }
         setCookie("iCnt", i, 1);
-    }    
+    }
 }
 
 function txtCountUpd() {
@@ -310,6 +290,5 @@ function txtCountUpd() {
     let ID = $(event.target).attr("id").slice(-1);
     $("#txtCount" + ID).text(txtMessagelength + "/500")
 }
-    
 
-    
+

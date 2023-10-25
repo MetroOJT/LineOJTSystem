@@ -7,3 +7,12 @@
 </div>
 
 id=form1のwidthが80%前提で作ってるので各自調節お願いします！
+
+<div id="HeaderArea" class="d-flex p-3" style="height:150px">
+                <div class="w-50  h1 text-center m-0" style="vertical-align:middle">クーポン発行サービス</div>
+                <div class="w-50 text-end">
+                    <input type="button" value="ログアウト" class="btn btn-warning"/>
+                    <p id="LoginUserName" class="h5 m-0"></p>
+                </div>
+            </div>
+            <hr class="m-0"/>
