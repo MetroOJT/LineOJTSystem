@@ -60,7 +60,7 @@ function btnLoginClick() {
         error_p.style.color = "red";
         error_div.appendChild(error_p);
     // 全角で入力していた場合
-    } else if (User_ID.match(/^[^\x01-\x7E\uFF61-\uFF9F]+$/)) {
+    } else if (User_ID.match(/[^\x01-\x7E\uFF61-\uFF9F]+/)) {
         const error_p = document.createElement('p');
         error_p.textContent = "ユーザーIDは半角で入力してください";
         error_p.style.color = "red";
