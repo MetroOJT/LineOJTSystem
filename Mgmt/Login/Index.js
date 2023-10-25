@@ -1,5 +1,6 @@
 ﻿var Ajax_File = "Index.ashx";
 
+// ログインをせずに他の画面を表示しようとした時に、ログイン画面に戻ってきてメッセージを表示する
 const unauthorized_access = sessionStorage.getItem("unauthorized_access");
 if (unauthorized_access == 1) {
     const unauthorized_access_div = document.querySelector(".unauthorized_access_div");
@@ -12,8 +13,16 @@ if (unauthorized_access == 1) {
 
 $(function () {
     document.getElementById("login_button").addEventListener("click", btnLoginClick, false);
+    document.getElementById("buttonEye").addEventListener("click", btnEyeClock, false);
+    document.getElementById("user_ID").addEventListener("keydown", go_next, false);
+    document.getElementById("user_password").addEventListener("keydown", go_login, false);
 });
 
+// 画面を表示したときにユーザーID入力欄に自動でフォーカスする
+const user_ID_input = document.querySelector('#user_ID');
+user_ID_input.focus();
+
+// ユーザーID入力欄でエンターキーを押すと、パスワード入力欄にフォーカスが移動する
 function go_next() {
     if (window.event.keyCode == 13) {
         const user_password_button = document.querySelector('#user_password');
@@ -21,6 +30,7 @@ function go_next() {
     }
 }
 
+// パスワード入力欄でエンターキーを押すと、ログインボタンを押したときと同じ動きをする
 function go_login() {
     if (window.event.keyCode == 13) {
         btnLoginClick();
@@ -37,21 +47,25 @@ function btnLoginClick() {
     const error_div = document.querySelector('.error_div');
     error_div.innerHTML = '';
 
+    // 入力値のチェック
     if (User_ID == "") {
         const error_p = document.createElement('p');
         error_p.textContent = "ユーザーIDを入力してください";
         error_p.style.color = "red";
         error_div.appendChild(error_p);
+        user_ID_input.focus();
     } else if (Password == "") {
         const error_p = document.createElement('p');
         error_p.textContent = "パスワードを入力してください";
         error_p.style.color = "red";
         error_div.appendChild(error_p);
+    // 全角で入力していた場合
     } else if (User_ID.match(/^[^\x01-\x7E\uFF61-\uFF9F]+$/)) {
         const error_p = document.createElement('p');
         error_p.textContent = "ユーザーIDは半角で入力してください";
         error_p.style.color = "red";
         error_div.appendChild(error_p);
+        user_ID_input.focus();
     } else {
         $.ajax({
             url: Ajax_File,
@@ -67,6 +81,7 @@ function btnLoginClick() {
                 if (data != "") {
                     if (data.status == "OK") {
                         if (Number(data.count) > 0) {
+                            // セッションに追加（ユーザーIDとユーザーネームと管理者権限があるかどうか）
                             var UserID = Number(data.UserID);
                             var Admin = Number(data.Admin);
 
@@ -74,7 +89,7 @@ function btnLoginClick() {
                             sessionStorage.setItem('UserName', data.UserName);
                             sessionStorage.setItem('Admin', Admin);
 
-
+                            // セッションに追加（ログインをしてから他の画面に遷移したか）
                             const login_check = 1;
                             sessionStorage.setItem("login_check", login_check);
 
@@ -89,4 +104,18 @@ function btnLoginClick() {
             }
         });
     }
+};
+
+// パスワード入力欄の横にある👁を押すと、入力したパスワードが見えるようになったり見えなくなったりするようになる
+function btnEyeClock() {
+    const user_password = document.querySelector("#user_password");
+    const buttonEye = document.querySelector("#buttonEye");
+
+    if (user_password.type == "password") {
+        user_password.type = "text";
+        buttonEye.className = "fa fa-eye";
+    } else {
+        user_password.type = "password";
+        buttonEye.className = "fa fa-eye-slash";
+    };
 };

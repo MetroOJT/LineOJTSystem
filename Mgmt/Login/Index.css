@@ -1,40 +1,15 @@
-﻿#Header{
-    margin: 100px auto 0 auto;
-    width: 60%;
-    text-align: center;
+﻿label{
+    width: 80px;
 }
-#SystemTitle{
-    margin: 0;
-}
-
-#option{
-    width: 100%;
+.InputField_div{
     display: flex;
-    flex-direction: column;
-    margin-top: 50px;
+    border: 1px solid black;
+    margin-left: 5px;
+    width: 200px;
 }
-#option_title{
-    text-align: center;
+#buttonEye{
+    margin: auto;
 }
-tr{
-    height: 30px;
-}
-th{
-    width: 42%;
-    text-align: right;
-    padding-right: 30px;
-}
-td{
-    width:58%;
-}
-#user_ID, #user_password{
-    height: 25px;
-    width: 250px;
-    margin: 10px auto;
-}
-#login_button{
-    height: 40px;
-    margin: 30px auto;
-    width: 250px;
-    font-size: 120%;
+.error_div{
+    margin: auto;
 }

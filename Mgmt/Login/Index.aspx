@@ -7,30 +7,36 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous" />
     <link rel="stylesheet" href="Index.css" />
+    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet" />
     <title>ログイン</title>
 </head>
 <body>
     <form id="form1" runat="server" style="width: 80%; margin: 0 auto">
     <div>
-        <div id="Header" class="row">
-            <label class="h1" id="SystemTitle">クーポン発行サービス</label>
+        <div id="Header" class="row mt-5 ms-auto mb-0 me-auto w-100 text-center">
+            <label class="h1 m-0" id="SystemTitle">クーポン発行サービス</label>
         </div>
-        <div id="option">
-            <p id="option_title" class="h4">ログイン画面</p>
-            <div class="mx-auto" style="margin-top: 10px;">
-                <div>
-                    <label style="width: 80px;">ユーザーID</label>
-                    <input type="text" id="user_ID" onkeydown="go_next()" autofocus />
+        <div id="option" class="w-100 d-flex flex-column mt-5">
+            <p id="option_title" class="h4 text-center">ログイン画面</p>
+            <div class="mx-auto m-2 mt-4">
+                   <div class="d-flex">
+                    <label>ユーザーID</label>
+                    <div class="InputField_div">
+                        <input type="text" id="user_ID" class="border-0 w-100"/>
+                    </div>
+                    
                 </div>
-                <div>
-                    <label style="width: 80px">パスワード</label>
-                    <input type="password" id="user_password" onkeydown="go_login();" />
+                <div class="d-flex mt-2">
+                    <label>パスワード</label>
+                    <div class="InputField_div">
+                        <input type="password" id="user_password" class="border-0 w-100"/>
+                        <span id="buttonEye" class="fa fa-eye-slash"></span>
+                    </div>
                 </div>
-                
             </div>
-            <div class="error_div" style="margin-top: 10px; text-align: center"></div>
-            <input type="button" value="ログイン" id="login_button" class="btn btn-primary shadow" />
-            <div class="unauthorized_access_div" style="margin-top: 10px; text-align: center;"></div>
+            <div class="error_div"></div>
+            <input type="button" value="ログイン" id="login_button" class="btn btn-primary shadow h-50 mt-4 me-auto mb-4 ms-auto w-25 h5" />
+            <div class="unauthorized_access_div mt-2 text-center"></div>
         </div>
     </div>
     </form>
