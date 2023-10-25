@@ -401,6 +401,33 @@ Public Class Common
         Return sRet.ToString
 
     End Function
+    ''' <summary>
+    '''  共通ヘッダー（必ず最初に読み込み必要）
+    ''' </summary>
+    ''' <returns></returns>
+    Public Function CmnDspHeader(Optional ByVal Mode As String = "") As String
+        Dim sRet As New StringBuilder
+
+        sRet.Clear()
+        sRet.Append("<div id = 'HeaderArea' Class='d-flex p-3' style='height: 150px'>")
+        sRet.Append("<div Class='w-25'></div>")
+        sRet.Append("<div Class='w-50 h1 text-center m-0  d-flex align-items-center justify-content-center'>クーポン発行サービス</div>")
+        If Mode = "Login" Then
+            sRet.Append("<div Class='w-25'></div>")
+        Else
+            sRet.Append("<div Class='w-25 text-end '>")
+            sRet.Append("<div Class='h-50 d-flex align-items-center justify-content-end'>")
+            sRet.Append("<Input  type = 'button' value='ログアウト' id='LogOutbtn' Class='btn btn-secondary btn-lg' onclick='LogOut()'/>")
+            sRet.Append("</div>")
+            sRet.Append("<div Class='h-50 d-flex align-items-center justify-content-end'>")
+            sRet.Append("<p id = 'LoginUserName' Class='h4 m-0'></p>")
+            sRet.Append("</div>")
+            sRet.Append("</div>")
+        End If
+        sRet.Append("</div>")
+        sRet.Append("<hr Class='m-0'/>")
+        Return sRet.ToString
+    End Function
 
     ''' <summary>
     ''' 共通フッター（必ず最後に読み込み必要）
@@ -465,6 +492,11 @@ Public Class Common
     Function CmnReplaceSingleQuote(ByVal sReplaceStr As String) As String
         Return sReplaceStr.Replace("'", "''")
     End Function
+
+    Function CmnTimeStamp() As String
+        Return Format(Now(), "yyyyMMddHHmmssfff")
+    End Function
+
 
 #End Region
 

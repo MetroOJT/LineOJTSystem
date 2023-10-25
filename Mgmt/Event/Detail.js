@@ -2,10 +2,9 @@
 
 let Ajax_File = "Detail.ashx";
 let Referrer = document.referrer;
-const LoginUserName = sessionStorage.getItem("UserName");
 
 $(function () {
-    document.getElementById("LoginUserName").textContent = "担当者名：" + LoginUserName;
+    DspLoginUserName();
     document.getElementById("Savebtn").addEventListener("mouseup", SavebtnClick, false);
     document.getElementById("Deletebtn").addEventListener("mouseup", DeletebtnClick, false);
     document.getElementById("Backbtn").addEventListener("mouseup", BackbtnClick, false);

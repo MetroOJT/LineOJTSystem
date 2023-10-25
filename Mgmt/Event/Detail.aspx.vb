@@ -1,6 +1,7 @@
 ﻿
 Partial Class Sample_Detail
     Inherits System.Web.UI.Page
+    Public cCom As New Common
 
     Public Sub Page_Load() Handles Me.Load
         Dim cCom As New Common

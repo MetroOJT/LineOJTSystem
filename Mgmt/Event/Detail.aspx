@@ -7,21 +7,14 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous" />
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <script src="../../Common/js/Common.js"></script>
-    <script src="Detail.js"></script>
+    <%="<script src='../../Common/js/Common.js?ts=" & cCom.CmnTimeStamp & "'></script>" %>
+    <%="<script src='Detail.js?ts=" & cCom.CmnTimeStamp & "'></script>" %>
     <title>イベント登録画面</title>
 </head>
 <body>
     <form id="main" runat="server">
         <div class="container">
-            <div id="HeaderArea" class="d-flex p-3" style="height:150px">
-                <div class="w-50  h1 text-center m-0" style="vertical-align:middle">クーポン発行サービス</div>
-                <div class="w-50 text-end">
-                    <input type="button" value="ログアウト" class="btn btn-warning"/>
-                    <p id="LoginUserName" class="h5 m-0"></p>
-                </div>
-            </div>
-            <hr class="m-0"/>
+            <%=cCom.CmnDspHeader() %>
             <div id="FormArea" class="w-100 ">
                 <div id="ButtonArea" class="w-100 p-3">
                     <input type="button" id="Savebtn" value="登録" />
