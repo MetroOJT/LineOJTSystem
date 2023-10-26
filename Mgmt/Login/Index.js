@@ -97,6 +97,7 @@ function btnLoginClick() {
                             window.location.href = "../Menu/Index.aspx";
                         } else {
                             alert("該当するユーザーが存在しません。");
+                            user_ID_input.focus();
                         };
                     } else {
                         alert("エラーが発生しました。");
