@@ -1,20 +1,28 @@
-﻿// ＜jsの最初に追加＞
-// function_login_check();
+﻿function_login_check();
 
-// var Ajax_File = "Detail.ashx"
+var DD_Sere = sessionStorage.getItem("DD_Sere");
+var DD_Status = sessionStorage.getItem("DD_Status");
+var DD_Log = sessionStorage.getItem("DD_Log");
+var DD_Time = sessionStorage.getItem("DD_Time");
+
+document.getElementById("DetailSere").value = DD_Sere;
+document.getElementById("DetailStatus").value = DD_Status;
+document.getElementById("DetailLog").value = DD_Log;
+document.getElementById("DetailTime").value = DD_Time;
+
+const u_name = sessionStorage.getItem("UserName");
+document.getElementById("Manager").textContent = "担当者名: " + u_name;
 
 // ログアウト
 function btnLogOutClick() {
     // ＜ログアウトをしたときの処理に追加＞
     sessionStorage.removeItem("unauthorized_access");
-    window.location = "http://localhost:808/LineOJTSystem/Mgmt/Login/Index.aspx";
-    console.log("ログアウト");
+    window.location = "../Login/Index.aspx";
 }
 
 // 戻る
 function btnBackClick() {
-    console.log("メニュー画面へ遷移");
-    window.location = "http://localhost:808/LineSampleSystem/Sample/hirashima/Index.aspx";
+    window.location = "../Menu/Index.aspx";
 }
 
 $(function () {

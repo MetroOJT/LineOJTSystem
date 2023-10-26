@@ -13,9 +13,7 @@
 <body>
     <form id="form1" runat="server" style="width: 80%; margin: 0 auto">
     <div class="container">
-        <div id="Header" class="row mt-5 ms-auto mb-0 me-auto w-100 text-center">
-            <label class="h1 m-0" id="SystemTitle">クーポン発行サービス</label>
-        </div>
+        <%=cCom.CmnDspHeader("Login") %>
         <div id="option" class="w-100 d-flex flex-column mt-5">
             <p id="option_title" class="h4 text-center">ログイン画面</p>
             <div class="mx-auto m-2 mt-4">

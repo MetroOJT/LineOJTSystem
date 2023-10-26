@@ -1,9 +1,0 @@
-﻿#option{
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-}
-#option input{
-    width: 250px;
-    margin: 20px auto;
-}

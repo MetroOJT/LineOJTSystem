@@ -95,9 +95,8 @@ Public Class Index : Implements IHttpHandler
             sSQL.Append(" ,Status")
             sSQL.Append(" ,Log")
             sSQL.Append(" ,Datetime")
-            sSQL.Append(" FROM lineojtdb.logmst")
+            sSQL.Append(" FROM " & cCom.gctbl_LogMst)
             sSQL.Append(" WHERE ")
-            'sSQL.Append(" FROM " & cCom.gctbl_UserMst) 
             If sDateFm <> "" Then
                 sSQL.Append(" '" & CDate(sDateFm) & "' <= Datetime AND")
             End If
@@ -115,7 +114,6 @@ Public Class Index : Implements IHttpHandler
                 sSQL.Append(" 200 != Status AND")
             End If
             sSQL.Append(" 1=1" & sWhere.ToString)
-            'sSQL.Append(" ORDER BY MenuID")
             iCount = cDB.ExecuteSQL(sSQL.ToString)
 
         Catch ex As Exception
@@ -184,12 +182,12 @@ Public Class Index : Implements IHttpHandler
             cDB.SelectSQL(sSQL.ToString)
 
             sHTML.Clear()
-            sHTML.Append("<table border=""1"" width=""1000px"" style=""border-collapse: collapse;"" class=""table table-striped table-bordered"">")
+            sHTML.Append("<table id=""table"" border=""1"" width=""1000px"" style=""border-collapse: collapse;"" class=""table table-striped table-bordered"">")
             sHTML.Append("<tr style=""background-color: #CCCCCC;"">")
             sHTML.Append("<th width=""05%"" class=""text-center"">詳細</th >")
             sHTML.Append("<th width=""15%"" class=""text-center"">送信/受信</th>")
             sHTML.Append("<th width=""15%"" class=""text-center"">ステータス</th>")
-            sHTML.Append("<th width=""35%"" class=""text-center"">メッセージ</th>")
+            sHTML.Append("<th width=""35%"" class=""text-center"">通信ログ</th>")
             sHTML.Append("<th width=""30%"" class=""text-center"">通信時間</th>")
             Do Until Not cDB.ReadDr
 
@@ -199,10 +197,10 @@ Public Class Index : Implements IHttpHandler
                 End If
 
                 sHTML.Append("<tr class=""" & sRow & """>")
-                sHTML.Append("<td><input type=""button""name=""detail"" value=""詳細"" class=""btn btn-success btn-sm btnDetail"" id=""detail" & iCnt & """ value=""" & cDB.DRData("wRowNo") & """ /></td>")
+                sHTML.Append("<td><input type=""button""name=""detail"" class=""btn btn-success btn-sm btnDetail"" id=""detail" & cDB.DRData("wRowNo") & """ value=""詳細"" /></td>")
                 sHTML.Append("<td class=""text-center"">&nbsp;" & cDB.DRData("wSendRecv") & "</td>")
                 sHTML.Append("<td class=""text-center"">" & cDB.DRData("wStatusNumber") & "</td>")
-                sHTML.Append("<td align=""left"">&nbsp;" & cDB.DRData("wLog") & "</td>")
+                sHTML.Append("<td align=""left"" class=""text-truncate"" style=""max-width:0px;"">&nbsp;" & cDB.DRData("wLog") & "</td>")
                 sHTML.Append("<td class=""text-center"">" & cDB.DRData("wDatetime") & "</td>")
                 sHTML.Append("</tr>")
 
@@ -313,12 +311,12 @@ Public Class Index : Implements IHttpHandler
             cDB.SelectSQL(sSQL.ToString)
 
             sHTML.Clear()
-            sHTML.Append("<table border=""1"" width=""1000px"" style=""border-collapse: collapse;"" class=""table table-striped table-bordered"">")
+            sHTML.Append("<table id=""table"" border=""1"" width=""1000px"" style=""border-collapse: collapse;"" class=""table table-striped table-bordered"">")
             sHTML.Append("<tr style=""background-color: #CCCCCC;"">")
             sHTML.Append("<th width=""05%"" class=""text-center"">詳細</th >")
             sHTML.Append("<th width=""15%"" class=""text-center"">送信/受信</th>")
             sHTML.Append("<th width=""15%"" class=""text-center"">ステータス</th>")
-            sHTML.Append("<th width=""35%"" class=""text-center"">メッセージ</th>")
+            sHTML.Append("<th width=""35%"" class=""text-center"">通信ログ</th>")
             sHTML.Append("<th width=""30%"" class=""text-center"">通信時間</th>")
             Do Until Not cDB.ReadDr
 
@@ -328,10 +326,10 @@ Public Class Index : Implements IHttpHandler
                 End If
 
                 sHTML.Append("<tr class=""" & sRow & """>")
-                sHTML.Append("<td><input type=""button""name=""detail"" value=""詳細"" class=""btn btn-success btn-sm btnDetail"" id=""detail" & iCnt & """ value=""" & cDB.DRData("wRowNo") & """ /></td>")
+                sHTML.Append("<td><input type=""button""name=""detail"" value=""詳細"" class=""btn btn-success btn-sm btnDetail"" id=""detail" & cDB.DRData("wRowNo") & """ value=""詳細"" /></td>")
                 sHTML.Append("<td class=""text-center"">&nbsp;" & cDB.DRData("wSendRecv") & "</td>")
                 sHTML.Append("<td class=""text-center"">" & cDB.DRData("wStatusNumber") & "</td>")
-                sHTML.Append("<td align=""left"" class=""text-truncate"">&nbsp;" & cDB.DRData("wLog") & "</td>")
+                sHTML.Append("<td align=""left"" class=""text-truncate"" style=""max-width:0px;"">&nbsp;" & cDB.DRData("wLog") & "</td>")
                 sHTML.Append("<td class=""text-center"">" & cDB.DRData("wDatetime") & "</td>")
                 sHTML.Append("</tr>")
 
