@@ -46,15 +46,15 @@ function btnCloseClick() {
     if (oac == 1) {
         oac = 0;        
         cona.classList.remove("col-10");
-        cona.classList.add("col-7");
+        cona.classList.add("col-8");
         conb.classList.remove("col-2");
-        conb.classList.add("col-5");
+        conb.classList.add("col-4");
         document.getElementById("btnClose").textContent = "検索する際はこちらのボタンをクリックしてください";
     } else {
         oac = 1;
-        cona.classList.remove("col-7");
+        cona.classList.remove("col-8");
         cona.classList.add("col-10");
-        conb.classList.remove("col-5");
+        conb.classList.remove("col-4");
         conb.classList.add("col-2");
         document.getElementById("btnClose").textContent = "閉じる";
     }
