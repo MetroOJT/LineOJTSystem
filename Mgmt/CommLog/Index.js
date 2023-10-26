@@ -145,7 +145,7 @@ function PagiNation(pid) {
                         const NpageFm = (parseInt(Npage) - 1) * 10 + 1;
                         var NpageTo = 0;
                         if (Npage == Math.ceil(data.count / 10)) {
-                            NpageTo = (parseInt(Npage) - 1) * 10 + (data.count % 10);
+                            NpageTo = data.count;
                         } else {
                             NpageTo = parseInt(Npage) * 10;
                         }
@@ -166,6 +166,7 @@ function PagiNation(pid) {
 };
 
 function MakeResult() {
+    Npage = 1;
     document.getElementById("CntArea").innerText = "";
     document.getElementById("ResultArea").innerHTML = "";
 
@@ -183,7 +184,7 @@ function MakeResult() {
                         const NpageFm = (parseInt(Npage) - 1) * 10 + 1;
                         var NpageTo = 0;
                         if (Npage == Math.ceil(data.count / 10)) {
-                            NpageTo = (parseInt(Npage) - 1) * 10 + (data.count % 10);
+                            NpageTo = data.count;
                         } else {
                             NpageTo = parseInt(Npage) * 10;
                         }

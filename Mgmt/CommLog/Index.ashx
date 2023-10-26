@@ -104,9 +104,9 @@ Public Class Index : Implements IHttpHandler
                 sSQL.Append(" '" & CDate(sDateTo) & "' >= Datetime AND")
             End If
             If sSere = "send" Then
-                sSQL.Append(" '送信' = SendRecv AND")
+                sSQL.Append(" 'Send' = SendRecv AND")
             ElseIf sSere = "reception" Then
-                sSQL.Append(" '受信' = SendRecv AND")
+                sSQL.Append(" 'Recv' = SendRecv AND")
             End If
             If sCond_Status = "normal" Then
                 sSQL.Append(" 200 = Status AND")
