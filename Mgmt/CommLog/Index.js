@@ -1,5 +1,6 @@
 ﻿// ＜jsの最初に追加＞
 function_login_check();
+DspLoginUserName();
 
 const uid = sessionStorage.getItem("UserID");
 const u_admin = sessionStorage.getItem("Admin");
@@ -10,16 +11,6 @@ var Nod = 0;
 var Npage = 1;
 var page_item = document.querySelectorAll(".page-item");
 var detail_button = document.querySelectorAll(".btnDetail");
-
-document.getElementById("Manager").textContent = "担当者名: " + u_name;
-
-// ログアウト
-function btnLogOutClick() {
-    // ＜ログアウトをしたときの処理に追加＞
-    sessionStorage.removeItem("unauthorized_access");
-    window.location = "../Login/Index.aspx";
-    console.log("ログアウト");
-}
 
 // 通信ログ検索
 function btnSearchClick() {
@@ -243,7 +234,6 @@ function detail_btn(){
 }
 
 $(function () {
-    document.getElementById("btnLogOut").addEventListener("click", btnLogOutClick, false);
     document.getElementById("btnSearch").addEventListener("click", btnSearchClick, false);
     document.getElementById("btnClear").addEventListener("click", btnClearClick, false);
     document.getElementById("btnBack").addEventListener("click", btnBackClick, false);
