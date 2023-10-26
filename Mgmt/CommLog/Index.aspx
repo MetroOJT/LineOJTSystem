@@ -18,7 +18,7 @@
             <div class="col-5"><input type="button" value="ログアウト" name="btnLogOut" id="btnLogOut" class="btn btn-warning w-75" /></div>
             <div class="w-100"></div>
             <div class="col-7"></div>
-            <label class="col-5 h6" id="Manager">担当者名: </label>
+            <label class="col-5 h6" id="Manager"></label>
         </div>
 
         <div class="accordion">
@@ -33,8 +33,8 @@
                     <div id="Condition" class="accordion-body">
                         <div> 
                             <label class="col-sm-2 col-form-label">通信日時</label>
-                            <input type="datetime-local" id="DateFm" class="form-control" style="margin-right: 20px;" />～
-                            <input type="datetime-local" id="DateTo" class="form-control" style="margin-left: 20px"; />
+                            <input type="datetime-local" id="DateFm" class="form-control initial-time" style="margin-right: 20px;" />～
+                            <input type="datetime-local" id="DateTo" class="form-control initial-time" style="margin-left: 20px"; />
                         </div>
                         
                         <div>
@@ -77,8 +77,7 @@
         </div>
     </div>
     </form>
-    <%--＜aspsファイルのheadタグの中に追加＞--%>
-    <script src="../../Common/js/Common.js">
+    <script src="../../Common/js/Common.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="Index.js"></script>

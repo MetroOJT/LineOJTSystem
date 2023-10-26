@@ -1,11 +1,17 @@
 ﻿// ＜jsの最初に追加＞
-// function_login_check();
+function_login_check();
+
+const uid = sessionStorage.getItem("UserID");
+const u_admin = sessionStorage.getItem("Admin");
+const u_name = sessionStorage.getItem("UserName");
 
 var Ajax_File = "Index.ashx"
 var Nod = 0;
 var Npage = 1;
 var page_item = document.querySelectorAll(".page-item");
 var detail_button = document.querySelectorAll(".btnDetail");
+
+document.getElementById("Manager").textContent = "担当者名: " + u_name;
 
 // ログアウト
 function btnLogOutClick() {
@@ -23,7 +29,16 @@ function btnSearchClick() {
 
 // 通信ログクリア
 function btnClearClick() {
-    console.log("通信ログクリア");
+    console.log("検索条件を初期値に変更");
+    const initial_time = document.querySelectorAll(".initial-time");
+    initial_time.forEach(it => {
+        it.value = "";
+    })
+    const Sere_select = document.getElementById("Sere");
+    const Status_select = document.getElementById("Status");
+    Sere_select.options[0].selected = true;
+    Status_select.options[0].selected = true;
+
 }
 
 // 戻る
@@ -94,6 +109,7 @@ function Search() {
         }
     });
 }
+
 function PagiNation(pid) {
     switch (pid) {
         case "pista":
@@ -145,12 +161,7 @@ function PagiNation(pid) {
                         document.getElementById("CntArea").innerText = "件数：" + data.count + "件" + " (表示中: " + Npage + " ページ , " + NpageFm + "件 ～ " + NpageTo + "件)";
                         if (data.html != "") {
                             document.getElementById("ResultArea").innerHTML = data.html;
-                            detail_button = document.querySelectorAll(".btnDetail");
-                            detail_button.forEach(elm => {
-                                elm.addEventListener('click', function () {
-                                    console.log(elm.id);
-                                });
-                            });
+                            detail_btn();
                         }
                     } else {
                         document.getElementById("ResultArea").innerText = "該当するユーザーが存在しません。";
@@ -195,12 +206,7 @@ function MakeResult() {
                                     PagiNation(pi.id);
                                 });
                             });
-                            detail_button = document.querySelectorAll(".btnDetail");
-                            detail_button.forEach(elm => {
-                                elm.addEventListener('click', function () {
-                                    console.log(elm.id);
-                                });
-                            });
+                            detail_btn();
                         }
                     } else {
                         document.getElementById("ResultArea").innerText = "該当するユーザーが存在しません。";
@@ -212,6 +218,29 @@ function MakeResult() {
         }
     });
 };
+
+function detail_btn(){
+    detail_button = document.querySelectorAll(".btnDetail");
+    detail_button.forEach(elm => {
+        elm.addEventListener('click', function () {
+            const elmrow = (parseInt(elm.id.replace("detail", "")) - 1) % 10 + 1;
+            const tb = document.getElementById("table");
+            const tds = tb.rows[elmrow].querySelectorAll("td");
+            const ary = [];
+            tds.forEach(td_elm => {
+                if (td_elm.querySelector("input")) {
+                } else {
+                    ary.push(td_elm.innerHTML);
+                }
+            })
+            sessionStorage.setItem("DD_Sere", ary[0].replace("&nbsp;", ""));
+            sessionStorage.setItem("DD_Status", ary[1]);
+            sessionStorage.setItem("DD_Log", ary[2].replace("&nbsp;", ""));
+            sessionStorage.setItem("DD_Time", ary[3]);
+            location.href = "../CommLog/Detail.aspx?" + elm.id;
+        });
+    });
+}
 
 $(function () {
     document.getElementById("btnLogOut").addEventListener("click", btnLogOutClick, false);
