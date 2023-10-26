@@ -15,38 +15,59 @@
     <form id="main" runat="server">
         <div class="container">
             <%=cCom.CmnDspHeader() %>
-            <div id="FormArea" class="w-100 ">
-                <div id="ButtonArea" class="w-100 p-3">
-                    <input type="button" id="Savebtn" value="登録" />
-                    <input type="button" id="Deletebtn" value="削除" />
-                    <input type="button" id="Backbtn" value="戻る" />
+            <div id="FormArea" class="">
+                <div id="ButtonArea" class="row">
+                    <div class="col-2 d-grid">
+                    <input type="button" id="Savebtn" class="btn btn-primary btn-lg" value="登録" />
+                    </div>
+                    <div class="col-2 d-grid">
+                    <input type="button" id="Deletebtn" class="btn btn-danger btn-lg" value="削除" />
+                    </div>
+                    <div class="col-6"></div>
+                    <div class="col-2 d-grid">
+                    <input type="button" id="Backbtn" class="btn btn-secondary btn-lg" value="戻る" />
+                    </div>
                 </div>
-                <div>
-                    <label>イベント名</label>
-                    <input type="text" id="txtEventName" />
+                <div class="row">
+                    <div class="col-3 text-center">
+                        <label>イベント名</label>
+                    </div>
+                    <div class="col-9">
+                        <input type="text" id="txtEventName" class="w-100"/>
+                    </div>
                 </div>
-                <div>
-                    <label>ステータス</label>
-                    <input type="radio" id="EventStatusOn" name="EventStatus" value="1" />
-                    <label for="EventStatusOn">オン</label>
-                    <input type="radio" id="EventStatusOff" name="EventStatus" value="0" />
-                    <label for="EventStatusOff">オフ</label>
+                <div class="row">
+                    <div class="col-3 text-center">
+                        <label>ステータス</label>
+                    </div>
+                    <div class="col-9">
+                        <input type="radio" id="EventStatusOn" name="EventStatus" value="1" />
+                        <label for="EventStatusOn">オン</label>
+                        <input type="radio" id="EventStatusOff" name="EventStatus" value="0" />
+                        <label for="EventStatusOff">オフ</label>
+                    </div>
                 </div>
-                <div class="d-flex">
+                <div class="d-flex row">
+                    <div class="col-3 text-center">
                     <label>スケジュール</label>
-                    <div class="d-flex">
+                    </div>
+                    <div class="d-flex col-9">
                         <input type="date" id="txtScheduleFm" />
                         <p>～</p>
                         <input type="date" id="txtScheduleTo" />
                     </div>
                 </div>
-                <div>
-                    <label>キーワード</label>
-                    <input type="text" id="txtKeyword" />
+                <div class="row">
+                    <div class="col-3 text-center">
+                        <label>キーワード</label>
+                    </div>
+                    <div class="col-9">
+                        <input type="text" id="txtKeyword" class="w-100"/>
+                    </div>        
                 </div>
             </div>
             <p>※メッセージは5個まで追加できます</p>
-            <div id="MessageArea" class="w-100 p-3 mx-auto"></div>
+            <div id="MessageArea" class="row"></div>
             <div id="MessagebtnArea">
                 <input type="button" id="MessageAddbtn" value="メッセージ追加" />
             </div>

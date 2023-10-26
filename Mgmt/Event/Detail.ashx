@@ -80,7 +80,7 @@ Public Class Detail : Implements IHttpHandler
                 sHTML.Clear()
                 Do Until Not cDB.ReadDr
 
-                    sHTML.Append("<div class=""MessageContainer"" id=""MessageContainer" & iCnt & """>")
+                    sHTML.Append("<div class=""MessageContainer col-12"" id=""MessageContainer" & iCnt & """>")
                     sHTML.Append("<div class=""MessagebtnArea"">")
                     sHTML.Append("<input type=""button"" id =""MessageUpbtn" & iCnt & """value=""△"" onclick=""MessageUpbtnClick()""/>")
                     sHTML.Append("<input type=""button"" id =""MessageDownbtn" & iCnt & """value=""▽"" onclick=""MessageDownbtnClick()""/>")
@@ -408,7 +408,7 @@ Public Class Detail : Implements IHttpHandler
             End If
 
             sHTML.Clear()
-            sHTML.Append("<div class=""MessageContainer"" id=""MessageContainer" & iCnt & """>")
+            sHTML.Append("<div class=""MessageContainer col-12"" id=""MessageContainer" & iCnt & """>")
             sHTML.Append("<div class=""MessagebtnArea"">")
             sHTML.Append("<input type=""button"" id =""MessageUpbtn" & iCnt & """value=""△"" onclick=""MessageUpbtnClick()""/>")
             sHTML.Append("<input type=""button"" id =""MessageDownbtn" & iCnt & """value=""▽"" onclick=""MessageDownbtnClick()""/>")

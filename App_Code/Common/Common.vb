@@ -409,23 +409,29 @@ Public Class Common
         Dim sRet As New StringBuilder
 
         sRet.Clear()
-        sRet.Append("<div id = 'HeaderArea' Class='d-flex p-3' style='height: 150px'>")
-        sRet.Append("<div Class='w-25'></div>")
-        sRet.Append("<div Class='w-50 h1 text-center m-0  d-flex align-items-center justify-content-center'>クーポン発行サービス</div>")
+        sRet.Append("<div id = 'HeaderArea' Class='d-flex row' style='height: 150px'>")
+        sRet.Append("<div Class='col-2'></div>")
+        sRet.Append("<div Class='col-2'></div>")
+        sRet.Append("<div Class='col-6 h1 text-center m-0  d-flex align-items-center justify-content-start'>クーポン発行サービス</div>")
         If Mode = "Login" Then
-            sRet.Append("<div Class='w-25'></div>")
+            sRet.Append("<div Class='col-2'></div>")
         Else
-            sRet.Append("<div Class='w-25 text-end '>")
-            sRet.Append("<div Class='h-50 d-flex align-items-center justify-content-end'>")
-            sRet.Append("<Input  type = 'button' value='ログアウト' id='LogOutbtn' Class='btn btn-secondary btn-lg' onclick='LogOut()'/>")
+            sRet.Append("<div Class='col-2 text-end '>")
+            sRet.Append("<div Class='h-50 d-flex'>")
+            sRet.Append("<div Class='d-grid align-items-center w-100'>")
+            sRet.Append("<Input  type = 'button' value='ログアウト' id='LogOutbtn' Class='btn btn-warning btn-lg' style='height:64%;' onclick='LogOut()'/>")
             sRet.Append("</div>")
-            sRet.Append("<div Class='h-50 d-flex align-items-center justify-content-end'>")
+            sRet.Append("</div>")
+            sRet.Append("<div Class='h-25 d-flex justify-content-start align-items-center'>")
+            sRet.Append("<p Class='h4 m-0'>担当者名：</p>")
+            sRet.Append("</div>")
+            sRet.Append("<div Class='h-25 d-flex justify-content-start align-items-center'>")
             sRet.Append("<p id = 'LoginUserName' Class='h4 m-0'></p>")
             sRet.Append("</div>")
             sRet.Append("</div>")
         End If
         sRet.Append("</div>")
-        sRet.Append("<hr Class='m-0'/>")
+        sRet.Append("<hr Class=''/>")
         Return sRet.ToString
     End Function
 

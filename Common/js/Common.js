@@ -60,7 +60,7 @@ function function_login_check(){
 
 function DspLoginUserName() {
     const LoginUserName = sessionStorage.getItem("UserName");
-    document.getElementById("LoginUserName").textContent = "担当者名：" + LoginUserName;
+    document.getElementById("LoginUserName").textContent =　LoginUserName;
 }
 
 function LogOut() {
