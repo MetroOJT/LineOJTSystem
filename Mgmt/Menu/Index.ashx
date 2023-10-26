@@ -54,7 +54,7 @@ Public Class Index : Implements IHttpHandler
             cDB.DrClose()
             cDB.Dispose()
             If sRet <> "" Then
-                sStatus = sRet
+                sStatus = "NG"
                 cCom.CmnWriteStepLog(sRet)
             End If
 
