@@ -17,6 +17,7 @@ Public Class Index : Implements IHttpHandler
         End Select
     End Sub
 
+    '検索
     Public Function sea(ByVal context As HttpContext) As String
         Dim cCom As New Common
         Dim cDB As New CommonDB
@@ -134,6 +135,7 @@ Public Class Index : Implements IHttpHandler
         Return sJSON
     End Function
     '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    '検索結果表示
     Public Function mr(ByVal context As HttpContext) As String
         Dim cCom As New Common
         Dim cDB As New CommonDB
@@ -146,6 +148,7 @@ Public Class Index : Implements IHttpHandler
         Dim sStatus As String = "OK"
         Dim iCnt As Integer = 1
         Dim sRow As String = ""
+        Dim sError As String = ""
 
         Dim sTempTable As String = ""
 
@@ -196,12 +199,16 @@ Public Class Index : Implements IHttpHandler
                     sRow = " evenRow"
                 End If
 
+                If cDB.DRData("wStatusNumber") <> "200" Then
+                    sError = " text-danger"
+                End If
+
                 sHTML.Append("<tr class=""" & sRow & """>")
                 sHTML.Append("<td><input type=""button""name=""detail"" class=""btn btn-success btn-sm btnDetail"" id=""detail" & cDB.DRData("wRowNo") & """ value=""詳細"" /></td>")
-                sHTML.Append("<td class=""text-center"">&nbsp;" & cDB.DRData("wSendRecv") & "</td>")
-                sHTML.Append("<td class=""text-center"">" & cDB.DRData("wStatusNumber") & "</td>")
-                sHTML.Append("<td align=""left"" class=""text-truncate"" style=""max-width:0px;"">&nbsp;" & cDB.DRData("wLog") & "</td>")
-                sHTML.Append("<td class=""text-center"">" & cDB.DRData("wDatetime") & "</td>")
+                sHTML.Append("<td class=""" & sError & " text-center"">&nbsp;" & cDB.DRData("wSendRecv") & "</td>")
+                sHTML.Append("<td class=""" & sError & " text-center"">" & cDB.DRData("wStatusNumber") & "</td>")
+                sHTML.Append("<td align=""left"" class=""" & sError & " text-truncate"" style=""max-width:0px;"">&nbsp;" & cDB.DRData("wLog") & "</td>")
+                sHTML.Append("<td class=""" & sError & " text-center"">" & cDB.DRData("wDatetime") & "</td>")
                 sHTML.Append("</tr>")
 
                 iCnt = iCnt + 1
@@ -210,6 +217,7 @@ Public Class Index : Implements IHttpHandler
             sHTML.Append("</table>")
 
             sPNList.Clear()
+            sPNList.Append("<div class=""col"">")
             sPNList.Append("<ul class=""pagination"" >")
             sPNList.Append("<li class=""page-item"" id=""pista"">")
             sPNList.Append("<a class=""page-link"" href=""#"" aria-label=""Previous"">")
@@ -236,6 +244,21 @@ Public Class Index : Implements IHttpHandler
             sPNList.Append("</a>")
             sPNList.Append("</li>")
             sPNList.AppendLine("</ul>")
+            sPNList.Append("</div>")
+
+            sPNList.Append("<div class=""col"">")
+            sPNList.Append("<div Class=""row g-3 align-items-center"">")
+            sPNList.Append("<div Class=""col-auto"">")
+            sPNList.Append("<Label for=""PageNumber"" class=""col-form-label"">ページ検索</label>")
+            sPNList.Append("</div>")
+            sPNList.Append("<div Class=""col-auto"">")
+            sPNList.Append("<input type=""text"" inputmode=""numeric"" pattern=""^[1-9][0-9]*$"" oninput=""value = value.replace(/[^0-9]+/i,'');"" id=""PageNumber"" Class=""form-control"" aria-labelledby=""passwordHelpInline"">")
+            sPNList.Append("</div>")
+            sPNList.Append("<div Class=""col-auto"">")
+            sPNList.Append("<input type=""button"" class=""btn btn-primary"" onclick=""PageNumber_Search()"" value=""検索"" />")
+            sPNList.Append("</div>")
+            sPNList.Append("</div>")
+            sPNList.Append("</div>")
 
         Catch ex As Exception
             sRet = ex.Message
@@ -259,6 +282,7 @@ Public Class Index : Implements IHttpHandler
 
     End Function
     '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    'ページネーション
     Public Function pn(ByVal context As HttpContext) As String
         Dim cCom As New Common
         Dim cDB As New CommonDB
@@ -271,6 +295,7 @@ Public Class Index : Implements IHttpHandler
         Dim sStatus As String = "OK"
         Dim iCnt As Integer = 1
         Dim sRow As String = ""
+        Dim sError As String = ""
 
         Dim sTempTable As String = ""
 
@@ -296,6 +321,11 @@ Public Class Index : Implements IHttpHandler
 
             If cDB.ReadDr Then
                 iCount = cDB.DRData("count")
+            End If
+
+            If NowPage > Math.Ceiling(iCount / 10) Then
+                NowPage = Math.Ceiling(iCount / 10)
+                OffSet = 10 * (NowPage - 1)
             End If
 
             sSQL.Clear()
@@ -325,12 +355,17 @@ Public Class Index : Implements IHttpHandler
                     sRow = " evenRow"
                 End If
 
-                sHTML.Append("<tr class=""" & sRow & """>")
+                sError = ""
+                If cDB.DRData("wStatusNumber") <> "200" Then
+                    sError = " text-danger"
+                End If
+
+                sHTML.Append("<tr class=""" & sRow & "" & sError & """>")
                 sHTML.Append("<td><input type=""button""name=""detail"" value=""詳細"" class=""btn btn-success btn-sm btnDetail"" id=""detail" & cDB.DRData("wRowNo") & """ value=""詳細"" /></td>")
-                sHTML.Append("<td class=""text-center"">&nbsp;" & cDB.DRData("wSendRecv") & "</td>")
-                sHTML.Append("<td class=""text-center"">" & cDB.DRData("wStatusNumber") & "</td>")
-                sHTML.Append("<td align=""left"" class=""text-truncate"" style=""max-width:0px;"">&nbsp;" & cDB.DRData("wLog") & "</td>")
-                sHTML.Append("<td class=""text-center"">" & cDB.DRData("wDatetime") & "</td>")
+                sHTML.Append("<td class=""" & sError & " text-center"">&nbsp;" & cDB.DRData("wSendRecv") & "</td>")
+                sHTML.Append("<td class=""" & sError & " text-center"">" & cDB.DRData("wStatusNumber") & "</td>")
+                sHTML.Append("<td align=""left"" class=""" & sError & " text-truncate"" style=""max-width:0px;"">&nbsp;" & cDB.DRData("wLog") & "</td>")
+                sHTML.Append("<td class=""" & sError & " text-center"">" & cDB.DRData("wDatetime") & "</td>")
                 sHTML.Append("</tr>")
 
                 iCnt = iCnt + 1

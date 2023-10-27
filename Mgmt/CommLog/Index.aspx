@@ -11,7 +11,7 @@
     <title>通信ログ</title>
 </head>
 <body>
-    <form runat="server" id="form1" style="margin: 0 auto;">
+    <form runat="server" id="form1" style="margin: 0 auto;" onsubmit="return false">
     <div>
         <%-- type > value > name > id > class > style --%>
         <div class="container">
@@ -67,9 +67,7 @@
         <%-- データベースから取得したデータを表示 --%>
         <div id="DB_Result" style="width: 90%; margin: 0 auto;">
             <div id="CntArea" style="margin-bottom: 20px;"></div>
-            <nav aria-label="Page navigation example" id="PNArea">
-                
-            </nav>
+            <nav aria-label="Page navigation example" id="PNArea" class="row row-cols-auto"></nav>
             <div id="ResultArea"></div>
         </div>
     </div>

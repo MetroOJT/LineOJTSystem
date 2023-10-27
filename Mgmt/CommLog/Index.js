@@ -95,8 +95,9 @@ function Search() {
     });
 }
 
+// ページネーション
 function PagiNation(pid) {
-    switch (pid) {
+    switch (pid) { 
         case "pista":
             Npage = 1;
             break;
@@ -122,8 +123,11 @@ function PagiNation(pid) {
         case "piend":
             Npage = Math.ceil(Nod / 10);
             break;
+        default:
+            Npage = pid;
+            break;  
     }
-    console.log(Npage);
+
     $.ajax({
         url: Ajax_File,
         method: "POST",
@@ -136,6 +140,9 @@ function PagiNation(pid) {
             if (data != "") {
                 if (data.status == "OK") {
                     if (Number(data.count) > 0) {
+                        if (Npage > data.count / 10) {
+                            Npage = Math.ceil(data.count / 10);
+                        }
                         const NpageFm = (parseInt(Npage) - 1) * 10 + 1;
                         var NpageTo = 0;
                         if (Npage == Math.ceil(data.count / 10)) {
@@ -146,6 +153,7 @@ function PagiNation(pid) {
                         document.getElementById("CntArea").innerText = "件数：" + data.count + "件" + " (表示中: " + Npage + " ページ , " + NpageFm + "件 ～ " + NpageTo + "件)";
                         if (data.html != "") {
                             document.getElementById("ResultArea").innerHTML = data.html;
+                            document.getElementById("PageNumber").value = Npage;
                             detail_btn();
                         }
                     } else {
@@ -160,10 +168,9 @@ function PagiNation(pid) {
     });
 };
 
+// 検索結果表示
 function MakeResult() {
     Npage = 1;
-    document.getElementById("CntArea").innerText = "";
-    document.getElementById("ResultArea").innerHTML = "";
 
     $.ajax({
         url: Ajax_File,
@@ -207,6 +214,7 @@ function MakeResult() {
     });
 };
 
+// 通信ログ詳細画面遷移
 function detail_btn(){
     detail_button = document.querySelectorAll(".btnDetail");
     detail_button.forEach(elm => {
@@ -228,6 +236,23 @@ function detail_btn(){
             location.href = "../CommLog/Detail.aspx?" + elm.id;
         });
     });
+}
+
+// エンターキー無効
+function NoEnter() {
+    if (window.event.keyCode == 13) {
+        return false;
+    }
+}
+
+// ページ検索
+function PageNumber_Search() {
+    const PageNumber = document.getElementById("PageNumber").value;
+    if (PageNumber == "") {
+        window.alert("検索するページを入力してください。");
+    } else {
+        PagiNation(parseInt(PageNumber));
+    }
 }
 
 $(function () {
