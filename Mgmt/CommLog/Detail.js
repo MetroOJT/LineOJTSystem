@@ -11,6 +11,13 @@ document.getElementById("DetailStatus").value = DD_Status;
 document.getElementById("DetailLog").value = DD_Log;
 document.getElementById("DetailTime").value = DD_Time;
 
+if (DD_Status != "200") {
+    document.getElementById("DetailSere").style.color = "red";
+    document.getElementById("DetailStatus").style.color = "red";
+    document.getElementById("DetailLog").style.color = "red";
+    document.getElementById("DetailTime").style.color = "red";
+}
+
 // 戻る
 function btnBackClick() {
     window.location = "../Menu/Index.aspx";
