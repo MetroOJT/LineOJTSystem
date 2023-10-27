@@ -56,6 +56,7 @@
         </div>
         <div style="width: 90%; margin: 0 auto;">
             <div id="CntArea"></div>
+            <nav aria-label="Page navigation example" id="PNArea"></nav>
             <div id="ItiranArea">
                 <div id="NumberCnt"></div>
                 <div id="Pager"></div>

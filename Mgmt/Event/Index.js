@@ -1,6 +1,9 @@
 ﻿//function_login_check();
 
 let Ajax_File = "Index.ashx";
+let Npage = 1;
+let page_item = document.querySelectorAll(".page-item");
+let Nod = 0;
 
 $(function () {
     document.getElementById("btnSearch").addEventListener("mouseup", SearchbtnClick, false);
@@ -56,6 +59,7 @@ function SearchbtnClick() {
             if (data != "") {
                 if (data.status == "OK") {
                     if (Number(data.count) > 0) {
+                        Nod = data.count;
                         MakeItiran();
                     } else {
                         document.getElementById("CntArea").innerText = ""
@@ -158,6 +162,7 @@ function btnClearClick() {
 };
 
 function MakeItiran() {
+    Npage = 1;
     document.getElementById("CntArea").innerText = "";
     document.getElementById("ItiranArea").innerHTML = "";
 
@@ -172,9 +177,23 @@ function MakeItiran() {
             if (data != "") {
                 if (data.status == "OK") {
                     if (Number(data.count) > 0) {
-                        document.getElementById("CntArea").innerText = "件数：" + data.count + "件";
+                        const NpageFm = (parseInt(Npage) - 1) * 10 + 1;
+                        let NpageTo = 0;
+                        if (Npage == Math.ceil(data.count / 10)) {
+                            NpageTo = data.count;
+                        } else {
+                            NpageTo = parseInt(Npage) * 10;
+                        }
+                        document.getElementById("CntArea").innerText = "件数：" + data.count + "件" + " (表示中: " + Npage + " ページ , " + NpageFm + "件 ～ " + NpageTo + "件)";
                         if (data.html != "") {
+                            document.getElementById("PNArea").innerHTML = data.pnlist;
                             document.getElementById("ItiranArea").innerHTML = data.html;
+                            page_item = document.querySelectorAll(".page-item");
+                            page_item.forEach(pi => {
+                                pi.addEventListener('click', function () {
+                                    PagiNation(pi.id);
+                                });
+                            });
                         };
                     } else {
                         document.getElementById("ItiranArea").innerText = "該当するユーザーが存在しません。";
@@ -183,6 +202,74 @@ function MakeItiran() {
                     alert("エラーが発生しました。");
                 };
             };
+        }
+    });
+};
+
+function PagiNation(pid) {
+    switch (pid) {
+        case "pista":
+            Npage = 1;
+            break;
+        case "piback":
+            if (Npage > 1) {
+                Npage -= 1;
+                break;
+            }
+        case "pi1":
+            Npage = 1;
+            break;
+        case "pi2":
+            Npage = 2;
+            break;
+        case "pi3":
+            Npage = 3;
+            break;
+        case "pinext":
+            if (Npage < Math.ceil(Nod / 10)) {
+                Npage += 1;
+                break;
+            }
+        case "piend":
+            Npage = Math.ceil(Nod / 10);
+            break;
+    }
+    if (Npage != 1) {
+        document.getElementById("pista").classList.remove("disabled");
+        document.getElementById("piback").classList.remove("disabled");
+    }
+    $.ajax({
+        url: Ajax_File,
+        method: "POST",
+        data: {
+            "mode": "PagiNation",
+            "nowpage": Npage
+        },
+        dataType: "json",
+        success: function (data) {
+            if (data != "") {
+                if (data.status == "OK") {
+                    if (Number(data.count) > 0) {
+                        const NpageFm = (parseInt(Npage) - 1) * 10 + 1;
+                        var NpageTo = 0;
+                        if (Npage == Math.ceil(data.count / 10)) {
+                            NpageTo = data.count;
+                        } else {
+                            NpageTo = parseInt(Npage) * 10;
+                        }
+                        document.getElementById("CntArea").innerText = "件数：" + data.count + "件" + " (表示中: " + Npage + " ページ , " + NpageFm + "件 ～ " + NpageTo + "件)";
+                        if (data.html != "") {
+                            document.getElementById("ItiranArea").innerHTML = data.html;
+                            detail_btn();
+                        }
+                    } else {
+                        document.getElementById("PNArea").innerHTML = "";
+                        document.getElementById("ItiranArea").innerText = "該当するユーザーが存在しません。";
+                    }
+                } else {
+                    alert(data.status);
+                }
+            }
         }
     });
 };
