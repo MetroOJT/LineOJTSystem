@@ -212,3 +212,4 @@ function btnCloseClick() {
         document.getElementById("btnClose").textContent = "閉じる";
     }
 }
+
