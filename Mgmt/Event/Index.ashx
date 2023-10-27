@@ -14,6 +14,8 @@ Public Class Index : Implements IHttpHandler
                 context.Response.Write(Delete(context))
             Case "Itiran"
                 context.Response.Write(Itiran(context))
+            Case "Clear"
+                context.Response.Write(Clear(context))
         End Select
     End Sub
 
@@ -59,13 +61,12 @@ Public Class Index : Implements IHttpHandler
             sSQL.Clear()
             sSQL.Append("CREATE TABLE " & sTempTable)
             sSQL.Append(" (")
-            sSQL.Append("  wEventID         INT NOT NULL")
+            sSQL.Append("  wEventID          INT NOT NULL")
             sSQL.Append("  ,wEventName       VARCHAR(50) NOT NULL")
-            sSQL.Append("  ,wEventStatus     BIT NOT NULL")
+            sSQL.Append("  ,wStatus          BIT(1) NOT NULL")
             sSQL.Append("  ,wScheduleFm      DATE NOT NULL")
             sSQL.Append("  ,wScheduleTo      DATE NOT NULL")
-            sSQL.Append("  ,wUpdate_date     DATE NOT NULL")
-            sSQL.Append("  ,wUpdate_UserID   INT NOT NULL")
+            sSQL.Append("  ,wKeyword         VARCHAR(30) NOT NULL")
             sSQL.Append("  ,PRIMARY KEY (wEventID) ")
             sSQL.Append("  )")
             cDB.ExecuteSQL(sSQL.ToString)
@@ -84,14 +85,16 @@ Public Class Index : Implements IHttpHandler
                 cDB.AddWithValue("@EventStatus", sEventStatus)
             End If
 
-            If sScheduleFm <> "" Then
+            If sScheduleFm <> "" And sScheduleTo <> "" Then
+                sWhere.Append(" AND ScheduleFm <= @ScheduleFm")
+                sWhere.Append(" AND ScheduleTo >= @ScheduleTo")
+                cDB.AddWithValue("@ScheduleFm", sScheduleFm)
+                cDB.AddWithValue("@ScheduleTo", sScheduleTo)
+            ElseIf sScheduleFm <> "" Then
                 sWhere.Append(" AND ScheduleFm >= @ScheduleFm")
                 cDB.AddWithValue("@ScheduleFm", sScheduleFm)
-            End If
-
-
-            If sScheduleTo <> "" Then
-                sWhere.Append(" AND ScheduleTo <= @ScheduleTo")
+            ElseIf sScheduleTo <> "" Then
+                sWhere.Append(" AND ScheduleTo >= @ScheduleTo")
                 cDB.AddWithValue("@ScheduleTo", sScheduleTo)
             End If
 
@@ -116,8 +119,8 @@ Public Class Index : Implements IHttpHandler
             sSQL.Append(" ,Status")
             sSQL.Append(" ,ScheduleFm")
             sSQL.Append(" ,ScheduleTo")
-            sSQL.Append(" ,wKeyword")
-            sSQL.Append(" FROM " & cCom.gctbl_UserMst)
+            sSQL.Append(" ,Keyword")
+            sSQL.Append(" FROM " & cCom.gctbl_EventMst)
             sSQL.Append(" WHERE 1=1" & sWhere.ToString)
             sSQL.Append(" ORDER BY EventID")
             iCount = cDB.ExecuteSQL(sSQL.ToString)
@@ -164,12 +167,12 @@ Public Class Index : Implements IHttpHandler
 
             sSQL.Clear()
             sSQL.Append(" DELETE FROM " & sTempTable)
-            sSQL.Append(" WHERE wUserID IN (" & sDelList & ")")
+            sSQL.Append(" WHERE wEventID IN (" & sDelList & ")")
             cDB.ExecuteSQL(sSQL.ToString)
 
             sSQL.Clear()
-            sSQL.Append(" DELETE FROM " & cCom.gctbl_UserMst)
-            sSQL.Append(" WHERE um_UserID IN (" & sDelList & ")")
+            sSQL.Append(" DELETE FROM " & cCom.gctbl_EventMst)
+            sSQL.Append(" WHERE EventID IN (" & sDelList & ")")
             cDB.ExecuteSQL(sSQL.ToString)
 
 
@@ -220,50 +223,59 @@ Public Class Index : Implements IHttpHandler
             sSQL.Append(" SELECT")
             sSQL.Append(" COUNT(*) AS Count")
             sSQL.Append(" FROM " & sTempTable)
+            sSQL.Append(" WHERE wEventID <> 0")
             cDB.SelectSQL(sSQL.ToString)
 
             If cDB.ReadDr Then
-                iCount = cDB.DRData("count")
+                iCount = cDB.DRData("Count")
             End If
 
 
             sSQL.Clear()
             sSQL.Append(" SELECT")
-            sSQL.Append("  wUserID")
-            sSQL.Append(" ,wName")
-            sSQL.Append(" ,wAge")
-            sSQL.Append(" ,wAddress")
-            sSQL.Append(" ,DATE_FORMAT(wUpdateTime,'%Y/%m/%d %T') AS wUpdateTime")
+            sSQL.Append(" wEventID")
+            sSQL.Append(" ,wEventName")
+            sSQL.Append(" ,wScheduleFm")
+            sSQL.Append(" ,wScheduleTo")
+            sSQL.Append(" ,wKeyword")
+            sSQL.Append(" ,wStatus")
             sSQL.Append(" FROM " & sTempTable)
-            sSQL.Append(" ORDER BY wRowNo")
+            sSQL.Append(" WHERE wEventID <> 0")
+            sSQL.Append(" ORDER BY wEventID")
             cDB.SelectSQL(sSQL.ToString)
 
             sHTML.Clear()
-            sHTML.Append("<table border=""1"" width=""1000px"" style=""border-collapse: collapse;"">")
+            sHTML.Append("<table border=""1"" width=""1000px"" style=""border-collapse: collapse;"" class=""table table-striped table-bordered"">")
             sHTML.Append("<tr style=""background-color: #CCCCCC;"">")
-            sHTML.Append("<td width=""05%"" align=""center"">選択</td>")
-            sHTML.Append("<td width=""20%"" align=""center"">氏名</td>")
-            sHTML.Append("<td width=""10%"" align=""center"">年齢</td>")
-            sHTML.Append("<td width=""35%"" align=""center"">住所</td>")
-            sHTML.Append("<td width=""30%"" align=""center"">登録日</td>")
+            sHTML.Append("<td width=""06%"" align=""center"">選択</td>")
+            sHTML.Append("<td width=""30%"" align=""center"">イベント名</td>")
+            sHTML.Append("<td width=""30%"" align=""center"">スケジュール</td>")
+            sHTML.Append("<td width=""24%"" align=""center"">キーワード</td>")
+            sHTML.Append("<td width=""10%"" align=""center"">ステータス</td>")
+            sHTML.Append("</tr>")
             Do Until Not cDB.ReadDr
 
                 sRow = ""
                 If iCnt Mod 2 = 0 Then
                     sRow = " evenRow"
                 End If
+                Dim Status As String = ""
+                If cDB.DRData("wStatus") = 1 Then
+                    Status = "オン"
+                Else
+                    Status = "オフ"
+                End If
 
                 sHTML.Append("<tr class=""" & sRow & """>")
-                sHTML.Append("<td align=""center""><input type=""checkbox""name=""chkUser"" id=""chk" & iCnt & """ value=""" & cDB.DRData("wUserID") & """ /></td>")
-                sHTML.Append("<td align=""left"">&nbsp;" & cDB.DRData("wName") & "</td>")
-                sHTML.Append("<td align=""center"">" & cDB.DRData("wAge") & "</td>")
-                sHTML.Append("<td align=""left"">&nbsp;" & cDB.DRData("wAddress") & "</td>")
-                sHTML.Append("<td align=""center"">" & cDB.DRData("wUpdateTime") & "</td>")
+                sHTML.Append("<td align=""center""><input type=""checkbox""name=""chkEvent"" id=""chk" & iCnt & """ value=""" & cDB.DRData("wEventID") & """ /></td>")
+                sHTML.Append("<td align=""left"">&nbsp;" & cDB.DRData("wEventName") & "</td>")
+                sHTML.Append("<td align=""left"">" & cDB.DRData("wScheduleFm") & "～" & cDB.DRData("wScheduleTo") & "</td>")
+                sHTML.Append("<td align=""left"">&nbsp;" & cDB.DRData("wKeyword") & "</td>")
+                sHTML.Append("<td align=""center"">&nbsp;" & Status & "</td>")
                 sHTML.Append("</tr>")
 
                 iCnt = iCnt + 1
             Loop
-            sHTML.Append("</tr>")
             sHTML.Append("</table>")
 
         Catch ex As Exception
@@ -279,6 +291,41 @@ Public Class Index : Implements IHttpHandler
             hHash.Add("status", sStatus)
             hHash.Add("html", sHTML.ToString)
             hHash.Add("count", iCount)
+
+            sJSON = jJSON.Serialize(hHash)
+        End Try
+
+        Return sJSON
+    End Function
+
+    Public Function Clear(ByVal context As HttpContext) As String
+        Dim cCom As New Common
+        Dim cDB As New CommonDB
+        Dim Cki As New Cookie
+        Dim sSQL As New StringBuilder
+        Dim jJSON As New JavaScriptSerializer
+        Dim sJSON As String = ""
+        Dim hHash As New Hashtable
+        Dim sRet As String = ""
+        Dim sStatus As String = "OK"
+        Try
+            Cki.Release_Cookies("Event")
+            Cki.Release_Cookies("EventStatus")
+            Cki.Release_Cookies("ScheduleFm")
+            Cki.Release_Cookies("ScheduleTo")
+            Cki.Release_Cookies("Keyword")
+            Cki.Release_Cookies("TempTable")
+        Catch ex As Exception
+            sRet = ex.Message
+        Finally
+            cDB.DrClose()
+            cDB.Dispose()
+            If sRet <> "" Then
+                sStatus = "NG"
+                cCom.CmnWriteStepLog(sRet)
+            End If
+
+            hHash.Add("status", sStatus)
 
             sJSON = jJSON.Serialize(hHash)
         End Try

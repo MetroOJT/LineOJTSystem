@@ -1,3 +1,17 @@
 ﻿.evenRow {
     background-color:#E8EFFF;
 }
+#btnOption input, #btnOption div{
+    margin: 0 20px 12px 20px;
+}
+
+#Condition div{
+    margin-bottom: 12px;
+}
+#txtDateFm, #txtDateTo{
+    width: 25%;
+    display: inline-block;
+}
+#txtEvent, #txtKeyword {
+    width: 25%;
+}
