@@ -14,13 +14,11 @@ var detail_button = document.querySelectorAll(".btnDetail");
 
 // 通信ログ検索
 function btnSearchClick() {
-    console.log("通信ログ検索");
     Search();
 }
 
 // 通信ログクリア
 function btnClearClick() {
-    console.log("検索条件を初期値に変更");
     const initial_time = document.querySelectorAll(".initial-time");
     initial_time.forEach(it => {
         it.value = "";
@@ -34,7 +32,6 @@ function btnClearClick() {
 
 // 戻る
 function btnBackClick() {
-    console.log("メニュー画面へ遷移");
     window.location = "../Menu/Index.aspx";
 }
 
@@ -69,7 +66,6 @@ function Search() {
     let DateTo = document.getElementById("DateTo").value;
     let Sere = document.getElementById("Sere").value;
     let Status = document.getElementById("Status").value;
-    console.log(DateFm, DateTo, Sere, Status);
 
     $.ajax({
         url: Ajax_File,
@@ -89,11 +85,9 @@ function Search() {
         success: function (data) {
             if (data != "") {
                 if (data.status == "OK") {
-                    console.log("検索完了")
                     Nod = data.count;
                     MakeResult();
                 } else {
-                    console.log("検索エラー")
                     alert(data.status);
                 };
             };
@@ -155,6 +149,7 @@ function PagiNation(pid) {
                             detail_btn();
                         }
                     } else {
+                        document.getElementById("PNArea").innerHTML = "";
                         document.getElementById("ResultArea").innerText = "該当するユーザーが存在しません。";
                     }
                 } else {
@@ -201,6 +196,7 @@ function MakeResult() {
                             detail_btn();
                         }
                     } else {
+                        document.getElementById("PNArea").innerHTML = "";
                         document.getElementById("ResultArea").innerText = "該当するユーザーが存在しません。";
                     }
                 } else {
