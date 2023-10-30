@@ -7,21 +7,18 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="Index.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <%="<script src='../../Common/js/Common.js?ts=" & cCom.CmnTimeStamp & "'></script>" %>
     <title>通信ログ</title>
 </head>
 <body>
-    <form runat="server" id="form1" style="width: 80%; margin: 0 auto;">
+    <form runat="server" id="form1" style="margin: 0 auto;" onsubmit="return false">
     <div>
         <%-- type > value > name > id > class > style --%>
-        <div id="Header" class="row">
-            <label class="h1 col-7" id="SystemTitle">クーポン発行サービス</label>
-            <div class="col-5"><input type="button" value="ログアウト" name="btnLogOut" id="btnLogOut" class="btn btn-warning w-75" /></div>
-            <div class="w-100"></div>
-            <div class="col-7"></div>
-            <label class="col-5 h6" id="Manager"></label>
+        <div class="container">
+            <%=cCom.CmnDspHeader() %>
         </div>
 
-        <div class="accordion">
+        <div class="accordion" style="width: 90%; margin: 0 auto;">
             <div class="accordion-item">
                 <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
                     <div id="btnOption" class="row accordion-body">
@@ -68,11 +65,9 @@
         </div>
 
         <%-- データベースから取得したデータを表示 --%>
-        <div id="DB_Result">
+        <div id="DB_Result" style="width: 90%; margin: 0 auto;">
             <div id="CntArea" style="margin-bottom: 20px;"></div>
-            <nav aria-label="Page navigation example" id="PNArea">
-                
-            </nav>
+            <nav aria-label="Page navigation example" id="PNArea" class="row row-cols-auto"></nav>
             <div id="ResultArea"></div>
         </div>
     </div>

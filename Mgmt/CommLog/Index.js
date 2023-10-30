@@ -1,5 +1,6 @@
 ﻿// ＜jsの最初に追加＞
 function_login_check();
+DspLoginUserName();
 
 const uid = sessionStorage.getItem("UserID");
 const u_admin = sessionStorage.getItem("Admin");
@@ -11,25 +12,13 @@ var Npage = 1;
 var page_item = document.querySelectorAll(".page-item");
 var detail_button = document.querySelectorAll(".btnDetail");
 
-document.getElementById("Manager").textContent = "担当者名: " + u_name;
-
-// ログアウト
-function btnLogOutClick() {
-    // ＜ログアウトをしたときの処理に追加＞
-    sessionStorage.removeItem("unauthorized_access");
-    window.location = "../Login/Index.aspx";
-    console.log("ログアウト");
-}
-
 // 通信ログ検索
 function btnSearchClick() {
-    console.log("通信ログ検索");
     Search();
 }
 
 // 通信ログクリア
 function btnClearClick() {
-    console.log("検索条件を初期値に変更");
     const initial_time = document.querySelectorAll(".initial-time");
     initial_time.forEach(it => {
         it.value = "";
@@ -43,7 +32,6 @@ function btnClearClick() {
 
 // 戻る
 function btnBackClick() {
-    console.log("メニュー画面へ遷移");
     window.location = "../Menu/Index.aspx";
 }
 
@@ -55,15 +43,15 @@ function btnCloseClick() {
     if (oac == 1) {
         oac = 0;        
         cona.classList.remove("col-10");
-        cona.classList.add("col-7");
+        cona.classList.add("col-8");
         conb.classList.remove("col-2");
-        conb.classList.add("col-5");
+        conb.classList.add("col-4");
         document.getElementById("btnClose").textContent = "検索する際はこちらのボタンをクリックしてください";
     } else {
         oac = 1;
-        cona.classList.remove("col-7");
+        cona.classList.remove("col-8");
         cona.classList.add("col-10");
-        conb.classList.remove("col-5");
+        conb.classList.remove("col-4");
         conb.classList.add("col-2");
         document.getElementById("btnClose").textContent = "閉じる";
     }
@@ -78,7 +66,6 @@ function Search() {
     let DateTo = document.getElementById("DateTo").value;
     let Sere = document.getElementById("Sere").value;
     let Status = document.getElementById("Status").value;
-    console.log(DateFm, DateTo, Sere, Status);
 
     $.ajax({
         url: Ajax_File,
@@ -98,11 +85,9 @@ function Search() {
         success: function (data) {
             if (data != "") {
                 if (data.status == "OK") {
-                    console.log("検索完了")
                     Nod = data.count;
                     MakeResult();
                 } else {
-                    console.log("検索エラー")
                     alert(data.status);
                 };
             };
@@ -110,8 +95,9 @@ function Search() {
     });
 }
 
+// ページネーション
 function PagiNation(pid) {
-    switch (pid) {
+    switch (pid) { 
         case "pista":
             Npage = 1;
             break;
@@ -137,8 +123,11 @@ function PagiNation(pid) {
         case "piend":
             Npage = Math.ceil(Nod / 10);
             break;
+        default:
+            Npage = pid;
+            break;  
     }
-    console.log(Npage);
+
     $.ajax({
         url: Ajax_File,
         method: "POST",
@@ -151,19 +140,24 @@ function PagiNation(pid) {
             if (data != "") {
                 if (data.status == "OK") {
                     if (Number(data.count) > 0) {
+                        if (Npage > data.count / 10) {
+                            Npage = Math.ceil(data.count / 10);
+                        }
                         const NpageFm = (parseInt(Npage) - 1) * 10 + 1;
                         var NpageTo = 0;
                         if (Npage == Math.ceil(data.count / 10)) {
-                            NpageTo = (parseInt(Npage) - 1) * 10 + (data.count % 10);
+                            NpageTo = data.count;
                         } else {
                             NpageTo = parseInt(Npage) * 10;
                         }
                         document.getElementById("CntArea").innerText = "件数：" + data.count + "件" + " (表示中: " + Npage + " ページ , " + NpageFm + "件 ～ " + NpageTo + "件)";
                         if (data.html != "") {
                             document.getElementById("ResultArea").innerHTML = data.html;
+                            document.getElementById("PageNumber").value = Npage;
                             detail_btn();
                         }
                     } else {
+                        document.getElementById("PNArea").innerHTML = "";
                         document.getElementById("ResultArea").innerText = "該当するユーザーが存在しません。";
                     }
                 } else {
@@ -174,9 +168,9 @@ function PagiNation(pid) {
     });
 };
 
+// 検索結果表示
 function MakeResult() {
-    document.getElementById("CntArea").innerText = "";
-    document.getElementById("ResultArea").innerHTML = "";
+    Npage = 1;
 
     $.ajax({
         url: Ajax_File,
@@ -192,7 +186,7 @@ function MakeResult() {
                         const NpageFm = (parseInt(Npage) - 1) * 10 + 1;
                         var NpageTo = 0;
                         if (Npage == Math.ceil(data.count / 10)) {
-                            NpageTo = (parseInt(Npage) - 1) * 10 + (data.count % 10);
+                            NpageTo = data.count;
                         } else {
                             NpageTo = parseInt(Npage) * 10;
                         }
@@ -209,6 +203,7 @@ function MakeResult() {
                             detail_btn();
                         }
                     } else {
+                        document.getElementById("PNArea").innerHTML = "";
                         document.getElementById("ResultArea").innerText = "該当するユーザーが存在しません。";
                     }
                 } else {
@@ -219,6 +214,7 @@ function MakeResult() {
     });
 };
 
+// 通信ログ詳細画面遷移
 function detail_btn(){
     detail_button = document.querySelectorAll(".btnDetail");
     detail_button.forEach(elm => {
@@ -242,8 +238,24 @@ function detail_btn(){
     });
 }
 
+// エンターキー無効
+function NoEnter() {
+    if (window.event.keyCode == 13) {
+        return false;
+    }
+}
+
+// ページ検索
+function PageNumber_Search() {
+    const PageNumber = document.getElementById("PageNumber").value;
+    if (PageNumber == "") {
+        window.alert("検索するページを入力してください。");
+    } else {
+        PagiNation(parseInt(PageNumber));
+    }
+}
+
 $(function () {
-    document.getElementById("btnLogOut").addEventListener("click", btnLogOutClick, false);
     document.getElementById("btnSearch").addEventListener("click", btnSearchClick, false);
     document.getElementById("btnClear").addEventListener("click", btnClearClick, false);
     document.getElementById("btnBack").addEventListener("click", btnBackClick, false);

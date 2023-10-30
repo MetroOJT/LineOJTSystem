@@ -10,9 +10,9 @@
     <title>メニュー</title>
 </head>
 <body>
-    <form id="form1" runat="server" style="width: 80%; margin: 0 auto;">
+    <form id="form1" runat="server">
     <div class="container">
-        <%=cCom.CmnDspHeader() %>
+            <%=cCom.CmnDspHeader() %>
         <div id="option" style="width: 40%; display: flex; flex-direction: column; margin: 0 auto;"></div>
     </div>
     </form>
