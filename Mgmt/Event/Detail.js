@@ -196,6 +196,7 @@ function DeletebtnClick() {
 };
 
 function BackbtnClick() {
+    sessionStorage.removeItem("EventID");
     location.href = "../Menu/Index.aspx";
 };
 
