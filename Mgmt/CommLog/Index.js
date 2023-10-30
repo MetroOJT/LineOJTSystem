@@ -203,6 +203,7 @@ function MakeResult() {
                             detail_btn();
                         }
                     } else {
+                        document.getElementById("CntArea").innerText = "";
                         document.getElementById("PNArea").innerHTML = "";
                         document.getElementById("ResultArea").innerText = "該当するユーザーが存在しません。";
                     }
