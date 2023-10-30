@@ -196,6 +196,7 @@ function DeletebtnClick() {
 };
 
 function BackbtnClick() {
+    sessionStorage.removeItem("EventID");
     location.href = "../Menu/Index.aspx";
 };
 
@@ -231,7 +232,7 @@ function MessageUpbtnClick() {
     let UpIndex;
     let MessageArea = document.getElementById("MessageArea");
     let MessageContainer = MessageArea.getElementsByClassName("MessageContainer");
-    let UpId = $(event.target).parent().parent().attr("id");
+    let UpId = $(event.target).parent().parent().parent().attr("id");
 
     for (let i = 0; i < MessageContainer.length; i++) {
         if (UpId == MessageContainer[i].id) {
@@ -257,7 +258,7 @@ function MessageDownbtnClick() {
     let DownIndex;
     let MessageArea = document.getElementById("MessageArea");
     let MessageContainer = MessageArea.getElementsByClassName("MessageContainer");
-    let DownId = $(event.target).parent().parent().attr("id");
+    let DownId = $(event.target).parent().parent().parent().attr("id");
 
     for (let i = 0; i < MessageContainer.length; i++) {
         if (DownId == MessageContainer[i].id) {
@@ -275,7 +276,7 @@ function MessageDownbtnClick() {
 function MessageDeletebtnClick() {
     console.log(document.getElementsByClassName("txtMessage").length)
     if (document.getElementsByClassName("txtMessage").length > 1) {
-        $(event.target).parent().parent().remove();
+        $(event.target).parent().parent().parent().remove();
 
         for (var i = 0; i <= document.getElementsByClassName("MessageContainer").length - 1; i++) {
             document.getElementsByClassName("MessageContainer")[i].id = "MessageContainer" + i;
