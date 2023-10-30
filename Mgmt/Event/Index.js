@@ -7,12 +7,12 @@ let Nod = 0;
 
 $(function () {
     document.getElementById("btnSearch").addEventListener("mouseup", SearchbtnClick, false);
-    document.getElementById("btnUpdIns").addEventListener("mouseup", btnUpdInsClick, false);
-    document.getElementById("btnDelete").addEventListener("mouseup", btnDeleteClick, false);
-    document.getElementById("btnClear").addEventListener("click", btnClearClick, false);
+    //document.getElementById("btnUpdIns").addEventListener("mouseup", btnUpdInsClick, false);
+    //document.getElementById("btnDelete").addEventListener("mouseup", btnDeleteClick, false);
+    //document.getElementById("btnClear").addEventListener("click", btnClearClick, false);
     document.getElementById("btnBack").addEventListener("mouseup", btnBackClick, false);
     document.getElementById("btnClose").addEventListener("mouseup", btnCloseClick, false);
-    document.getElementById("modalBtnDelete").addEventListener("click", delete_DB, false);
+    //document.getElementById("modalBtnDelete").addEventListener("click", delete_DB, false);
 });
 
 // モーダルの内容変更
@@ -216,15 +216,6 @@ function PagiNation(pid) {
                 Npage -= 1;
                 break;
             }
-        case "pi1":
-            Npage = 1;
-            break;
-        case "pi2":
-            Npage = 2;
-            break;
-        case "pi3":
-            Npage = 3;
-            break;
         case "pinext":
             if (Npage < Math.ceil(Nod / 10)) {
                 Npage += 1;
@@ -232,6 +223,9 @@ function PagiNation(pid) {
             }
         case "piend":
             Npage = Math.ceil(Nod / 10);
+            break;
+        default:
+            Npage = parseInt(pid.slice(2));
             break;
     }
     if (Npage != 1) {
@@ -259,8 +253,14 @@ function PagiNation(pid) {
                         }
                         document.getElementById("CntArea").innerText = "件数：" + data.count + "件" + " (表示中: " + Npage + " ページ , " + NpageFm + "件 ～ " + NpageTo + "件)";
                         if (data.html != "") {
+                            document.getElementById("PNArea").innerHTML = data.pnlist;
                             document.getElementById("ItiranArea").innerHTML = data.html;
-                            detail_btn();
+                            page_item = document.querySelectorAll(".page-item");
+                            page_item.forEach(pi => {
+                                pi.addEventListener('click', function () {
+                                    PagiNation(pi.id);
+                                });
+                            });
                         }
                     } else {
                         document.getElementById("PNArea").innerHTML = "";

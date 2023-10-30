@@ -16,9 +16,9 @@
                 <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
                     <div id="btnOption" class="row accordion-body">
                         <input type="button" value="検索" name="Search" id="btnSearch" class="col-sm btn btn-outline-primary"/>
-                        <input type="button" value="登録・更新" name="UpdIns" id="btnUpdIns" class="col-sm btn btn-outline-primary"/>
+                        <%--<input type="button" value="登録・更新" name="UpdIns" id="btnUpdIns" class="col-sm btn btn-outline-primary"/>
                         <input type="button" value="削除" name="Delete" id="btnDelete" class="col-sm btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop"/>
-                        <input type="button" value="クリア" name="Clear" id="btnClear" class="col-sm btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop"/>
+                        <input type="button" value="クリア" name="Clear" id="btnClear" class="col-sm btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop"/>--%>
                         <div class="col-sm"></div>
                         <input type="button" value="戻る" name="Back" id="btnBack" class="col-sm btn btn-outline-secondary"/>
                     </div>
@@ -64,7 +64,7 @@
             </div>
         </div>
     </form>
-    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <%--<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header">
@@ -81,7 +81,7 @@
             </div>
           </div>
         </div>
-    </div>
+    </div>--%>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
     <script src="../../Common/js/Common.js"></script>
