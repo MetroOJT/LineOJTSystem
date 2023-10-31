@@ -1,23 +1,29 @@
-﻿//function_login_check();
+﻿//ログインなされているかをチェックする関数
+function_login_check();
 
 let Ajax_File = "Detail.ashx";
+
+//直前に閲覧したページのURLを保持しておく変数
 let Referrer = document.referrer;
 
 $(function () {
+    //ヘッダーの担当者名を入れる関数
     DspLoginUserName();
+
     document.getElementById("Savebtn").addEventListener("mouseup", SavebtnClick, false);
     document.getElementById("Deletebtn").addEventListener("mouseup", DeletebtnClick, false);
     document.getElementById("Backbtn").addEventListener("mouseup", BackbtnClick, false);
     document.getElementById("MessageAddbtn").addEventListener("mouseup", MessageAddbtnClick, false);
+
+    //登録モードか更新モードかを判別する
     if (sessionStorage.getItem("EventID") != null) {
         EventLoad();
     } else {
         MessageAddbtnClick();
     }
-
-
 })
 
+//更新するデータをロードする関数
 function EventLoad() {
     $.ajax({
         url: Ajax_File,
@@ -30,15 +36,17 @@ function EventLoad() {
         success: function (data) {
             if (data != "") {
                 if (data.status == "OK") {
-                    alert("Load成功");
+                    //更新対象のデータをフォームに入力された状態で表示
+                    $("#Savebtn").val("更新");
                     $("#txtEventName").val(data.EventName);
+
                     if (data.EventStatus == 1) {
                         $('input[value="1"]').prop('checked', true);
                     } else if (data.EventStatus === 0) {
                         $('input[value="0"]').prop('checked', true);
                     }
-                    let ScheduleFm = data.ScheduleFm.replaceAll("/", "-");
 
+                    let ScheduleFm = data.ScheduleFm.replaceAll("/", "-");
                     if (ScheduleFm != "1900-01-01") {
                         $("#txtScheduleFm").val(ScheduleFm);
                     } else {
@@ -54,7 +62,6 @@ function EventLoad() {
 
                     $("#txtKeyword").val(data.Keyword);
 
-                    console.log(data.Html)
                     document.getElementById("MessageArea").innerHTML = data.Html;
 
                 } else {
@@ -65,7 +72,7 @@ function EventLoad() {
     });
 };
 
-
+//登録・更新を行う関数
 function SavebtnClick() {
 
     let EventName = $("#txtEventName").val();
@@ -76,6 +83,8 @@ function SavebtnClick() {
     let Messages = [];
     let work = "";
 
+
+    //スケジュールの日付を整形
     if ($("input[name=EventStatus]:checked").is(':checked')) {
         EventStatus = $('input[name="EventStatus"]:checked').val();
 
@@ -90,7 +99,7 @@ function SavebtnClick() {
         };
     };
 
-
+    //各データの入力チェック
     if (EventName == "") {
         alert("イベント名を入力してください。")
         return false;
@@ -111,6 +120,7 @@ function SavebtnClick() {
         return false;
     };
 
+    //空白のメッセージコンテナがないか、メッセージが一つ以上入力されているかを判別
     if (document.getElementsByClassName("txtMessage").length != 0) {
         for(ele of document.getElementsByClassName("txtMessage")) {
             if (ele.value == "") {
@@ -123,16 +133,22 @@ function SavebtnClick() {
         return false;
     }
 
+    //メッセージをリストに入れこむ
     for(ele of document.getElementsByClassName("txtMessage")) {
         Messages.push(ele.value)
     }
-    console.log(Messages)
 
-
-    if (!window.confirm("登録を行いますか？")) {
-        return false;
-    };
-
+    //確認アラート表示
+    if ($("#Savebtn").val() == "登録") {
+        if (!window.confirm("登録を行いますか？")) {
+            return false;
+        };
+    } else {
+        if (!window.confirm("更新を行いますか？")) {
+            return false;
+        };
+    }
+    
     $.ajax({
         url: Ajax_File,
         method: "POST",
@@ -155,8 +171,18 @@ function SavebtnClick() {
                     if (data.ErrorMessage != "") {
                         alert(data.ErrorMessage);
                     } else {
-                        alert("登録が完了しました。");
+                        //完了アラート表示
+                        if (data.Mode == "Ins") {
+                            alert("登録が完了しました。");
+                        } else {
+                            alert("更新が完了しました。");
+                        }
+                        
+                        //更新・登録したEventIDをセッション変数としてセットする
                         sessionStorage.setItem("EventID", data.EventID)
+
+                        //ページをリロードし、登録ページの場合は更新ページに切り替わる
+                        window.location.reload(true);
                     }
 
                 } else {
@@ -167,8 +193,10 @@ function SavebtnClick() {
     });
 };
 
+//データを削除する関数
 function DeletebtnClick() {
 
+    //確認アラート
     if (!window.confirm("本当に削除しますか？")) {
         return false;
     };
@@ -184,8 +212,13 @@ function DeletebtnClick() {
         success: function (data) {
             if (data != "") {
                 if (data.status == "OK") {
+                    //完了アラート
                     alert("データを削除しました。");
+
+                    //セッション変数「EventID」を削除する
                     sessionStorage.removeItem("EventID");
+
+                    //直前に閲覧したページに遷移する
                     window.location.href = Referrer;
                 } else {
                     alert("エラーが発生しました。");
@@ -195,11 +228,16 @@ function DeletebtnClick() {
     });
 };
 
+// メニュー画面に戻る関数
 function BackbtnClick() {
+    //セッション変数「EventID」を削除する
     sessionStorage.removeItem("EventID");
-    location.href = "../Menu/Index.aspx";
+
+    //メニュー画面へ遷移する
+    window.location.href = "../Menu/Index.aspx";
 };
 
+//メッセージコンテナを一つ追加する関数
 function MessageAddbtnClick() {
 
     if (document.getElementsByClassName("MessageContainer").length < 5) {

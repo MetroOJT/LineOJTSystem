@@ -19,14 +19,14 @@
             <div id="FormArea" class="">
                 <div id="ButtonArea" class="row mb-3">
                     <div class="col-2 d-grid">
-                    <input type="button" id="Savebtn" class="btn btn-primary btn-lg" value="登録" />
+                    <input type="button" id="Savebtn" class="btn btn-outline-primary btn-lg" value="登録" />
                     </div>
                     <div class="col-2 d-grid">
-                    <input type="button" id="Deletebtn" class="btn btn-danger btn-lg" value="削除" />
+                    <input type="button" id="Deletebtn" class="btn btn-outline-danger btn-lg" value="削除" />
                     </div>
                     <div class="col-6"></div>
                     <div class="col-2 d-grid">
-                    <input type="button" id="Backbtn" class="btn btn-secondary btn-lg" value="戻る" />
+                    <input type="button" id="Backbtn" class="btn btn-outline-secondary btn-lg" value="戻る" />
                     </div>
                 </div>
                 <div class="row mb-3">
@@ -75,10 +75,13 @@
                     <div class="col-4"></div>    
                 </div>
             </div>
-            <p class="m-0" style="font-weight:bold;">※メッセージは5個まで追加できます</p>
+            <p class="mt-5 h5">※メッセージは5個まで追加できます</p>
             <div id="MessageArea" class="row"></div>
-            <div id="MessagebtnArea">
-                <input type="button" id="MessageAddbtn" value="メッセージ追加" />
+            <div id="MessagebtnArea" class="row mt-2 mb-2">
+                <div class="col-2">
+                <input type="button" id="MessageAddbtn" class="btn btn-primary btn-lg w-100" value="メッセージ追加" />
+                </div>
+                <div class="col-10"></div>
             </div>
         </div>
     </form>

@@ -80,20 +80,39 @@ Public Class Detail : Implements IHttpHandler
                 sHTML.Clear()
                 Do Until Not cDB.ReadDr
 
-                    sHTML.Append("<div class=""MessageContainer"" id=""MessageContainer" & iCnt & """>")
+                    sHTML.Clear()
+                    sHTML.Append("<div class=""MessageContainer border border-secondary border-3 mb-2"" id=""MessageContainer" & iCnt & """>")
                     sHTML.Append("<div class=""MessagebtnArea row"">")
-                    sHTML.Append("<input type=""button"" id =""MessageUpbtn" & iCnt & """value=""△"" onclick=""MessageUpbtnClick()""/>")
-                    sHTML.Append("<input type=""button"" id =""MessageDownbtn" & iCnt & """value=""▽"" onclick=""MessageDownbtnClick()""/>")
-                    sHTML.Append("<input type=""button"" id =""MessageDeletebtn" & iCnt & """value=""×"" onclick=""MessageDeletebtnClick()""/>")
+                    sHTML.Append("<div class=""col-1""></div>")
+                    sHTML.Append("<div class=""col-7""></div>")
+                    sHTML.Append("<div class=""col-1 d-grid"">")
+                    sHTML.Append("<input type=""image"" style=""width:30px; height:30px;"" src=""../../Common/img/up_triangle.png"" id =""MessageUpbtn" & iCnt & """ onclick=""MessageUpbtnClick(); return false;""/>")
+                    sHTML.Append("</div>")
+                    sHTML.Append("<div class=""col-1 d-grid"">")
+                    sHTML.Append("<input type=""image"" style=""width:30px; height:30px;""  src=""../../Common/img/down_triangle.png"" id =""MessageDownbtn" & iCnt & """ onclick=""MessageDownbtnClick(); return false;""/>")
+                    sHTML.Append("</div>")
+                    sHTML.Append("<div class=""col-1 d-grid"">")
+                    sHTML.Append("<input type=""image"" style=""width:30px; height:30px;"" src=""../../Common/img/cross.png"" id =""MessageDeletebtn" & iCnt & """ onclick=""MessageDeletebtnClick(); return false;""/>")
+                    sHTML.Append("</div>")
+                    sHTML.Append("<div class=""col-1""></div>")
                     sHTML.Append("</div>")
                     sHTML.Append("<div class=""row"">")
                     sHTML.Append("<div class=""col-1""></div>")
-                    sHTML.Append("<textarea class=""txtMessage col-10"" id=""txtMessage" & iCnt & """ maxlength=500 onkeyup=""txtCountUpd()"">" & cDB.DRData("Message") & "</textarea>")
+                    sHTML.Append("<div class=""col-10"">")
+                    sHTML.Append("<textarea class=""txtMessage w-100 form-control"" id=""txtMessage" & iCnt & """ maxlength=500 rows=""5"" onkeyup=""txtCountUpd()"">" & cDB.DRData("Message") & "</textarea>")
+                    sHTML.Append("</div>")
                     sHTML.Append("<div class=""col-1""></div>")
                     sHTML.Append("</div>")
-                    sHTML.Append("<div class=""d-flex"">")
-                    sHTML.Append("<input type=""button"" id =""CouponCodeAddbtn" & iCnt & """value=""クーポンコード追加"" onclick=""CouponCodeAddbtnClick()""/>")
-                    sHTML.Append("<p class=""txtCount"" id=""txtCount" & iCnt & """>0/500</p>")
+                    sHTML.Append("<div class=""row mt-2 mb-2"">")
+                    sHTML.Append("<div class=""col-1""></div>")
+                    sHTML.Append("<div class=""col-2"">")
+                    sHTML.Append("<input type=""button"" class=""btn btn-success"" id =""CouponCodeAddbtn" & iCnt & """value=""クーポンコード追加"" onclick=""CouponCodeAddbtnClick()""/>")
+                    sHTML.Append("</div>")
+                    sHTML.Append("<div class=""col-7""></div>")
+                    sHTML.Append("<div class=""col-1"">")
+                    sHTML.Append("<p class=""txtCount m-0 text-end h5"" id=""txtCount" & iCnt & """>0/500</p>")
+                    sHTML.Append("</div>")
+                    sHTML.Append("<div class=""col-1""></div>")
                     sHTML.Append("</div>")
                     sHTML.Append("</div>")
                     iCnt += 1
@@ -151,7 +170,7 @@ Public Class Detail : Implements IHttpHandler
         Dim sErrorMessage As String = ""
 
         Try
-            sUserID = context.Request.Item("UserID")
+            sUserID = context.Request.Item("Update_UserID")
             sEventID = context.Request.Item("Update_EventID")
             sEventName = context.Request.Item("EventName")
             sEventStatus = context.Request.Item("EventStatus")
@@ -181,12 +200,8 @@ Public Class Detail : Implements IHttpHandler
                 cDB.AddWithValue("@ScheduleTo", sScheduleTo)
             End If
 
+            cDB.AddWithValue("@UserID", sUserID)
 
-            If sUserID = "" Then
-                cDB.AddWithValue("@UserID", "99999")
-            ElseIf sUserID <> "" Then
-                cDB.AddWithValue("@UserID", sUserID)
-            End If
 
             sWhere.Clear()
             sWhere.Append(" WHERE EventName = @EventName")
@@ -273,7 +288,6 @@ Public Class Detail : Implements IHttpHandler
                         cDB.ExecuteSQL(sSQL.ToString)
 
                     Case "Upd"
-                        'cDB.AddWithValue("@EventID", sEventID)
 
                         sSQL.Clear()
                         sSQL.Append(" UPDATE " & cCom.gctbl_EventMst)
@@ -333,6 +347,7 @@ Public Class Detail : Implements IHttpHandler
             hHash.Add("ErrorMessage", sErrorMessage)
             hHash.Add("status", sStatus)
             hHash.Add("EventID", sEventID)
+            hHash.Add("Mode", sMode)
             sJSON = jJSON.Serialize(hHash)
         End Try
 
@@ -412,20 +427,21 @@ Public Class Detail : Implements IHttpHandler
             End If
 
             sHTML.Clear()
-            sHTML.Append("<div class=""MessageContainer border"" id=""MessageContainer" & iCnt & """>")
+            sHTML.Append("<div class=""MessageContainer border border-secondary border-3 mb-2"" id=""MessageContainer" & iCnt & """>")
             sHTML.Append("<div class=""MessagebtnArea row"">")
             sHTML.Append("<div class=""col-1""></div>")
             sHTML.Append("<div class=""col-7""></div>")
             sHTML.Append("<div class=""col-1 d-grid"">")
-            'sHTML.Append("<input type=""image"" src=""../../Common/img/up_triangle.png"" id =""MessageUpbtn" & iCnt & " onclick=""MessageUpbtnClick()"">")
-            sHTML.Append("<input type=""button"" id =""MessageUpbtn" & iCnt & """value=""△"" onclick=""MessageUpbtnClick()""/>")
+            sHTML.Append("<input type=""image"" style=""width:30px; height:30px;"" src=""../../Common/img/up_triangle.png"" id =""MessageUpbtn" & iCnt & """ onclick=""MessageUpbtnClick(); return false;""/>")
+            'sHTML.Append("<input type=""button"" id =""MessageUpbtn" & iCnt & """value=""△"" onclick=""MessageUpbtnClick()""/>")
             sHTML.Append("</div>")
             sHTML.Append("<div class=""col-1 d-grid"">")
-            'sHTML.Append("<input type=""image"" src=""../../Common/img/down_triangle.png"" id =""MessageDownbtn" & iCnt & """value=""▽"" onclick=""MessageDownbtnClick()""/>")
-            sHTML.Append("<input type=""button"" id =""MessageDownbtn" & iCnt & """value=""▽"" onclick=""MessageDownbtnClick()""/>")
+            sHTML.Append("<input type=""image"" style=""width:30px; height:30px;""  src=""../../Common/img/down_triangle.png"" id =""MessageDownbtn" & iCnt & """ onclick=""MessageDownbtnClick(); return false;""/>")
+            'sHTML.Append("<input type=""button"" id =""MessageDownbtn" & iCnt & """value=""▽"" onclick=""MessageDownbtnClick()""/>")
             sHTML.Append("</div>")
             sHTML.Append("<div class=""col-1 d-grid"">")
-            sHTML.Append("<input type=""button"" id =""MessageDeletebtn" & iCnt & """value=""×"" onclick=""MessageDeletebtnClick()""/>")
+            sHTML.Append("<input type=""image"" style=""width:30px; height:30px;"" src=""../../Common/img/cross.png"" id =""MessageDeletebtn" & iCnt & """ onclick=""MessageDeletebtnClick(); return false;""/>")
+            'sHTML.Append("<input type=""button"" id =""MessageDeletebtn" & iCnt & """value=""×"" onclick=""MessageDeletebtnClick()""/>")
             sHTML.Append("</div>")
             sHTML.Append("<div class=""col-1""></div>")
             sHTML.Append("</div>")
@@ -436,14 +452,14 @@ Public Class Detail : Implements IHttpHandler
             sHTML.Append("</div>")
             sHTML.Append("<div class=""col-1""></div>")
             sHTML.Append("</div>")
-            sHTML.Append("<div class=""row"">")
+            sHTML.Append("<div class=""row mt-2 mb-2"">")
             sHTML.Append("<div class=""col-1""></div>")
             sHTML.Append("<div class=""col-2"">")
-            sHTML.Append("<input type=""button"" id =""CouponCodeAddbtn" & iCnt & """value=""クーポンコード追加"" onclick=""CouponCodeAddbtnClick()""/>")
+            sHTML.Append("<input type=""button"" class=""btn btn-success"" id =""CouponCodeAddbtn" & iCnt & """value=""クーポンコード追加"" onclick=""CouponCodeAddbtnClick()""/>")
             sHTML.Append("</div>")
             sHTML.Append("<div class=""col-7""></div>")
             sHTML.Append("<div class=""col-1"">")
-            sHTML.Append("<p class=""txtCount m-0 text-end"" style=""font-weight:bold;"" id=""txtCount" & iCnt & """>0/500</p>")
+            sHTML.Append("<p class=""txtCount m-0 text-end h5"" id=""txtCount" & iCnt & """>0/500</p>")
             sHTML.Append("</div>")
             sHTML.Append("<div class=""col-1""></div>")
             sHTML.Append("</div>")
