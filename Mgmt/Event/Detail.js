@@ -39,10 +39,10 @@ function EventLoad() {
                     //更新対象のデータをフォームに入力された状態で表示
                     $("#Savebtn").val("更新");
                     $("#txtEventName").val(data.EventName);
-
+                    console.log(data.EventStatus)
                     if (data.EventStatus == 1) {
                         $('input[value="1"]').prop('checked', true);
-                    } else if (data.EventStatus === 0) {
+                    } else if (data.EventStatus == 0) {
                         $('input[value="0"]').prop('checked', true);
                     }
 
@@ -61,7 +61,7 @@ function EventLoad() {
                     }
 
                     $("#txtKeyword").val(data.Keyword);
-
+                    console.log(data.Html)
                     document.getElementById("MessageArea").innerHTML = data.Html;
 
                 } else {
@@ -228,7 +228,7 @@ function DeletebtnClick() {
     });
 };
 
-// メニュー画面に戻る関数
+//メニュー画面に戻る関数
 function BackbtnClick() {
     //セッション変数「EventID」を削除する
     sessionStorage.removeItem("EventID");
@@ -239,7 +239,7 @@ function BackbtnClick() {
 
 //メッセージコンテナを一つ追加する関数
 function MessageAddbtnClick() {
-
+    //メッセージが5つ以下かそうではないかを判定する
     if (document.getElementsByClassName("MessageContainer").length < 5) {
         $.ajax({
             url: Ajax_File,
@@ -251,7 +251,10 @@ function MessageAddbtnClick() {
             success: function (data) {
                 if (data != "") {
                     if (data.status == "OK") {
+                        //data.htmlが文字列なのでhtml要素に変換する
                         let html = createElementFromHTML(data.html);
+
+                        //メッセージエリアにメッセージコンテナを追加する
                         document.getElementById("MessageArea").appendChild(html);
                     } else {
                         alert("エラーが発生しました。");
@@ -266,6 +269,7 @@ function MessageAddbtnClick() {
 
 };
 
+//
 function MessageUpbtnClick() {
     let UpIndex;
     let MessageArea = document.getElementById("MessageArea");

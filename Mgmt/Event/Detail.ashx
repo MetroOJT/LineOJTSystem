@@ -80,7 +80,6 @@ Public Class Detail : Implements IHttpHandler
                 sHTML.Clear()
                 Do Until Not cDB.ReadDr
 
-                    sHTML.Clear()
                     sHTML.Append("<div class=""MessageContainer border border-secondary border-3 mb-2"" id=""MessageContainer" & iCnt & """>")
                     sHTML.Append("<div class=""MessagebtnArea row"">")
                     sHTML.Append("<div class=""col-1""></div>")
