@@ -26,7 +26,7 @@
                 <div class="d-flex mt-2">
                     <label>パスワード</label>
                     <div class="InputField_div">
-                        <input type="password" id="user_password" class="border-0 w-100"/>
+                        <input type="password" id="user_password" class="border-0 w-100" autocomplete="off"/>
                         <span id="buttonEye" class="fa fa-eye-slash"></span>
                     </div>
                 </div>
