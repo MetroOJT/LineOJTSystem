@@ -252,7 +252,7 @@ Public Class Index : Implements IHttpHandler
             sPNList.Append("<Label for=""PageNumber"" class=""col-form-label"">ページ検索</label>")
             sPNList.Append("</div>")
             sPNList.Append("<div Class=""col-auto"">")
-            sPNList.Append("<input type=""text"" inputmode=""numeric"" pattern=""^[1-9][0-9]*$"" oninput=""value = value.replace(/[^0-9]+/i,'');"" id=""PageNumber"" Class=""form-control"" aria-labelledby=""passwordHelpInline"">")
+            sPNList.Append("<input type=""text"" inputmode=""numeric"" pattern=""^[1-9][0-9]*$"" maxlength=""8"" oninput=""value = value.replace(/[^0-9]+/i,'');"" id=""PageNumber"" Class=""form-control"" aria-labelledby=""passwordHelpInline"">")
             sPNList.Append("</div>")
             sPNList.Append("<div Class=""col-auto"">")
             sPNList.Append("<input type=""button"" class=""btn btn-primary"" onclick=""PageNumber_Search()"" value=""検索"" />")
