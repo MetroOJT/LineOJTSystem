@@ -38,7 +38,7 @@ Public Class Detail : Implements IHttpHandler
         Dim ScheduleFm As String = ""
         Dim ScheduleTo As String = ""
         Dim Keyword As String = ""
-        Dim iCnt As Integer = 1
+        Dim iCnt As Integer = 0
 
         Try
             sEventID = context.Request.Item("EventID")
@@ -418,29 +418,29 @@ Public Class Detail : Implements IHttpHandler
         Dim iCnt As String = ""
 
         Try
+            '追加するメッセージコンテナに割り振るidを取得する(cookie)
             iCnt = Cki.Get_Cookies("iCnt")
 
+            'cookieがセットされていない場合はcookieに0をセットしidにも0を割り振る
             If (iCnt = "") Then
                 iCnt = "0"
                 Cki.Set_Cookies("iCnt", iCnt, 1)
             End If
 
+                'メッセージコンテナ要素を作成
             sHTML.Clear()
             sHTML.Append("<div class=""MessageContainer border border-secondary border-3 mb-2"" id=""MessageContainer" & iCnt & """>")
             sHTML.Append("<div class=""MessagebtnArea row"">")
             sHTML.Append("<div class=""col-1""></div>")
             sHTML.Append("<div class=""col-7""></div>")
             sHTML.Append("<div class=""col-1 d-grid"">")
-            sHTML.Append("<input type=""image"" style=""width:30px; height:30px;"" src=""../../Common/img/up_triangle.png"" id =""MessageUpbtn" & iCnt & """ onclick=""MessageUpbtnClick(); return false;""/>")
-            'sHTML.Append("<input type=""button"" id =""MessageUpbtn" & iCnt & """value=""△"" onclick=""MessageUpbtnClick()""/>")
+            sHTML.Append("<input type=""image"" style=""width:30px; height:30px;"" src=""../../Common/img/up_triangle.png"" class=""MessageUpbtn"" id =""MessageUpbtn" & iCnt & """ onclick=""MessageUpbtnClick(); return false;""/>")
             sHTML.Append("</div>")
             sHTML.Append("<div class=""col-1 d-grid"">")
-            sHTML.Append("<input type=""image"" style=""width:30px; height:30px;""  src=""../../Common/img/down_triangle.png"" id =""MessageDownbtn" & iCnt & """ onclick=""MessageDownbtnClick(); return false;""/>")
-            'sHTML.Append("<input type=""button"" id =""MessageDownbtn" & iCnt & """value=""▽"" onclick=""MessageDownbtnClick()""/>")
+            sHTML.Append("<input type=""image"" style=""width:30px; height:30px;""  src=""../../Common/img/down_triangle.png"" class=""MessageDownbtn"" id =""MessageDownbtn" & iCnt & """ onclick=""MessageDownbtnClick(); return false;""/>")
             sHTML.Append("</div>")
             sHTML.Append("<div class=""col-1 d-grid"">")
-            sHTML.Append("<input type=""image"" style=""width:30px; height:30px;"" src=""../../Common/img/cross.png"" id =""MessageDeletebtn" & iCnt & """ onclick=""MessageDeletebtnClick(); return false;""/>")
-            'sHTML.Append("<input type=""button"" id =""MessageDeletebtn" & iCnt & """value=""×"" onclick=""MessageDeletebtnClick()""/>")
+            sHTML.Append("<input type=""image"" style=""width:30px; height:30px;"" src=""../../Common/img/cross.png"" class=""MessageDeletebtn"" id =""MessageDeletebtn" & iCnt & """ onclick=""MessageDeletebtnClick(); return false;""/>")
             sHTML.Append("</div>")
             sHTML.Append("<div class=""col-1""></div>")
             sHTML.Append("</div>")
@@ -464,6 +464,7 @@ Public Class Detail : Implements IHttpHandler
             sHTML.Append("</div>")
             sHTML.Append("</div>")
 
+            '現在割り振られたid + 1をcookieにセットする
             iCnt = CStr(CInt(iCnt) + 1)
             Cki.Set_Cookies("iCnt", iCnt, 1)
 
