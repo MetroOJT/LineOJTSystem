@@ -25,8 +25,10 @@ function btnClearClick() {
     })
     const Sere_select = document.getElementById("Sere");
     const Status_select = document.getElementById("Status");
+    const Order_select = document.getElementById("Order");
     Sere_select.options[0].selected = true;
     Status_select.options[0].selected = true;
+    Order_select.options[0].selected = true;
 
 }
 
@@ -66,6 +68,7 @@ function Search() {
     let DateTo = document.getElementById("DateTo").value;
     let Sere = document.getElementById("Sere").value;
     let Status = document.getElementById("Status").value;
+    let Order = document.getElementById("Order").value;
 
     $.ajax({
         url: Ajax_File,
@@ -79,7 +82,8 @@ function Search() {
             "DateFm": DateFm,
             "DateTo": DateTo,
             "Sere": Sere,
-            "Status": Status
+            "Status": Status,
+            "Order": Order
         },
         dataType: "json",
         success: function (data) {
