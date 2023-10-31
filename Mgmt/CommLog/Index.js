@@ -7,8 +7,8 @@ const u_admin = sessionStorage.getItem("Admin");
 const u_name = sessionStorage.getItem("UserName");
 
 var Ajax_File = "Index.ashx"
-var Nod = 0;
-var Npage = 1;
+var Nod = 0; // 検索に引っかかった件数
+var Npage = 1; // ページ設定
 var page_item = document.querySelectorAll(".page-item");
 var detail_button = document.querySelectorAll(".btnDetail");
 
@@ -37,7 +37,7 @@ function btnBackClick() {
     window.location = "../Menu/Index.aspx";
 }
 
-var oac = 1;
+var oac = 1; // アコーディオン[開:1,閉:0]
 // 閉じる
 function btnCloseClick() {
     const cona = document.getElementById("cona");
@@ -64,11 +64,11 @@ function Search() {
     let StatusNumber = $("#txtStatusNumber").val();
     let Log = $("#txtLog").val();
     let DateTime = $("#txtDateTime").val();
-    let DateFm = document.getElementById("DateFm").value;
-    let DateTo = document.getElementById("DateTo").value;
-    let Sere = document.getElementById("Sere").value;
-    let Status = document.getElementById("Status").value;
-    let Order = document.getElementById("Order").value;
+    let DateFm = document.getElementById("DateFm").value; // 通信時間(前)
+    let DateTo = document.getElementById("DateTo").value; // 通信時間(後)
+    let Sere = document.getElementById("Sere").value; // 送信,受信
+    let Status = document.getElementById("Status").value; // ステータス
+    let Order = document.getElementById("Order").value; // 並べ替え
 
     $.ajax({
         url: Ajax_File,
@@ -147,8 +147,8 @@ function PagiNation(pid) {
                         if (Npage > data.count / 10) {
                             Npage = Math.ceil(data.count / 10);
                         }
-                        const NpageFm = (parseInt(Npage) - 1) * 10 + 1;
-                        var NpageTo = 0;
+                        const NpageFm = (parseInt(Npage) - 1) * 10 + 1; // 件数表示(前)
+                        var NpageTo = 0; // 件数表示(後)
                         if (Npage == Math.ceil(data.count / 10)) {
                             NpageTo = data.count;
                         } else {
