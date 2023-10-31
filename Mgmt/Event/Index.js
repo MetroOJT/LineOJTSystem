@@ -1,4 +1,4 @@
-﻿//function_login_check();
+﻿function_login_check();
 
 let Ajax_File = "Index.ashx";
 let Npage = 1;
@@ -6,6 +6,7 @@ let page_item = document.querySelectorAll(".page-item");
 let Nod = 0;
 
 $(function () {
+    DspLoginUserName();
     document.getElementById("btnSearch").addEventListener("mouseup", SearchbtnClick, false);
     //document.getElementById("btnUpdIns").addEventListener("mouseup", btnUpdInsClick, false);
     //document.getElementById("btnDelete").addEventListener("mouseup", btnDeleteClick, false);
@@ -301,3 +302,6 @@ function btnCloseClick() {
 }
 
 
+function EventIdToSession(EventID) {
+    sessionStorage.setItem("EventID", EventID);
+}
