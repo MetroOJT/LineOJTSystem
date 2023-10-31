@@ -269,7 +269,7 @@ Public Class Index : Implements IHttpHandler
                 End If
 
                 sHTML.Append("<tr class=""" & sRow & """>")
-                sHTML.Append("<td align=""left""><a href=Detail.aspx?EventID=" & cDB.DRData("wEventID") & ">&nbsp;" & cDB.DRData("wEventName") & "</a></td>")
+                sHTML.Append("<td align=""left""><a href=""Detail.aspx"" onclick=""EventIdToSession(" & cDB.DRData("wEventID") & ")"">" & cDB.DRData("wEventName") & "</a></td>")
                 sHTML.Append("<td align=""left"">" & cDB.DRData("wScheduleFm") & "～" & cDB.DRData("wScheduleTo") & "</td>")
                 sHTML.Append("<td align=""left"">&nbsp;" & cDB.DRData("wKeyword") & "</td>")
                 sHTML.Append("<td align=""center"">&nbsp;" & Status & "</td>")
@@ -278,7 +278,8 @@ Public Class Index : Implements IHttpHandler
                 iCnt = iCnt + 1
             Loop
             sHTML.Append("</table>")
-
+            sHTML.Append("<form name=""EventID"" method=""POST"" action=""Detail.aspx"">" &
+                         "<input type=hidden name=""EventID"" value=" & cDB.DRData("wEventID") & "/></form>")
             sPNList.Clear()
             sPNList.Append("<ul class=""pagination"" >")
             sPNList.Append("<li class=""page-item disabled"" id=""pista"">")
@@ -450,7 +451,7 @@ Public Class Index : Implements IHttpHandler
                 End If
 
                 sHTML.Append("<tr class=""" & sRow & """>")
-                sHTML.Append("<td align=""left""><a href=Detail.aspx?EventID=" & cDB.DRData("wEventID") & ">&nbsp;" & cDB.DRData("wEventName") & "</a></td>")
+                sHTML.Append("<td align=""left""><a href=""Detail.aspx"" onclick=""EventIdToSession(" & cDB.DRData("wEventID") & ")"">" & cDB.DRData("wEventName") & "</a></td>")
                 sHTML.Append("<td align=""left"">" & cDB.DRData("wScheduleFm") & "～" & cDB.DRData("wScheduleTo") & "</td>")
                 sHTML.Append("<td align=""left"">&nbsp;" & cDB.DRData("wKeyword") & "</td>")
                 sHTML.Append("<td align=""center"">&nbsp;" & Status & "</td>")

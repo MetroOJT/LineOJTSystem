@@ -51,16 +51,25 @@
                                 <option value="abnormality">異常</option>
                             </select>
                         </div>
+
+                        <div>
+                            <label class="col-sm-2 col-form-label">並べ替え</label>
+                            <select aria-label="全て" class="form-select form-select-sm" style="display: inline-block; width: 20%;" id="Order">
+                                <option value="all" selected>指定なし</option>
+                                <option value="time_asc">通信日時(昇順)</option>
+                                <option value="time_desc">通信日時(降順)</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
-                <h2 class="row accordion-header">
+                <h1 class="row accordion-header">
                     <div id="cona" class="col-10"></div>
                     <div id="conb" class="col-2">
                         <button class="accordion-button" type="button" id="btnClose" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
                         閉じる
                         </button>
                     </div>
-                </h2>
+                </h1>
             </div>
         </div>
 
