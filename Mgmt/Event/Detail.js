@@ -61,8 +61,13 @@ function EventLoad() {
                     }
 
                     $("#txtKeyword").val(data.Keyword);
-                    console.log(data.Html)
                     document.getElementById("MessageArea").innerHTML = data.Html;
+
+                    //テキストの文字数を初期値として設定
+                    for (let i = 0; i < $(".MessageContainer").length; i++) {
+                        let txtMessagelength = $("#txtMessage" + i).val().length;
+                        $("#txtCount" + i).text(txtMessagelength + "/500");
+                    }
 
                 } else {
                     alert("エラーが発生しました。");
@@ -228,17 +233,20 @@ function DeletebtnClick() {
     });
 };
 
-//メニュー画面に戻る関数
+//直前に閲覧したページに戻る関数
 function BackbtnClick() {
     //セッション変数「EventID」を削除する
     sessionStorage.removeItem("EventID");
 
     //メニュー画面へ遷移する
-    window.location.href = "../Menu/Index.aspx";
+    window.location.href = Referrer;
 };
 
 //メッセージコンテナを一つ追加する関数
 function MessageAddbtnClick() {
+    //現在のメッセージコンテナの数を取得しcookieにセット
+    let Container_num = $(".MessageContainer").length
+    setCookie("iCnt", Container_num, 1);
     //メッセージが5つ以下かそうではないかを判定する
     if (document.getElementsByClassName("MessageContainer").length < 5) {
         $.ajax({
@@ -269,13 +277,15 @@ function MessageAddbtnClick() {
 
 };
 
-//
+//メッセージコンテナの位置替えを行う関数(上のコンテナと位置替え)
 function MessageUpbtnClick() {
     let UpIndex;
     let MessageArea = document.getElementById("MessageArea");
     let MessageContainer = MessageArea.getElementsByClassName("MessageContainer");
+    //位置替え対象コンテナのidを取得
     let UpId = $(event.target).parent().parent().parent().attr("id");
-
+    
+    //位置替え対象のidを検索(idが順番通りに並んでいない可能性があるため)
     for (let i = 0; i < MessageContainer.length; i++) {
         if (UpId == MessageContainer[i].id) {
             UpIndex = i;
@@ -283,20 +293,15 @@ function MessageUpbtnClick() {
         }
     }
 
+    //位置替えを実行する
     if (UpIndex != 0) {
         MessageArea.insertBefore(MessageContainer[UpIndex], MessageContainer[UpIndex - 1])
     }
 
 }
 
-function CouponCodeAddbtnClick() {
-    let ID = $(event.target).attr("id").slice(-1);
-    let CouponCode = getCookie("CouponCode");
-    document.getElementById("txtMessage" + ID).value += CouponCode;
-}
-
+//メッセージコンテナの位置替えを行う関数(下のコンテナと位置替え)
 function MessageDownbtnClick() {
-    console.log("test")
     let DownIndex;
     let MessageArea = document.getElementById("MessageArea");
     let MessageContainer = MessageArea.getElementsByClassName("MessageContainer");
@@ -315,16 +320,26 @@ function MessageDownbtnClick() {
 
 }
 
+//対象メッセージコンテナを削除する関数
 function MessageDeletebtnClick() {
-    console.log(document.getElementsByClassName("txtMessage").length)
+
+    //メッセージコンテナが２つ以上ある時のみ削除する
     if (document.getElementsByClassName("txtMessage").length > 1) {
         $(event.target).parent().parent().parent().remove();
 
+        //削除した後にメッセージコンテナのidを整理する
         for (var i = 0; i <= document.getElementsByClassName("MessageContainer").length - 1; i++) {
             document.getElementsByClassName("MessageContainer")[i].id = "MessageContainer" + i;
         }
         setCookie("iCnt", i, 1);
     }
+}
+
+//クーポンコードをテキストエリアに追加する関数
+function CouponCodeAddbtnClick() {
+    let ID = $(event.target).attr("id").slice(-1);
+    let CouponCode = getCookie("CouponCode");
+    document.getElementById("txtMessage" + ID).value += CouponCode;
 }
 
 function txtCountUpd() {
