@@ -24,6 +24,7 @@ Public Class Index : Implements IHttpHandler
         Dim Cki As New Cookie
         Dim sSQL As New StringBuilder
         Dim sWhere As New StringBuilder
+        Dim sOb As New StringBuilder
         Dim jJSON As New JavaScriptSerializer
         Dim sJSON As String = ""
         Dim hHash As New Hashtable
@@ -38,6 +39,7 @@ Public Class Index : Implements IHttpHandler
         Dim sDateTo As String = ""
         Dim sSere As String = ""
         Dim sCond_Status As String = ""
+        Dim sOrder As String = ""
 
         Dim iCount As Integer = 0
 
@@ -49,6 +51,7 @@ Public Class Index : Implements IHttpHandler
             sDateTo = context.Request.Item("DateTo")
             sSere = context.Request.Item("Sere")
             sCond_Status = context.Request.Item("Status")
+            sOrder = context.Request.Item("Order")
 
             sTempTable = cCom.CmnGet_TableName("logitiran")
             cDB.DeleteTable(sTempTable)
@@ -71,6 +74,7 @@ Public Class Index : Implements IHttpHandler
             cDB.ExecuteSQL(sSQL.ToString)
 
             sWhere.Clear()
+            sOb.Clear()
             cDB.ParameterClear()
 
             If sSendRecv <> "" Then
@@ -81,6 +85,12 @@ Public Class Index : Implements IHttpHandler
             If sLog <> "" Then
                 sWhere.Append(" AND Log <= @Log")
                 cDB.AddWithValue("@Log", sLog)
+            End If
+
+            If sOrder = "time_asc" Then
+                sOb.Append(" ORDER BY Datetime ASC")
+            ElseIf sOrder = "time_desc" Then
+                sOb.Append(" ORDER BY Datetime DESC")
             End If
 
             sSQL.Clear()
@@ -115,6 +125,7 @@ Public Class Index : Implements IHttpHandler
                 sSQL.Append(" 200 != Status AND")
             End If
             sSQL.Append(" 1=1" & sWhere.ToString)
+            sSQL.Append(" " & sOb.ToString)
             iCount = cDB.ExecuteSQL(sSQL.ToString)
 
         Catch ex As Exception
