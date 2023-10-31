@@ -20,7 +20,7 @@ if (DD_Status != "200") {
 
 // 戻る
 function btnBackClick() {
-    window.location = "../Menu/Index.aspx";
+    window.location = document.referrer;
 }
 
 $(function () {
