@@ -20,13 +20,13 @@
                    <div class="d-flex">
                     <label>ユーザーID</label>
                     <div class="InputField_div">
-                        <input type="text" id="user_ID" class="border-0 w-100"/>
+                        <input type="text" id="user_ID" class="border-0 w-100" maxlength="20"/>
                     </div>
                 </div>
                 <div class="d-flex mt-2">
                     <label>パスワード</label>
                     <div class="InputField_div">
-                        <input type="password" id="user_password" class="border-0 w-100" autocomplete="off"/>
+                        <input type="password" id="user_password" class="border-0 w-100" autocomplete="off" maxlength="20"/>
                         <span id="buttonEye" class="fa fa-eye-slash"></span>
                     </div>
                 </div>
