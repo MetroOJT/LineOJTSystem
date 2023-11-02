@@ -240,13 +240,13 @@ Public Class Index : Implements IHttpHandler
             If iCount > 10 Then
                 sPNList.Append("<li class=""page-item"" id=""pi2""><a class=""page-link"" href=""#"">2</a></li>")
             Else
-                sPNList.Append("<li class=""page-item pe-none"" id=""pi2""><a class=""page-link text-secondary"" href=""#"">2</a></li>")
+                sPNList.Append("<li class=""page-item pe-none"" id=""pi2""><a class=""page-link text-dark"" href=""#"">2</a></li>")
             End If
 
             If iCount > 20 Then
                 sPNList.Append("<li class=""page-item"" id=""pi3""><a class=""page-link"" href=""#"">3</a></li>")
             Else
-                sPNList.Append("<li class=""page-item pe-none"" id=""pi3""><a class=""page-link text-secondary"" href=""#"">3</a></li>")
+                sPNList.Append("<li class=""page-item pe-none"" id=""pi3""><a class=""page-link text-dark"" href=""#"">3</a></li>")
             End If
             sPNList.Append("<li class=""page-item"" id=""pinext""><a Class=""page-link"" href=""#"">›</a></li>")
             sPNList.Append("<li class=""page-item"" id=""piend"">")
@@ -337,6 +337,9 @@ Public Class Index : Implements IHttpHandler
             If NowPage > Math.Ceiling(iCount / 10) Then
                 NowPage = Math.Ceiling(iCount / 10)
                 OffSet = 10 * (NowPage - 1)
+            ElseIf NowPage < 1 Then
+                NowPage = 1
+                OffSet = 0
             End If
 
             sSQL.Clear()
