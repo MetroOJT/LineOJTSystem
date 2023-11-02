@@ -11,7 +11,7 @@ let NowPage = 1;
 let CountOfHit = 0;
 
 // 初期検索
-btnSearchClick();
+Search();
 
 // ボタンクリック時の関数
 $(function () {
@@ -24,6 +24,13 @@ $(function () {
 
 // 検索ボタンクリック
 function btnSearchClick() {
+    NowPage = 1;
+    document.cookie = "EventNowPage=" + NowPage + "; max-age=86,400; path=/";
+    Search();
+};
+
+// 検索処理
+function Search() {
     // 入力値取得
     let EventName = $("#txtEventName").val();
     let EventStatus = $("#EventStatus").val();
@@ -72,7 +79,7 @@ function btnSearchClick() {
             };
         }
     });
-};
+}
 
 function delete_DB() {
     $.ajax({
@@ -143,11 +150,12 @@ function MakeItiran() {
             if (data != "") {
                 if (data.status == "OK") {
 
-                    // CookieにNowPageが存在する場合
-                    if (data.NowPage) {
+                    // CookieにNowPageが存在し、そのページが表示できる場合
+                    if (data.NowPage && CountOfHit > (data.NowPage - 1) * 10) {
                         PagiNation("pi" + data.NowPage);
                     }
                     else {
+                        document.cookie = "EventNowPage=" + NowPage + "; max-age=86400; path=/";
                         // 何件目～何件目を計算
                         const NowPageFm = (parseInt(NowPage) - 1) * 10 + 1;
                         let NowPageTo = 0;
