@@ -11,23 +11,25 @@
     <title>ログイン</title>
 </head>
 <body>
-    <form id="form1" runat="server" style="width: 80%; margin: 0 auto">
+    <form id="form1" runat="server" style="width: 80%; margin: 0 auto" class="needs-validation" novalidate>
     <div class="container">
         <%=cCom.CmnDspHeader("Login") %>
         <div id="option" class="w-100 d-flex flex-column mt-5">
             <p id="option_title" class="h4 text-center">ログイン画面</p>
             <div class="mx-auto m-2 mt-4">
-                   <div class="d-flex">
-                    <label>ユーザーID</label>
+                <div class="d-flex">
+                    <label class="form-label">ユーザーID</label>
                     <div class="InputField_div">
-                        <input type="text" id="user_ID" class="border-0 w-100" maxlength="20"/>
+                        <input type="text" id="user_ID" required="required" class="border-0 w-100 form-control" maxlength="20" data-regexp="^[0-9]{5}$" />
+                        <div class="invalid-feedback">Required.</div>
                     </div>
                 </div>
                 <div class="d-flex mt-2">
-                    <label>パスワード</label>
+                    <label class="form-label">パスワード</label>
                     <div class="InputField_div">
-                        <input type="password" id="user_password" class="border-0 w-100" autocomplete="off" maxlength="20"/>
+                        <input type="password" id="user_password" required="required" class="border-0 w-100 form-control" autocomplete="off" maxlength="20" data-maxlen=20 data-regexp="^[a-z]{1,}$"/>
                         <span id="buttonEye" class="fa fa-eye-slash"></span>
+                        <div class="invalid-feedback">Required.</div>
                     </div>
                 </div>
             </div>
