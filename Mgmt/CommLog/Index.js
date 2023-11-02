@@ -156,7 +156,7 @@ function PagiNation(pid) {
                         } else {
                             NpageTo = parseInt(Npage) * 10;
                         }
-                        document.getElementById("CntArea").innerText = "件数：" + data.count + "件" + " (表示中: " + Npage + " ページ , " + NpageFm + "件 ～ " + NpageTo + "件)";
+                        document.getElementById("CntArea").innerText = "件数：" + data.count + "件" + " (表示中: " + Npage + " / " + Math.ceil(data.count / 10) + " ページ , " + NpageFm + "件 ～ " + NpageTo + "件)";
                         if (data.html != "") {
                             document.getElementById("ResultArea").innerHTML = data.html;
                             document.getElementById("PageNumber").value = Npage;
@@ -196,7 +196,7 @@ function MakeResult() {
                         } else {
                             NpageTo = parseInt(Npage) * 10;
                         }
-                        document.getElementById("CntArea").innerText = "件数：" + data.count + "件" + " (表示中: " + Npage + " ページ , " + NpageFm + "件 ～ " + NpageTo + "件)";
+                        document.getElementById("CntArea").innerText = "件数：" + data.count + "件" + " (表示中: " + Npage + " / " + Math.ceil(data.count / 10) + " ページ , " + NpageFm + "件 ～ " + NpageTo + "件)";
                         if (data.html != "") {
                             document.getElementById("PNArea").innerHTML = data.pnlist;
                             document.getElementById("ResultArea").innerHTML = data.html;
