@@ -21,6 +21,7 @@ Public Class Detail : Implements IHttpHandler
         End Select
     End Sub
 
+    'ページロード時に動作する関数
     Public Function Load(ByVal context As HttpContext) As String
         Dim cCom As New Common
         Dim cDB As New CommonDB
@@ -43,11 +44,15 @@ Public Class Detail : Implements IHttpHandler
         Try
             sEventID = context.Request.Item("EventID")
 
+            'セッション変数に「EventID」が存在する場合のみデータベース検索を行う
             If sEventID <> "" Then
+
+                'EventIDをキーにデータベース検索を行う
                 sWhere.Clear()
                 sWhere.Append(" WHERE EventID = @EventID")
                 cDB.AddWithValue("@EventID", sEventID)
 
+                'eventmstを検索
                 sSQL.Clear()
                 sSQL.Append("SELECT ")
                 sSQL.Append(" EventName")
@@ -68,7 +73,7 @@ Public Class Detail : Implements IHttpHandler
                     Keyword = cDB.DRData("Keyword")
                 End If
 
-
+                'messagemstを検索
                 sSQL.Clear()
                 sSQL.Append("SELECT ")
                 sSQL.Append(" Message")
@@ -77,6 +82,7 @@ Public Class Detail : Implements IHttpHandler
 
                 cDB.SelectSQL(sSQL.ToString)
 
+                'HTML要素の作成
                 sHTML.Clear()
                 Do Until Not cDB.ReadDr
 
@@ -98,7 +104,8 @@ Public Class Detail : Implements IHttpHandler
                     sHTML.Append("<div class=""row"">")
                     sHTML.Append("<div class=""col-1""></div>")
                     sHTML.Append("<div class=""col-10"">")
-                    sHTML.Append("<textarea class=""txtMessage w-100 form-control"" id=""txtMessage" & iCnt & """ maxlength=500 rows=""5"" onkeyup=""txtCountUpd()"">" & cDB.DRData("Message") & "</textarea>")
+                    sHTML.Append("<textarea class=""txtMessage w-100 form-control"" id=""txtMessage" & iCnt & """ maxlength=500 rows=""5"" onkeyup=""txtCountUpd()"" required>" & cDB.DRData("Message") & "</textarea>")
+                    sHTML.Append("<div class=""invalid-feedback""><p class=""h6"">メッセージを入力してください。</p></div>")
                     sHTML.Append("</div>")
                     sHTML.Append("<div class=""col-1""></div>")
                     sHTML.Append("</div>")
@@ -129,7 +136,6 @@ Public Class Detail : Implements IHttpHandler
                 sStatus = "NG"
                 cCom.CmnWriteStepLog(sRet)
             End If
-            cCom.CmnWriteStepLog(sHTML.ToString)
             hHash.Add("EventName", EventName)
             hHash.Add("EventStatus", EventStatus)
             hHash.Add("ScheduleFm", ScheduleFm)
@@ -144,7 +150,7 @@ Public Class Detail : Implements IHttpHandler
         Return sJSON
     End Function
 
-
+    'データの登録・更新時に動作する関数
     Public Function Save(ByVal context As HttpContext) As String
         Dim cCom As New Common
         Dim cDB As New CommonDB
@@ -169,6 +175,7 @@ Public Class Detail : Implements IHttpHandler
         Dim sErrorMessage As String = ""
 
         Try
+            '各変数を設定
             sUserID = context.Request.Item("Update_UserID")
             sEventID = context.Request.Item("Update_EventID")
             sEventName = context.Request.Item("EventName")
@@ -181,6 +188,7 @@ Public Class Detail : Implements IHttpHandler
             If sEventID = "" Then
                 sMode = "Ins"
             Else
+                '更新モードの場合のみパラメータクエリ「@EventID」を設定
                 sMode = "Upd"
                 cDB.AddWithValue("@EventID", sEventID)
             End If
@@ -201,7 +209,7 @@ Public Class Detail : Implements IHttpHandler
 
             cDB.AddWithValue("@UserID", sUserID)
 
-
+            '同一のイベント名がデータベース内にないかチェック
             sWhere.Clear()
             sWhere.Append(" WHERE EventName = @EventName")
             If sMode = "Upd" Then
@@ -221,6 +229,7 @@ Public Class Detail : Implements IHttpHandler
                 End If
             End If
 
+            '同一のキーワードがデータベース内にないかチェック
             If sErrorMessage = "" Then
                 sWhere.Clear()
                 sWhere.Append(" WHERE Keyword = @Keyword")
@@ -247,8 +256,8 @@ Public Class Detail : Implements IHttpHandler
 
                 Select Case sMode
                     Case "Ins"
+                        '登録するデータのイベントIDを設定
                         sSQL.Clear()
-
                         sSQL.Append("Select MAX(EventID) As MaxID")
                         sSQL.Append(" FROM " & cCom.gctbl_EventMst)
                         cDB.SelectSQL(sSQL.ToString)
@@ -261,6 +270,7 @@ Public Class Detail : Implements IHttpHandler
                         sEventID = MaxID + 1
                         cDB.AddWithValue("@EventID", sEventID)
 
+                        'eventmstにINSERT文を実行
                         sSQL.Clear()
                         sSQL.Append(" INSERT INTO " & cCom.gctbl_EventMst)
                         sSQL.Append(" (")
@@ -288,6 +298,7 @@ Public Class Detail : Implements IHttpHandler
 
                     Case "Upd"
 
+                        'eventmstにINSERT文を実行
                         sSQL.Clear()
                         sSQL.Append(" UPDATE " & cCom.gctbl_EventMst)
                         sSQL.Append(" SET")
@@ -301,6 +312,7 @@ Public Class Detail : Implements IHttpHandler
                         sSQL.Append(" WHERE EventID   = @EventID")
                         cDB.ExecuteSQL(sSQL.ToString)
 
+                        '更新モードの場合のみmessagemstの該当データを削除する
                         sSQL.Clear()
                         sSQL.Append(" DELETE FROM " & cCom.gctbl_MessageMst)
                         sSQL.Append(" WHERE EventID = @EventID")
@@ -308,6 +320,7 @@ Public Class Detail : Implements IHttpHandler
 
                 End Select
 
+                'messagemstにINSERT文を実行(登録、更新モード共通の処理)
                 For MessageID As Integer = 1 To lMessages.Length
                     cDB.AddWithValue("@Message" & MessageID, lMessages(MessageID - 1))
 
@@ -354,7 +367,7 @@ Public Class Detail : Implements IHttpHandler
 
     End Function
 
-
+    'データの削除時に動作する関数
     Public Function Delete(ByVal context As HttpContext) As String
         Dim cCom As New Common
         Dim cDB As New CommonDB
@@ -373,6 +386,7 @@ Public Class Detail : Implements IHttpHandler
 
             cDB.AddWithValue("@EventID", sEventID)
 
+            'EventIDをキーにeventmst,messagemstにDELETE文を実行
             cDB.BeginTran()
 
             sSQL.Clear()
@@ -405,7 +419,7 @@ Public Class Detail : Implements IHttpHandler
         Return sJSON
     End Function
 
-
+    'メッセージコンテナを追加する際に動作する関数
     Public Function MessageAdd(ByVal context As HttpContext) As String
         Dim cCom As New Common
         Dim Cki As New Cookie
@@ -427,7 +441,7 @@ Public Class Detail : Implements IHttpHandler
                 Cki.Set_Cookies("iCnt", iCnt, 1)
             End If
 
-                'メッセージコンテナ要素を作成
+            'メッセージコンテナ要素を作成
             sHTML.Clear()
             sHTML.Append("<div class=""MessageContainer border border-secondary border-3 mb-2"" id=""MessageContainer" & iCnt & """>")
             sHTML.Append("<div class=""MessagebtnArea row"">")
@@ -447,14 +461,15 @@ Public Class Detail : Implements IHttpHandler
             sHTML.Append("<div class=""row"">")
             sHTML.Append("<div class=""col-1""></div>")
             sHTML.Append("<div class=""col-10"">")
-            sHTML.Append("<textarea class=""txtMessage w-100 form-control"" id=""txtMessage" & iCnt & """ maxlength=500 rows=""5"" onkeyup=""txtCountUpd()""></textarea>")
+            sHTML.Append("<textarea class=""txtMessage w-100 form-control"" id=""txtMessage" & iCnt & """ maxlength=500 rows=""5"" onkeyup=""txtCountUpd()"" required></textarea>")
+            sHTML.Append("<div class=""invalid-feedback""><p class=""h6"">メッセージを入力してください。</p></div>")
             sHTML.Append("</div>")
             sHTML.Append("<div class=""col-1""></div>")
             sHTML.Append("</div>")
             sHTML.Append("<div class=""row mt-2 mb-2"">")
             sHTML.Append("<div class=""col-1""></div>")
             sHTML.Append("<div class=""col-2"">")
-            sHTML.Append("<input type=""button"" class=""btn btn-success"" id =""CouponCodeAddbtn" & iCnt & """value=""クーポンコード追加"" onclick=""CouponCodeAddbtnClick()""/>")
+            sHTML.Append("<input type=""button"" class=""btn btn-success CouponCodeAddbtn"" id =""CouponCodeAddbtn" & iCnt & """value=""クーポンコード追加"" onclick=""CouponCodeAddbtnClick()""/>")
             sHTML.Append("</div>")
             sHTML.Append("<div class=""col-7""></div>")
             sHTML.Append("<div class=""col-1"">")

@@ -6,6 +6,8 @@ let Ajax_File = "Detail.ashx";
 //直前に閲覧したページのURLを保持しておく変数
 let Referrer = document.referrer;
 
+
+
 $(function () {
     //ヘッダーの担当者名を入れる関数
     DspLoginUserName();
@@ -18,8 +20,10 @@ $(function () {
     //登録モードか更新モードかを判別する
     if (sessionStorage.getItem("EventID") != null) {
         EventLoad();
+        $("#Deletebtn").prop("disabled", false);
     } else {
         MessageAddbtnClick();
+        $("#Deletebtn").prop("disabled", true);
     }
 })
 
@@ -88,7 +92,6 @@ function SavebtnClick() {
     let Messages = [];
     let work = "";
 
-
     //スケジュールの日付を整形
     if ($("input[name=EventStatus]:checked").is(':checked')) {
         EventStatus = $('input[name="EventStatus"]:checked').val();
@@ -103,8 +106,24 @@ function SavebtnClick() {
             };
         };
     };
-
+    let form = document.querySelector('#main');
+    let elm = form.querySelectorAll('.form-control')
+    console.log(elm)
     //各データの入力チェック
+    form.querySelectorAll('.form-control').forEach(function (elm) {
+        let required = elm.required;
+        if (required && (elm.value.length == 0)) {
+            elm.classList.add('is-invalid');
+            elm.classList.remove('is-valid');
+            event.preventDefault();
+            event.stopPropagation();
+        } else {
+            elm.classList.add('is-valid');
+            elm.classList.remove('is-invalid');
+        }
+    })
+
+    
     if (EventName == "") {
         alert("イベント名を入力してください。")
         return false;
@@ -235,18 +254,17 @@ function DeletebtnClick() {
 
 //直前に閲覧したページに戻る関数
 function BackbtnClick() {
-    //セッション変数「EventID」を削除する
     sessionStorage.removeItem("EventID");
-
-    //メニュー画面へ遷移する
     window.location.href = Referrer;
 };
 
 //メッセージコンテナを一つ追加する関数
 function MessageAddbtnClick() {
+
     //現在のメッセージコンテナの数を取得しcookieにセット
     let Container_num = $(".MessageContainer").length
     setCookie("iCnt", Container_num, 1);
+
     //メッセージが5つ以下かそうではないかを判定する
     if (document.getElementsByClassName("MessageContainer").length < 5) {
         $.ajax({
@@ -327,9 +345,15 @@ function MessageDeletebtnClick() {
     if (document.getElementsByClassName("txtMessage").length > 1) {
         $(event.target).parent().parent().parent().remove();
 
-        //削除した後にメッセージコンテナのidを整理する
+        //削除した後にメッセージコンテナ要素のidを整理する
         for (var i = 0; i <= document.getElementsByClassName("MessageContainer").length - 1; i++) {
-            document.getElementsByClassName("MessageContainer")[i].id = "MessageContainer" + i;
+            document.getElementsByClassName("MessageUpbtn")[i].id = "MessageUpbtn" + i;
+            document.getElementsByClassName("MessageDownbtn")[i].id = "MessageDownbtn" + i;
+            document.getElementsByClassName("MessageDeletebtn")[i].id = "MessageDeletebtn" + i;
+            document.getElementsByClassName("txtMessage")[i].id = "txtMessage" + i;
+            document.getElementsByClassName("CouponCodeAddbtn")[i].id = "CouponCodeAddbtn" + i;
+            document.getElementsByClassName("txtCount")[i].id = "txtCount" + i;
+
         }
         setCookie("iCnt", i, 1);
     }
@@ -342,10 +366,11 @@ function CouponCodeAddbtnClick() {
     document.getElementById("txtMessage" + ID).value += CouponCode;
 }
 
+//テキストエリア内の文字数をリアルタイムに反映する関数
 function txtCountUpd() {
     let txtMessagelength = $(event.target).val().length;
     let ID = $(event.target).attr("id").slice(-1);
-    $("#txtCount" + ID).text(txtMessagelength + "/500")
+    $("#txtCount" + ID).text(txtMessagelength + "/500");
 }
 
 
