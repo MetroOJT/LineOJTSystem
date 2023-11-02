@@ -281,3 +281,4 @@ function btnCloseClick() {
 function EventIdToSession(EventID) {
     sessionStorage.setItem("EventID", EventID);
 }
+
