@@ -254,7 +254,7 @@ function NoEnter() {
 function PageNumber_Search() {
     const PageNumber = document.getElementById("PageNumber").value;
     if (PageNumber == "") {
-        window.alert("検索するページを入力してください。");
+        document.getElementById("error_modal").click();
     } else {
         PagiNation(parseInt(PageNumber));
     }
