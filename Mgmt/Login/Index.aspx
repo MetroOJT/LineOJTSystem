@@ -18,19 +18,19 @@
             <p id="option_title" class="h4 text-center">ログイン画面</p>
             <div class="mx-auto m-2 mt-4">
                 <div class="d-flex">
-                    <label class="form-label">ユーザーID</label>
+                    <label class="m-auto">ユーザーID</label>
                     <div class="InputField_div">
                         <input type="text" id="user_ID" required="required" class="border-0 w-100 form-control" maxlength="20" data-regexp="^[0-9]{5}$" />
-                        <div class="invalid-feedback">Required.</div>
                     </div>
+                    <div class="invalid-feedback">Required.</div>
                 </div>
                 <div class="d-flex mt-2">
-                    <label class="form-label">パスワード</label>
+                    <label class="m-auto">パスワード</label>
                     <div class="InputField_div">
-                        <input type="password" id="user_password" required="required" class="border-0 w-100 form-control" autocomplete="off" maxlength="20" data-maxlen=20 data-regexp="^[a-z]{1,}$"/>
+                        <input type="password" id="user_password" required="required" class="border-0 w-100 form-control" autocomplete="off" maxlength="20" data-maxlen=20 data-regexp="^[0-9a-z]{1,}$"/>
                         <span id="buttonEye" class="fa fa-eye-slash"></span>
-                        <div class="invalid-feedback">Required.</div>
                     </div>
+                    <div class="invalid-feedback">Required.</div>
                 </div>
             </div>
             <div class="error_div"></div>

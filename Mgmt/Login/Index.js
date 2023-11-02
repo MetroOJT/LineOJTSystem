@@ -63,8 +63,6 @@ function btnLoginClick() {
             elm.classList.add('is-invalid');
             elm.classList.remove('is-valid');
             console.log("b");
-            //event.preventDefault();
-            //event.stopPropagation();
         } else {
             elm.classList.add('is-valid');
             elm.classList.remove('is-invalid');
@@ -93,6 +91,12 @@ function btnLoginClick() {
         error_p.style.color = "red";
         error_div.appendChild(error_p);
         user_ID_input.focus();
+    } else if (Password.match(/[^\x01-\x7E\uFF61-\uFF9F]+/)) {
+        const error_p = document.createElement('p');
+        error_p.textContent = "パスワードは半角で入力してください";
+        error_p.style.color = "red";
+        error_div.appendChild(error_p);
+        user_password_button.focus();
     } else {
         $.ajax({
             url: Ajax_File,
@@ -122,8 +126,11 @@ function btnLoginClick() {
 
                             window.location.href = "../Menu/Index.aspx";
                         } else {
-                            alert("該当するユーザーが存在しません。");
-                            user_ID_input.focus();
+                            const error_p = document.createElement('p');
+                            error_p.textContent = "該当するユーザーが存在しません";
+                            error_p.style.color = "red";
+                            error_div.appendChild(error_p);
+                           user_ID_input.focus();
                         };
                     } else {
                         alert("エラーが発生しました。");
