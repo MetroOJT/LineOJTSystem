@@ -146,6 +146,8 @@ function PagiNation(pid) {
                     if (Number(data.count) > 0) {
                         if (Npage > data.count / 10) {
                             Npage = Math.ceil(data.count / 10);
+                        } else if (Npage < 1) {
+                            Npage = 1;
                         }
                         const NpageFm = (parseInt(Npage) - 1) * 10 + 1; // 件数表示(前)
                         var NpageTo = 0; // 件数表示(後)
@@ -162,7 +164,7 @@ function PagiNation(pid) {
                         }
                     } else {
                         document.getElementById("PNArea").innerHTML = "";
-                        document.getElementById("ResultArea").innerText = "該当するユーザーが存在しません。";
+                        document.getElementById("ResultArea").innerText = "該当するデータが存在しませんでした。";
                     }
                 } else {
                     alert(data.status);
@@ -209,7 +211,7 @@ function MakeResult() {
                     } else {
                         document.getElementById("CntArea").innerText = "";
                         document.getElementById("PNArea").innerHTML = "";
-                        document.getElementById("ResultArea").innerText = "該当するユーザーが存在しません。";
+                        document.getElementById("ResultArea").innerText = "該当するデータが存在しませんでした。";
                     }
                 } else {
                     alert(data.status);
@@ -254,7 +256,7 @@ function NoEnter() {
 function PageNumber_Search() {
     const PageNumber = document.getElementById("PageNumber").value;
     if (PageNumber == "") {
-        window.alert("検索するページを入力してください。");
+        document.getElementById("error_modal").click();
     } else {
         PagiNation(parseInt(PageNumber));
     }
