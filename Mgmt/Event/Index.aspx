@@ -10,32 +10,34 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
     <script src="../../Common/js/Common.js"></script>
+    <%--ヘッダー・フッター読み込み用--%>
     <%="<script src='../../Common/js/Common.js?ts=" & cCom.CmnTimeStamp & "'></script>" %>
     <title>DBテスト</title>
 </head>
 <body>
     <div class="container">
+        <%--ヘッダー読み込み--%>
         <%=cCom.CmnDspHeader() %>
+        <%--開閉するフォーム--%>
         <div class="accordion">
             <div class="accordion-item">
                 <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
                     <form id="form1" runat="server">
                         <div id="btnOption" class="row accordion-body">
                             <input type="button" value="検索" name="Search" id="btnSearch" class="col-sm btn btn-outline-primary"/>
-                            <%--<input type="button" value="登録・更新" name="UpdIns" id="btnUpdIns" class="col-sm btn btn-outline-primary"/>
-                            <input type="button" value="削除" name="Delete" id="btnDelete" class="col-sm btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop"/>
-                            <input type="button" value="クリア" name="Clear" id="btnClear" class="col-sm btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop"/>--%>
+                            <%--クリアボタン(要件にない追加項目)--%>
+                            <%--<input type="button" value="クリア" name="Clear" id="btnClear" class="col-sm btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop"/>--%>
                             <div class="col-sm"></div>
                             <input type="button" value="戻る" name="Back" id="btnBack" class="col-sm btn btn-outline-secondary"/>
                         </div>
                         <div id="Condition" class="accordion-body">
                             <div class="row">
                                 <label class="col-sm-2 col-form-label">イベント名</label>
-                                <input type="text" id="txtEvent" class="form-control"/>
+                                <input type="text" id="txtEventName" class="form-control" runat="server" maxlength="50"/>
                             </div>
                             <div>
                                 <label class="col-sm-2 col-form-label">ステータス</label>
-                                <select aria-label="全て" class="form-select form-select-sm" style="display: inline-block; width: 20%;" id="EventStatus">
+                                <select aria-label="全て" class="form-select form-select-sm" id="EventStatus" runat="server">
                                     <option value="" selected="">全て</option>
                                     <option value="1">オン</option>
                                     <option value="0">オフ</option>
@@ -43,33 +45,31 @@
                             </div>
                             <div>
                                 <label class="col-sm-2 col-form-label">スケジュール</label>
-                                <input type="date" id="txtDateFm" class="form-control" style="margin-right: 20px;"/>～
-                                <input type="date" id="txtDateTo" class="form-control" style="margin-left: 20px" ;=""/>
+                                <input type="date" id="txtScheduleFm" class="form-control" runat="server" max="9999-12-31"/>～
+                                <input type="date" id="txtScheduleTo" class="form-control" runat="server" max="9999-12-31"/>
                             </div>
                             <div class="row">
                                 <label class="col-sm-2 col-form-label">キーワード</label>
-                                <input type="text" id="txtKeyword"  class="form-control"/>
+                                <input type="text" id="txtKeyword"  class="form-control" runat="server" maxlength="30"/>
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
             <h2 class="row accordion-header">
-                <div id="cona" class="col-10"></div>
-                <div id="conb" class="col-2">
+                <div id="cola" class="col-10"></div>
+                <div id="colb" class="col-2">
                     <button class="accordion-button" type="button" id="btnClose" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">閉じる</button>
                 </div>
             </h2>
         </div>
         <div id="CntArea"></div>
-        <nav aria-label="Page navigation example" id="PNArea"></nav>
-        <div id="ItiranArea">
-            <div id="NumberCnt"></div>
-            <div id="Pager"></div>
-            <div id="ResultTable"></div>
-        </div>
+        <nav aria-label="Page navigation example" id="PageNationArea"></nav>
+        <div id="ItiranArea"></div>
+        <%=cCom.CmnDspFooter()%>
     </div>
     
+    <%--モーダルウィンドウ(要件にない追加項目)--%>
     <%--<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">

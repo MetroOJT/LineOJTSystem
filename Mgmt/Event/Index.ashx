@@ -10,18 +10,19 @@ Public Class Index : Implements IHttpHandler
         Select Case context.Request.Item("mode")
             Case "Search"
                 context.Response.Write(Search(context))
-            Case "Delete"
-                context.Response.Write(Delete(context))
             Case "Itiran"
                 context.Response.Write(Itiran(context))
-            Case "Clear"
-                context.Response.Write(Clear(context))
             Case "PagiNation"
                 context.Response.Write(PagiNation(context))
+            '未実装
+            Case "Clear"
+                context.Response.Write(Clear(context))
         End Select
     End Sub
 
+    '検索
     Public Function Search(ByVal context As HttpContext) As String
+        '変数定義,インスタンス化
         Dim cCom As New Common
         Dim cDB As New CommonDB
         Dim Cki As New Cookie
@@ -34,7 +35,7 @@ Public Class Index : Implements IHttpHandler
         Dim sStatus As String = "OK"
         Dim sTempTable As String = ""
 
-        Dim sEvent As String = ""
+        Dim sEventName As String = ""
         Dim sEventStatus As String = ""
         Dim sScheduleFm As String = ""
         Dim sScheduleTo As String = ""
@@ -43,23 +44,24 @@ Public Class Index : Implements IHttpHandler
         Dim iCount As Integer = 0
 
         Try
-
-            sEvent = context.Request.Item("Event")
+            '送信データ取得
+            sEventName = context.Request.Item("EventName")
             sEventStatus = context.Request.Item("EventStatus")
             sScheduleFm = context.Request.Item("ScheduleFm")
             sScheduleTo = context.Request.Item("ScheduleTo")
             sKeyword = context.Request.Item("Keyword")
 
-            sTempTable = cCom.CmnGet_TableName("Itiran")
-            cDB.DeleteTable(sTempTable)
-
-            Cki.Set_Cookies("Event", sEvent, 1)
+            'クッキーを保存
+            Cki.Set_Cookies("EventName", sEventName, 1)
             Cki.Set_Cookies("EventStatus", sEventStatus, 1)
             Cki.Set_Cookies("ScheduleFm", sScheduleFm, 1)
             Cki.Set_Cookies("ScheduleTo", sScheduleTo, 1)
             Cki.Set_Cookies("Keyword", sKeyword, 1)
             Cki.Set_Cookies("TempTable", sTempTable, 1)
 
+            '作業用テーブルの生成
+            sTempTable = cCom.CmnGet_TableName("Itiran")
+            cDB.DeleteTable(sTempTable)
             sSQL.Clear()
             sSQL.Append("CREATE TABLE " & sTempTable)
             sSQL.Append(" (")
@@ -73,12 +75,13 @@ Public Class Index : Implements IHttpHandler
             sSQL.Append("  )")
             cDB.ExecuteSQL(sSQL.ToString)
 
+            'WHERE文の作成
             sWhere.Clear()
             cDB.ParameterClear()
 
-            If sEvent <> "" Then
-                sWhere.Append(" AND EventName LIKE @Event")
-                cDB.AddWithValue("@Event", "%" & sEvent & "%")
+            If sEventName <> "" Then
+                sWhere.Append(" AND EventName LIKE @EventName")
+                cDB.AddWithValue("@EventName", "%" & sEventName & "%")
 
             End If
 
@@ -87,6 +90,7 @@ Public Class Index : Implements IHttpHandler
                 cDB.AddWithValue("@EventStatus", sEventStatus)
             End If
 
+            'スケジュールの両方入力と片方入力で処理が違う
             If sScheduleFm <> "" And sScheduleTo <> "" Then
                 sWhere.Append(" AND ScheduleFm <= @ScheduleFm")
                 sWhere.Append(" AND ScheduleTo >= @ScheduleTo")
@@ -105,6 +109,7 @@ Public Class Index : Implements IHttpHandler
                 cDB.AddWithValue("@Keyword", "%" & sKeyword & "%")
             End If
 
+            '検索結果を作業用テーブルに挿入
             sSQL.Clear()
             sSQL.Append(" INSERT INTO " & sTempTable)
             sSQL.Append(" (")
@@ -146,59 +151,7 @@ Public Class Index : Implements IHttpHandler
         Return sJSON
     End Function
 
-    Public Function Delete(ByVal context As HttpContext) As String
-        Dim cCom As New Common
-        Dim cDB As New CommonDB
-        Dim Cki As New Cookie
-        Dim sSQL As New StringBuilder
-        Dim jJSON As New JavaScriptSerializer
-        Dim sJSON As String = ""
-        Dim hHash As New Hashtable
-        Dim sRet As String = ""
-        Dim sStatus As String = "OK"
-
-        Dim sDelList As String = ""
-        Dim sTempTable As String = ""
-
-        Try
-
-            sDelList = context.Request.Item("DelList")
-            sTempTable = Cki.Get_Cookies("TempTable")
-
-            cDB.BeginTran()
-
-            sSQL.Clear()
-            sSQL.Append(" DELETE FROM " & sTempTable)
-            sSQL.Append(" WHERE wEventID IN (" & sDelList & ")")
-            cDB.ExecuteSQL(sSQL.ToString)
-
-            sSQL.Clear()
-            sSQL.Append(" DELETE FROM " & cCom.gctbl_EventMst)
-            sSQL.Append(" WHERE EventID IN (" & sDelList & ")")
-            cDB.ExecuteSQL(sSQL.ToString)
-
-
-            cDB.CommitTran()
-
-        Catch ex As Exception
-            cDB.RollBackTran()
-            sRet = ex.Message
-        Finally
-            cDB.DrClose()
-            cDB.Dispose()
-            If sRet <> "" Then
-                sStatus = "NG"
-                cCom.CmnWriteStepLog(sRet)
-            End If
-
-            hHash.Add("status", sStatus)
-            sJSON = jJSON.Serialize(hHash)
-        End Try
-
-        Return sJSON
-
-    End Function
-
+    '一覧作成
     Public Function Itiran(ByVal context As HttpContext) As String
         Dim cCom As New Common
         Dim cDB As New CommonDB
@@ -214,12 +167,13 @@ Public Class Index : Implements IHttpHandler
         Dim sTempTable As String = ""
 
         Dim sHTML As New StringBuilder
-        Dim sPNList As New StringBuilder
+        Dim sPageNationHTML As New StringBuilder
         Dim iCount As Integer = 0
 
-        Try
+        Dim iNowPage As Integer = 0
 
-            sTempTable = Cki.Get_Cookies("TempTable")
+        Try
+            sTempTable = cCom.CmnGet_TableName("Itiran")
 
             sSQL.Clear()
             sSQL.Append(" SELECT")
@@ -232,7 +186,7 @@ Public Class Index : Implements IHttpHandler
                 iCount = cDB.DRData("Count")
             End If
 
-
+            '上位十件のみSELECT
             sSQL.Clear()
             sSQL.Append(" SELECT")
             sSQL.Append(" wEventID")
@@ -247,6 +201,7 @@ Public Class Index : Implements IHttpHandler
             sSQL.Append(" LIMIT 10 OFFSET 0")
             cDB.SelectSQL(sSQL.ToString)
 
+            '一覧のヘッダー生成
             sHTML.Clear()
             sHTML.Append("<table border=""1"" width=""1000px"" style=""border-collapse: collapse;"" class=""table table-striped table-bordered"">")
             sHTML.Append("<tr style=""background-color: #CCCCCC;"">")
@@ -255,12 +210,18 @@ Public Class Index : Implements IHttpHandler
             sHTML.Append("<td width=""30%"" align=""center"">キーワード</td>")
             sHTML.Append("<td width=""10%"" align=""center"">ステータス</td>")
             sHTML.Append("</tr>")
+
+            '一覧の要素挿入
             Do Until Not cDB.ReadDr
-                Dim iCnt As Integer = 1
+                Dim i As Integer = 1
                 sRow = ""
-                If iCnt Mod 2 = 0 Then
+
+                '一件ごとに色変更
+                If i Mod 2 = 0 Then
                     sRow = " evenRow"
                 End If
+
+                'ステータスの表記を"オン","オフ"に
                 Dim Status As String = ""
                 If cDB.DRData("wStatus") = 1 Then
                     Status = "オン"
@@ -268,56 +229,73 @@ Public Class Index : Implements IHttpHandler
                     Status = "オフ"
                 End If
 
+                'スケジュールがDefaultやEndの場合ブランクにする
+                Dim ScheduleFm As String = cDB.DRData("wScheduleFm")
+                Dim ScheduleTo As String = cDB.DRData("wScheduleTo")
+                If ScheduleFm = cCom.gcDate_DefaultDate Then
+                    ScheduleFm = ""
+                End If
+                If ScheduleTo = cCom.gcDate_EndDate Then
+                    ScheduleTo = ""
+                End If
+
+                '一行分生成
                 sHTML.Append("<tr class=""" & sRow & """>")
                 sHTML.Append("<td align=""left""><a href=""Detail.aspx"" onclick=""EventIdToSession(" & cDB.DRData("wEventID") & ")"">" & cDB.DRData("wEventName") & "</a></td>")
-                sHTML.Append("<td align=""left"">" & cDB.DRData("wScheduleFm") & "～" & cDB.DRData("wScheduleTo") & "</td>")
+                sHTML.Append("<td align=""left"">" & ScheduleFm & "～" & ScheduleTo & "</td>")
                 sHTML.Append("<td align=""left"">&nbsp;" & cDB.DRData("wKeyword") & "</td>")
                 sHTML.Append("<td align=""center"">&nbsp;" & Status & "</td>")
                 sHTML.Append("</tr>")
 
-                iCnt = iCnt + 1
+                i = i + 1
             Loop
             sHTML.Append("</table>")
-            sHTML.Append("<form name=""EventID"" method=""POST"" action=""Detail.aspx"">" &
-                         "<input type=hidden name=""EventID"" value=" & cDB.DRData("wEventID") & "/></form>")
-            sPNList.Clear()
-            sPNList.Append("<ul class=""pagination"" >")
-            sPNList.Append("<li class=""page-item disabled"" id=""pista"">")
-            sPNList.Append("<a class=""page-link"" aria-label=""Previous"">")
-            sPNList.Append("<span aria-hidden=""True"">&laquo;</span>")
-            sPNList.Append("</a>")
-            sPNList.Append("</li>")
-            sPNList.Append("<li class=""page-item disabled"" id=""piback""><a class=""page-link"">‹</a></li>")
-            sPNList.Append("<li class=""page-item disabled"" id=""pi1""><a class=""page-link"">1</a></li>")
+
+            'PageNation生成
+            sPageNationHTML.Clear()
+            sPageNationHTML.Append("<ul class=""pagination"" >")
+            sPageNationHTML.Append("<li class=""page-item disabled"" id=""pista"">")
+            sPageNationHTML.Append("<a class=""page-link"" aria-label=""Previous"">")
+            sPageNationHTML.Append("<span aria-hidden=""True"">&laquo;</span>")
+            sPageNationHTML.Append("</a>")
+            sPageNationHTML.Append("</li>")
+            sPageNationHTML.Append("<li class=""page-item disabled"" id=""piback""><a class=""page-link"">‹</a></li>")
+            sPageNationHTML.Append("<li class=""page-item disabled"" id=""pi1""><a class=""page-link"">1</a></li>")
+
+            '2ページ目が存在しない場合 "2" を押せなくする
             If iCount > 10 Then
-                sPNList.Append("<li class=""page-item"" id=""pi2""><a class=""page-link"">2</a></li>")
+                sPageNationHTML.Append("<li class=""page-item"" id=""pi2""><a class=""page-link"">2</a></li>")
             Else
-                sPNList.Append("<li class=""page-item disabled"" id=""pi2""><a class=""page-link"">2</a></li>")
+                sPageNationHTML.Append("<li class=""page-item disabled"" id=""pi2""><a class=""page-link"">2</a></li>")
             End If
 
+            '3ページ目が存在しない場合 "3" を押せなくする
             If iCount > 20 Then
-                sPNList.Append("<li class=""page-item"" id=""pi3""><a class=""page-link"">3</a></li>")
+                sPageNationHTML.Append("<li class=""page-item"" id=""pi3""><a class=""page-link"">3</a></li>")
             Else
-                sPNList.Append("<li class=""page-item disabled"" id=""pi3""><a class=""page-link"">3</a></li>")
+                sPageNationHTML.Append("<li class=""page-item disabled"" id=""pi3""><a class=""page-link"">3</a></li>")
             End If
 
-            If iCount < 10 Then
-                sPNList.Append("<li class=""page-item disabled"" id=""pinext""><a Class=""page-link"">›</a></li>")
-                sPNList.Append("<li class=""page-item disabled"" id=""piend"">")
-                sPNList.Append("<a class=""page-link"" aria-label=""Next"">")
-                sPNList.Append("<span aria-hidden=""true"">&raquo;</span>")
-                sPNList.Append("</a>")
-                sPNList.Append("</li>")
-                sPNList.AppendLine("</ul>")
+            '次のページが存在しない場合 ">", ">>" を押せなくする
+            If iCount <= 10 Then
+                sPageNationHTML.Append("<li class=""page-item disabled"" id=""pinext""><a Class=""page-link"">›</a></li>")
+                sPageNationHTML.Append("<li class=""page-item disabled"" id=""piend"">")
+                sPageNationHTML.Append("<a class=""page-link"" aria-label=""Next"">")
+                sPageNationHTML.Append("<span aria-hidden=""true"">&raquo;</span>")
+                sPageNationHTML.Append("</a>")
+                sPageNationHTML.Append("</li>")
+                sPageNationHTML.AppendLine("</ul>")
             Else
-                sPNList.Append("<li class=""page-item"" id=""pinext""><a Class=""page-link"">›</a></li>")
-                sPNList.Append("<li class=""page-item"" id=""piend"">")
-                sPNList.Append("<a class=""page-link"" aria-label=""Next"">")
-                sPNList.Append("<span aria-hidden=""true"">&raquo;</span>")
-                sPNList.Append("</a>")
-                sPNList.Append("</li>")
-                sPNList.AppendLine("</ul>")
+                sPageNationHTML.Append("<li class=""page-item"" id=""pinext""><a Class=""page-link"">›</a></li>")
+                sPageNationHTML.Append("<li class=""page-item"" id=""piend"">")
+                sPageNationHTML.Append("<a class=""page-link"" aria-label=""Next"">")
+                sPageNationHTML.Append("<span aria-hidden=""true"">&raquo;</span>")
+                sPageNationHTML.Append("</a>")
+                sPageNationHTML.Append("</li>")
+                sPageNationHTML.AppendLine("</ul>")
             End If
+
+            iNowPage = Cki.Get_Cookies("EventNowPage")
 
         Catch ex As Exception
             sRet = ex.Message
@@ -331,8 +309,8 @@ Public Class Index : Implements IHttpHandler
 
             hHash.Add("status", sStatus)
             hHash.Add("html", sHTML.ToString)
-            hHash.Add("pnlist", sPNList.ToString)
-            hHash.Add("count", iCount)
+            hHash.Add("PageNationHTML", sPageNationHTML.ToString)
+            hHash.Add("NowPage", iNowPage)
 
             sJSON = jJSON.Serialize(hHash)
         End Try
@@ -340,41 +318,7 @@ Public Class Index : Implements IHttpHandler
         Return sJSON
     End Function
 
-    Public Function Clear(ByVal context As HttpContext) As String
-        Dim cCom As New Common
-        Dim cDB As New CommonDB
-        Dim Cki As New Cookie
-        Dim sSQL As New StringBuilder
-        Dim jJSON As New JavaScriptSerializer
-        Dim sJSON As String = ""
-        Dim hHash As New Hashtable
-        Dim sRet As String = ""
-        Dim sStatus As String = "OK"
-        Try
-            Cki.Release_Cookies("Event")
-            Cki.Release_Cookies("EventStatus")
-            Cki.Release_Cookies("ScheduleFm")
-            Cki.Release_Cookies("ScheduleTo")
-            Cki.Release_Cookies("Keyword")
-            Cki.Release_Cookies("TempTable")
-        Catch ex As Exception
-            sRet = ex.Message
-        Finally
-            cDB.DrClose()
-            cDB.Dispose()
-            If sRet <> "" Then
-                sStatus = "NG"
-                cCom.CmnWriteStepLog(sRet)
-            End If
-
-            hHash.Add("status", sStatus)
-
-            sJSON = jJSON.Serialize(hHash)
-        End Try
-
-        Return sJSON
-    End Function
-
+    'ページ遷移
     Public Function PagiNation(ByVal context As HttpContext) As String
         Dim cCom As New Common
         Dim cDB As New CommonDB
@@ -390,18 +334,17 @@ Public Class Index : Implements IHttpHandler
         Dim sTempTable As String = ""
 
         Dim sHTML As New StringBuilder
-        Dim sPNList As New StringBuilder
+        Dim sPageNationHTML As New StringBuilder
         Dim iCount As Integer = 0
         Dim NowPage As Integer = 1
         Dim OffSet As Integer = 0
 
         Try
-
             NowPage = context.Request.Item("nowpage")
-            Cki.Set_Cookies("nowpage", NowPage, 1)
+            Cki.Set_Cookies("EventNowPage", NowPage, 1)
             OffSet = 10 * (NowPage - 1)
 
-            sTempTable = Cki.Get_Cookies("TempTable")
+            sTempTable = cCom.CmnGet_TableName("Itiran")
 
             sSQL.Clear()
             sSQL.Append(" Select")
@@ -450,9 +393,19 @@ Public Class Index : Implements IHttpHandler
                     Status = "オフ"
                 End If
 
+                'スケジュールがDefaultやEndの場合ブランクにする
+                Dim ScheduleFm As String = cDB.DRData("wScheduleFm")
+                Dim ScheduleTo As String = cDB.DRData("wScheduleTo")
+                If ScheduleFm = cCom.gcDate_DefaultDate Then
+                    ScheduleFm = ""
+                End If
+                If ScheduleTo = cCom.gcDate_EndDate Then
+                    ScheduleTo = ""
+                End If
+
                 sHTML.Append("<tr class=""" & sRow & """>")
                 sHTML.Append("<td align=""left""><a href=""Detail.aspx"" onclick=""EventIdToSession(" & cDB.DRData("wEventID") & ")"">" & cDB.DRData("wEventName") & "</a></td>")
-                sHTML.Append("<td align=""left"">" & cDB.DRData("wScheduleFm") & "～" & cDB.DRData("wScheduleTo") & "</td>")
+                sHTML.Append("<td align=""left"">" & ScheduleFm & "～" & ScheduleTo & "</td>")
                 sHTML.Append("<td align=""left"">&nbsp;" & cDB.DRData("wKeyword") & "</td>")
                 sHTML.Append("<td align=""center"">&nbsp;" & Status & "</td>")
                 sHTML.Append("</tr>")
@@ -461,59 +414,59 @@ Public Class Index : Implements IHttpHandler
             sHTML.Append("</tr>")
             sHTML.Append("</table>")
             If NowPage <= 1 Then
-                sPNList.Clear()
-                sPNList.Append("<ul class=""pagination"" >")
-                sPNList.Append("<li class=""page-item disabled"" id=""pista"">")
-                sPNList.Append("<a class=""page-link"" aria-label=""Previous"">")
-                sPNList.Append("<span aria-hidden=""True"">&laquo;</span>")
-                sPNList.Append("</a>")
-                sPNList.Append("</li>")
-                sPNList.Append("<li class=""page-item disabled"" id=""piback""><a class=""page-link"">‹</a></li>")
+                sPageNationHTML.Clear()
+                sPageNationHTML.Append("<ul class=""pagination"" >")
+                sPageNationHTML.Append("<li class=""page-item disabled"" id=""pista"">")
+                sPageNationHTML.Append("<a class=""page-link"" aria-label=""Previous"">")
+                sPageNationHTML.Append("<span aria-hidden=""True"">&laquo;</span>")
+                sPageNationHTML.Append("</a>")
+                sPageNationHTML.Append("</li>")
+                sPageNationHTML.Append("<li class=""page-item disabled"" id=""piback""><a class=""page-link"">‹</a></li>")
             Else
-                sPNList.Clear()
-                sPNList.Append("<ul class=""pagination"" >")
-                sPNList.Append("<li class=""page-item"" id=""pista"">")
-                sPNList.Append("<a class=""page-link"" aria-label=""Previous"">")
-                sPNList.Append("<span aria-hidden=""True"">&laquo;</span>")
-                sPNList.Append("</a>")
-                sPNList.Append("</li>")
-                sPNList.Append("<li class=""page-item"" id=""piback""><a class=""page-link"">‹</a></li>")
+                sPageNationHTML.Clear()
+                sPageNationHTML.Append("<ul class=""pagination"" >")
+                sPageNationHTML.Append("<li class=""page-item"" id=""pista"">")
+                sPageNationHTML.Append("<a class=""page-link"" aria-label=""Previous"">")
+                sPageNationHTML.Append("<span aria-hidden=""True"">&laquo;</span>")
+                sPageNationHTML.Append("</a>")
+                sPageNationHTML.Append("</li>")
+                sPageNationHTML.Append("<li class=""page-item"" id=""piback""><a class=""page-link"">‹</a></li>")
             End If
             If NowPage >= 3 And iCount \ (NowPage * 10) >= 1 And iCount Mod (NowPage * 10) >= 1 Then
                 For i As Integer = NowPage - 1 To NowPage + 1
                     If NowPage = i Then
-                        sPNList.Append("<li class=""page-item disabled"" id=""pi" & i & """><a class=""page-link"">" & i & "</a></li>")
+                        sPageNationHTML.Append("<li class=""page-item disabled"" id=""pi" & i & """><a class=""page-link"">" & i & "</a></li>")
                     Else
-                        sPNList.Append("<li class=""page-item"" id=""pi" & i & """><a class=""page-link"">" & i & "</a></li>")
+                        sPageNationHTML.Append("<li class=""page-item"" id=""pi" & i & """><a class=""page-link"">" & i & "</a></li>")
                     End If
                 Next
             Else
                 For i As Integer = Math.Max(1, NowPage - 2) To Math.Max(3, NowPage)
                     If i = NowPage Then
-                        sPNList.Append("<li class=""page-item disabled"" id=""pi" & i & """><a class=""page-link"">" & i & "</a></li>")
+                        sPageNationHTML.Append("<li class=""page-item disabled"" id=""pi" & i & """><a class=""page-link"">" & i & "</a></li>")
                     ElseIf iCount \ (i * 10) >= 1 Then
-                        sPNList.Append("<li class=""page-item"" id=""pi" & i & """><a class=""page-link"">" & i & "</a></li>")
+                        sPageNationHTML.Append("<li class=""page-item"" id=""pi" & i & """><a class=""page-link"">" & i & "</a></li>")
                     Else
-                        sPNList.Append("<li class=""page-item disabled"" id=""pi" & i & """><a class=""page-link"">" & i & "</a></li>")
+                        sPageNationHTML.Append("<li class=""page-item disabled"" id=""pi" & i & """><a class=""page-link"">" & i & "</a></li>")
                     End If
                 Next
             End If
             If iCount Mod (NowPage * 10) >= 1 And iCount \ (NowPage * 10) >= 1 Then
-                sPNList.Append("<li class=""page-item"" id=""pinext""><a Class=""page-link"">›</a></li>")
-                sPNList.Append("<li class=""page-item"" id=""piend"">")
-                sPNList.Append("<a class=""page-link"" aria-label=""Next"">")
-                sPNList.Append("<span aria-hidden=""true"">&raquo;</span>")
-                sPNList.Append("</a>")
-                sPNList.Append("</li>")
-                sPNList.AppendLine("</ul>")
+                sPageNationHTML.Append("<li class=""page-item"" id=""pinext""><a Class=""page-link"">›</a></li>")
+                sPageNationHTML.Append("<li class=""page-item"" id=""piend"">")
+                sPageNationHTML.Append("<a class=""page-link"" aria-label=""Next"">")
+                sPageNationHTML.Append("<span aria-hidden=""true"">&raquo;</span>")
+                sPageNationHTML.Append("</a>")
+                sPageNationHTML.Append("</li>")
+                sPageNationHTML.AppendLine("</ul>")
             Else
-                sPNList.Append("<li class=""page-item disabled"" id=""pinext""><a Class=""page-link"">›</a></li>")
-                sPNList.Append("<li class=""page-item disabled"" id=""piend"">")
-                sPNList.Append("<a class=""page-link"" aria-label=""Next"">")
-                sPNList.Append("<span aria-hidden=""true"">&raquo;</span>")
-                sPNList.Append("</a>")
-                sPNList.Append("</li>")
-                sPNList.AppendLine("</ul>")
+                sPageNationHTML.Append("<li class=""page-item disabled"" id=""pinext""><a Class=""page-link"">›</a></li>")
+                sPageNationHTML.Append("<li class=""page-item disabled"" id=""piend"">")
+                sPageNationHTML.Append("<a class=""page-link"" aria-label=""Next"">")
+                sPageNationHTML.Append("<span aria-hidden=""true"">&raquo;</span>")
+                sPageNationHTML.Append("</a>")
+                sPageNationHTML.Append("</li>")
+                sPageNationHTML.AppendLine("</ul>")
             End If
 
 
@@ -529,7 +482,7 @@ Public Class Index : Implements IHttpHandler
 
             hHash.Add("status", sStatus)
             hHash.Add("html", sHTML.ToString)
-            hHash.Add("pnlist", sPNList.ToString)
+            hHash.Add("PageNationHTML", sPageNationHTML.ToString)
             hHash.Add("count", iCount)
 
             sJSON = jJSON.Serialize(hHash)
@@ -537,6 +490,43 @@ Public Class Index : Implements IHttpHandler
 
         Return sJSON
 
+    End Function
+
+    'クリア処理(未実装)
+    Public Function Clear(ByVal context As HttpContext) As String
+        Dim cCom As New Common
+        Dim cDB As New CommonDB
+        Dim Cki As New Cookie
+        Dim sSQL As New StringBuilder
+        Dim jJSON As New JavaScriptSerializer
+        Dim sJSON As String = ""
+        Dim hHash As New Hashtable
+        Dim sRet As String = ""
+        Dim sStatus As String = "OK"
+        Try
+            Cki.Release_Cookies("EventName")
+            Cki.Release_Cookies("EventStatus")
+            Cki.Release_Cookies("ScheduleFm")
+            Cki.Release_Cookies("ScheduleTo")
+            Cki.Release_Cookies("Keyword")
+            Cki.Release_Cookies("TempTable")
+            Cki.Release_Cookies("EventNowPage")
+        Catch ex As Exception
+            sRet = ex.Message
+        Finally
+            cDB.DrClose()
+            cDB.Dispose()
+            If sRet <> "" Then
+                sStatus = "NG"
+                cCom.CmnWriteStepLog(sRet)
+            End If
+
+            hHash.Add("status", sStatus)
+
+            sJSON = jJSON.Serialize(hHash)
+        End Try
+
+        Return sJSON
     End Function
 
     Public ReadOnly Property IsReusable() As Boolean Implements IHttpHandler.IsReusable
