@@ -80,7 +80,7 @@ Public Class Index : Implements IHttpHandler
             cDB.ParameterClear()
 
             If sEventName <> "" Then
-                sWhere.Append(" AND EventName LIKE @EventName")
+                sWhere.Append(" AND EventName LIKE BINARY @EventName")
                 cDB.AddWithValue("@EventName", "%" & sEventName & "%")
 
             End If
@@ -90,24 +90,22 @@ Public Class Index : Implements IHttpHandler
                 cDB.AddWithValue("@EventStatus", sEventStatus)
             End If
 
-            'スケジュールの両方入力と片方入力で処理が違う
-            If sScheduleFm <> "" And sScheduleTo <> "" Then
-                sWhere.Append(" AND ScheduleFm <= @ScheduleFm")
-                sWhere.Append(" AND ScheduleTo >= @ScheduleTo")
+            If sScheduleFm <> "" Then
+                sWhere.Append(" AND ScheduleTo >= @ScheduleFm")
                 cDB.AddWithValue("@ScheduleFm", sScheduleFm)
-                cDB.AddWithValue("@ScheduleTo", sScheduleTo)
-            ElseIf sScheduleFm <> "" Then
-                sWhere.Append(" AND ScheduleFm >= @ScheduleFm")
-                cDB.AddWithValue("@ScheduleFm", sScheduleFm)
-            ElseIf sScheduleTo <> "" Then
-                sWhere.Append(" AND ScheduleTo >= @ScheduleTo")
+            End If
+
+            If sScheduleTo <> "" Then
+                sWhere.Append(" AND ScheduleFm <= @ScheduleTo")
                 cDB.AddWithValue("@ScheduleTo", sScheduleTo)
             End If
 
             If sKeyword <> "" Then
-                sWhere.Append(" AND Keyword LIKE @Keyword")
+                sWhere.Append(" AND Keyword LIKE BINARY @Keyword")
                 cDB.AddWithValue("@Keyword", "%" & sKeyword & "%")
             End If
+
+            sWhere.Append(" AND EventID <> 0")
 
             '検索結果を作業用テーブルに挿入
             sSQL.Clear()

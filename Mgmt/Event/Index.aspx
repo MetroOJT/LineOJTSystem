@@ -55,13 +55,13 @@
                         </div>
                     </form>
                 </div>
-            </div>
             <h2 class="row accordion-header">
                 <div id="cola" class="col-10"></div>
                 <div id="colb" class="col-2">
                     <button class="accordion-button" type="button" id="btnClose" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">閉じる</button>
                 </div>
             </h2>
+            </div>
         </div>
         <div id="CntArea"></div>
         <nav aria-label="Page navigation example" id="PageNationArea"></nav>
