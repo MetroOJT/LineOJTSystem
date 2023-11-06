@@ -236,7 +236,7 @@ Public Class Index : Implements IHttpHandler
             sPNList.Append("</a>")
             sPNList.Append("</li>")
             sPNList.Append("<li class=""page-item"" id=""piback""><a class=""page-link"" href=""#"">‹</a></li>")
-            sPNList.Append("<li class=""page-item"" id=""pi1""><a class=""page-link"" href=""#"">1</a></li>")
+            sPNList.Append("<li class=""page-item"" id=""pi1""><a class=""page-link"" href=""#"" style=""background-color: silver;"">1</a></li>")
             If iCount > 10 Then
                 sPNList.Append("<li class=""page-item"" id=""pi2""><a class=""page-link"" href=""#"">2</a></li>")
             Else
@@ -311,9 +311,14 @@ Public Class Index : Implements IHttpHandler
         Dim sTempTable As String = ""
 
         Dim sHTML As New StringBuilder
+        Dim sPNList As New StringBuilder
         Dim iCount As Integer = 0
         Dim NowPage As Integer = 1
         Dim OffSet As Integer = 0
+        Dim Page_Median As Integer
+        Dim Select_color_one As String = ""
+        Dim Select_color_two As String = ""
+        Dim Select_color_thr As String = ""
 
         Try
 
@@ -387,6 +392,62 @@ Public Class Index : Implements IHttpHandler
             sHTML.Append("</tr>")
             sHTML.Append("</table>")
 
+            'ページリンク(表示数字処理)
+            Page_Median = NowPage
+            If (Page_Median = 1) Then
+                Page_Median = 2
+                Select_color_one = "style=background-color:silver;"
+            ElseIf (Page_Median = Math.Ceiling(iCount / 10)) Then
+                Page_Median -= 1
+                Select_color_thr = "style=background-color:silver;"
+            Else
+                Select_color_two = "style=background-color:silver;"
+            End If
+
+            sPNList.Clear()
+            sPNList.Append("<div class=""col"">")
+            sPNList.Append("<ul class=""pagination"" >")
+            sPNList.Append("<li class=""page-item"" id=""pista"">")
+            sPNList.Append("<a class=""page-link"" href=""#"" aria-label=""Previous"">")
+            sPNList.Append("<span aria-hidden=""True"">&laquo;</span>")
+            sPNList.Append("</a>")
+            sPNList.Append("</li>")
+            sPNList.Append("<li class=""page-item"" id=""piback""><a class=""page-link"" href=""#"">‹</a></li>")
+            sPNList.Append("<li class=""page-item"" id=""pi1""><a class=""page-link"" href=""#"" " & Select_color_one & ">" & Page_Median - 1 & "</a></li>")
+            If iCount > 10 Then
+                sPNList.Append("<li class=""page-item"" id=""pi2""><a class=""page-link"" href=""#"" " & Select_color_two & ">" & Page_Median & "</a></li>")
+            Else
+                sPNList.Append("<li class=""page-item pe-none"" id=""pi2""><a class=""page-link text-dark"" href=""#"" " & Select_color_two & ">" & Page_Median & "</a></li>")
+            End If
+
+            If iCount > 20 Then
+                sPNList.Append("<li class=""page-item"" id=""pi3""><a class=""page-link"" href=""#"" " & Select_color_thr & ">" & Page_Median + 1 & "</a></li>")
+            Else
+                sPNList.Append("<li class=""page-item pe-none"" id=""pi3""><a class=""page-link text-dark"" href=""#"" " & Select_color_thr & ">" & Page_Median + 1 & "</a></li>")
+            End If
+            sPNList.Append("<li class=""page-item"" id=""pinext""><a Class=""page-link"" href=""#"">›</a></li>")
+            sPNList.Append("<li class=""page-item"" id=""piend"">")
+            sPNList.Append("<a class=""page-link"" href=""#"" aria-label=""Next"">")
+            sPNList.Append("<span aria-hidden=""true"">&raquo;</span>")
+            sPNList.Append("</a>")
+            sPNList.Append("</li>")
+            sPNList.AppendLine("</ul>")
+            sPNList.Append("</div>")
+
+            sPNList.Append("<div class=""col"">")
+            sPNList.Append("<div Class=""row g-3 align-items-center"">")
+            sPNList.Append("<div Class=""col-auto"">")
+            sPNList.Append("<Label for=""PageNumber"" class=""col-form-label"">ページ検索</label>")
+            sPNList.Append("</div>")
+            sPNList.Append("<div Class=""col-auto"">")
+            sPNList.Append("<input type=""text"" inputmode=""numeric"" pattern=""^[1-9][0-9]*$"" maxlength=""8"" oninput=""value = value.replace(/[^0-9]+/i,'');"" id=""PageNumber"" Class=""form-control"" aria-labelledby=""passwordHelpInline"">")
+            sPNList.Append("</div>")
+            sPNList.Append("<div Class=""col-auto"">")
+            sPNList.Append("<input type=""button"" class=""btn btn-primary"" onclick=""PageNumber_Search()"" value=""検索"" />")
+            sPNList.Append("</div>")
+            sPNList.Append("</div>")
+            sPNList.Append("</div>")
+
         Catch ex As Exception
             sRet = ex.Message
         Finally
@@ -399,7 +460,9 @@ Public Class Index : Implements IHttpHandler
 
             hHash.Add("status", sStatus)
             hHash.Add("html", sHTML.ToString)
+            hHash.Add("pnlist", sPNList.ToString)
             hHash.Add("count", iCount)
+            hHash.Add("pm", Page_Median)
 
             sJSON = jJSON.Serialize(hHash)
         End Try
