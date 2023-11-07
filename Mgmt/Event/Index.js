@@ -172,9 +172,11 @@ function MakeItiran() {
                             // .page-itemに関数を与える
                             const page_item = document.querySelectorAll(".page-item");
                             page_item.forEach(pi => {
-                                pi.addEventListener('click', function () {
-                                    PagiNation(pi.id);
-                                });
+                                if (!pi.classList.contains('disabled')) {
+                                    pi.addEventListener('click', function () {
+                                        PagiNation(pi.id);
+                                    });
+                                }
                             });
                         };
                     };
@@ -238,9 +240,11 @@ function PagiNation(pid) {
                         // .page-itemに関数を与える
                         const page_item = document.querySelectorAll(".page-item");
                         page_item.forEach(pi => {
-                            pi.addEventListener('click', function () {
-                                PagiNation(pi.id);
-                            });
+                            if (!pi.classList.contains('disabled')) {
+                                pi.addEventListener('click', function () {
+                                    PagiNation(pi.id);
+                                });
+                            }
                         });
                     } 
                 } else {
