@@ -6,8 +6,6 @@ let Ajax_File = "Detail.ashx";
 //直前に閲覧したページのURLを保持しておく変数
 let Referrer = document.referrer;
 
-
-
 $(function () {
     //ヘッダーの担当者名を入れる関数
     DspLoginUserName();
@@ -92,23 +90,25 @@ function SavebtnClick() {
     let Messages = [];
     let work = "";
 
-    //スケジュールの日付を整形
+    
     if ($("input[name=EventStatus]:checked").is(':checked')) {
         EventStatus = $('input[name="EventStatus"]:checked').val();
+   
+    };
 
-        if (ScheduleFm != "" && ScheduleTo != "") {
-            if (ScheduleFm > ScheduleTo) {
-                work = ScheduleFm;
-                ScheduleFm = ScheduleTo;
-                ScheduleTo = work;
-                $("#txtScheduleFm").val(ScheduleFm);
-                $("#txtScheduleTo").val(ScheduleTo);
-            };
+    //スケジュールの日付を整形
+    if (ScheduleFm != "" && ScheduleTo != "") {
+        if (ScheduleFm > ScheduleTo) {
+            work = ScheduleFm;
+            ScheduleFm = ScheduleTo;
+            ScheduleTo = work;
+            $("#txtScheduleFm").val(ScheduleFm);
+            $("#txtScheduleTo").val(ScheduleTo);
         };
     };
+
     let form = document.querySelector('#main');
-    let elm = form.querySelectorAll('.form-control')
-    console.log(elm)
+    let elm = form.querySelectorAll('.form-control');
     //各データの入力チェック
     form.querySelectorAll('.form-control').forEach(function (elm) {
         let required = elm.required;
@@ -122,25 +122,65 @@ function SavebtnClick() {
             elm.classList.remove('is-invalid');
         }
     })
+    form.querySelectorAll('.form-check-input').forEach(function (elm) {
+        if (!elm.checked) {
+            elm.classList.add('is-invalid');
+            elm.classList.remove('is-valid');
+            event.preventDefault();
+            event.stopPropagation();
+        } else {
+            elm.classList.add('is-valid');
+            elm.classList.remove('is-invalid');
+        }
+    })
 
+    if ($("#EventStatusOn").prop("checked") && !$("#EventStatusOff").prop("checked")) {
+        document.getElementById("EventStatusOff").classList.add('is-valid');
+        document.getElementById("EventStatusOff").classList.remove('is-invalid');
+        document.getElementById("Status-invalid-feedback").classList.remove("invalid-feedback-disp");
+        document.getElementById("Status-invalid-feedback").textContent = "";
+    }else if(!$("#EventStatusOn").prop("checked") && $("#EventStatusOff").prop("checked")) {
+        document.getElementById("EventStatusOn").classList.add('is-valid');
+        document.getElementById("EventStatusOn").classList.remove('is-invalid');
+        document.getElementById("Status-invalid-feedback").classList.remove("invalid-feedback-disp");
+        document.getElementById("Status-invalid-feedback").textContent = "";
+    } else if (!$("#EventStatusOn").prop("checked") && !$("#EventStatusOff").prop("checked")) {
+        document.getElementById("Status-invalid-feedback").classList.add("invalid-feedback-disp");
+        document.getElementById("Status-invalid-feedback").textContent = "ステータスを選択してください。";
+    } else {
+        document.getElementById("Status-invalid-feedback").classList.remove("invalid-feedback-disp");
+        document.getElementById("Status-invalid-feedback").textContent = "";
+    }
+    
+
+
+    if ($("#txtScheduleFm").val().length != 0 && $("#txtScheduleTo").val().length == 0) {   
+        document.getElementById("txtScheduleTo").classList.add('is-valid');
+        document.getElementById("txtScheduleTo").classList.remove('is-invalid');
+        document.getElementById("Schedule-invalid-feedback").textContent = "";
+    } else if ($("#txtScheduleFm").val().length == 0 && $("#txtScheduleTo").val().length != 0) {
+        document.getElementById("txtScheduleFm").classList.add('is-valid');
+        document.getElementById("txtScheduleFm").classList.remove('is-invalid');
+        document.getElementById("Schedule-invalid-feedback").textContent = "";
+    } else if($("#txtScheduleFm").val().length == 0 && $("#txtScheduleTo").val().length == 0){
+        document.getElementById("Schedule-invalid-feedback").textContent = "スケジュールを選択してください。";
+    } else {
+        document.getElementById("Schedule-invalid-feedback").textContent = "";
+    }
     
     if (EventName == "") {
-        alert("イベント名を入力してください。")
         return false;
     };
 
     if (EventStatus == "") {
-        alert("ステータスを選択してください。")
         return false;
     };
 
     if (ScheduleFm == "" && ScheduleTo == "") {
-        alert("スケジュールを入力して下さい。");
         return false;
     };
 
     if (Keyword == "") {
-        alert("キーワードを入力して下さい。");
         return false;
     };
 
@@ -148,12 +188,10 @@ function SavebtnClick() {
     if (document.getElementsByClassName("txtMessage").length != 0) {
         for(ele of document.getElementsByClassName("txtMessage")) {
             if (ele.value == "") {
-                alert("メッセージを全て入力してください。");
                 return false;
             }
         }
     } else {
-        alert("メッセージを1つ以上入力してください。");
         return false;
     }
 
