@@ -8,10 +8,20 @@
 #Condition div{
     margin-bottom: 12px;
 }
-#txtDateFm, #txtDateTo{
+#txtScheduleFm, #txtScheduleTo{
     width: 25%;
     display: inline-block;
 }
-#txtEvent, #txtKeyword {
-    width: 25%;
+#txtScheduleFm {
+    margin-right: 20px;
+}
+#txtScheduleTo {
+    margin-left: 20px;
+}
+#txtEventName, #txtKeyword {
+    width: 70%;
+}
+#EventStatus {
+    display: inline-block;
+    width: 20%;
 }

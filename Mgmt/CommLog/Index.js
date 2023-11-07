@@ -101,35 +101,49 @@ function Search() {
 
 // ページネーション
 function PagiNation(pid) {
-    switch (pid) { 
+    switch (pid) {
         case "pista":
             Npage = 1;
             break;
         case "piback":
             if (Npage > 1) {
                 Npage -= 1;
-                break;
             }
-        case "pi1":
-            Npage = 1;
+            break;
+        case "pi1": // 現在表示しているページの１つ前
+            if (Npage == Math.ceil(Nod / 10)) {
+                Npage -= 2;
+            }else if (Npage > 1) {
+                Npage -= 1;
+            }
             break;
         case "pi2":
-            Npage = 2;
+            if (Npage == 1) {
+                Npage = 2;
+            } else if (Npage == Math.ceil(Nod / 10)) {
+                Npage -= 1;
+            } else {
+                Npage = Npage
+            }
             break;
-        case "pi3":
-            Npage = 3;
+        case "pi3": // 現在表示しているページの１つ後
+            if (Npage == 1) {
+                Npage = 3;
+            }else if (Npage < Math.ceil(Nod / 10)) {
+                Npage += 1;
+            }
             break;
         case "pinext":
             if (Npage < Math.ceil(Nod / 10)) {
                 Npage += 1;
-                break;
             }
+            break;
         case "piend":
             Npage = Math.ceil(Nod / 10);
             break;
         default:
             Npage = pid;
-            break;  
+            break;
     }
 
     $.ajax({
@@ -146,6 +160,8 @@ function PagiNation(pid) {
                     if (Number(data.count) > 0) {
                         if (Npage > data.count / 10) {
                             Npage = Math.ceil(data.count / 10);
+                        } else if (Npage < 1) {
+                            Npage = 1;
                         }
                         const NpageFm = (parseInt(Npage) - 1) * 10 + 1; // 件数表示(前)
                         var NpageTo = 0; // 件数表示(後)
@@ -154,15 +170,22 @@ function PagiNation(pid) {
                         } else {
                             NpageTo = parseInt(Npage) * 10;
                         }
-                        document.getElementById("CntArea").innerText = "件数：" + data.count + "件" + " (表示中: " + Npage + " ページ , " + NpageFm + "件 ～ " + NpageTo + "件)";
+                        document.getElementById("CntArea").innerText = "件数：" + data.count + "件" + " (表示中: " + Npage + " / " + Math.ceil(data.count / 10) + " ページ , " + NpageFm + "件 ～ " + NpageTo + "件)";
                         if (data.html != "") {
+                            document.getElementById("PNArea").innerHTML = data.pnlist;
                             document.getElementById("ResultArea").innerHTML = data.html;
                             document.getElementById("PageNumber").value = Npage;
+                            page_item = document.querySelectorAll(".page-item");
+                            page_item.forEach(pi => {
+                                pi.addEventListener('click', function () {
+                                    PagiNation(pi.id);
+                                });
+                            });
                             detail_btn();
                         }
                     } else {
                         document.getElementById("PNArea").innerHTML = "";
-                        document.getElementById("ResultArea").innerText = "該当するユーザーが存在しません。";
+                        document.getElementById("ResultArea").innerText = "該当するデータが存在しませんでした。";
                     }
                 } else {
                     alert(data.status);
@@ -194,7 +217,7 @@ function MakeResult() {
                         } else {
                             NpageTo = parseInt(Npage) * 10;
                         }
-                        document.getElementById("CntArea").innerText = "件数：" + data.count + "件" + " (表示中: " + Npage + " ページ , " + NpageFm + "件 ～ " + NpageTo + "件)";
+                        document.getElementById("CntArea").innerText = "件数：" + data.count + "件" + " (表示中: " + Npage + " / " + Math.ceil(data.count / 10) + " ページ , " + NpageFm + "件 ～ " + NpageTo + "件)";
                         if (data.html != "") {
                             document.getElementById("PNArea").innerHTML = data.pnlist;
                             document.getElementById("ResultArea").innerHTML = data.html;
@@ -209,7 +232,7 @@ function MakeResult() {
                     } else {
                         document.getElementById("CntArea").innerText = "";
                         document.getElementById("PNArea").innerHTML = "";
-                        document.getElementById("ResultArea").innerText = "該当するユーザーが存在しません。";
+                        document.getElementById("ResultArea").innerText = "該当するデータが存在しませんでした。";
                     }
                 } else {
                     alert(data.status);
