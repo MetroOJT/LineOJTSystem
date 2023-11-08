@@ -47,30 +47,6 @@ function btnLoginClick() {
     const error_div = document.querySelector('.error_div');
     error_div.innerHTML = '';
 
-    const form = document.querySelector("#form1");
-    console.log("a");
-    form.querySelectorAll('.form-control').forEach(function (elm) {
-        var maxlen = elm.getAttribute('data-maxlen');
-        var regexp = elm.getAttribute('data-regexp');
-        console.log("値：", elm.value);
-        console.log(maxlen);
-        console.log("length: ", elm.value.length);
-        console.log(regexp);
-        console.log("正規表現：", elm.value.match(regexp));
-
-        if ((maxlen && (maxlen < elm.value.length)) ||
-            (regexp && !(elm.value.match(regexp)))) {
-            elm.classList.add('is-invalid');
-            elm.classList.remove('is-valid');
-            console.log("b");
-        } else {
-            elm.classList.add('is-valid');
-            elm.classList.remove('is-invalid');
-        }
-    });
-
-
-
     // 入力値のチェック
     if (User_ID == "") {
         const error_p = document.createElement('p');
