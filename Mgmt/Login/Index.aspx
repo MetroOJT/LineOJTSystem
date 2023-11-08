@@ -20,14 +20,14 @@
                 <div class="d-flex">
                     <label class="m-auto">ユーザーID</label>
                     <div class="InputField_div">
-                        <input type="text" id="user_ID" required="required" class="border-0 w-100 form-control" maxlength="20" data-regexp="^[0-9]{5}$" />
+                        <input type="text" id="user_ID" required="required" class="border-0 w-100 form-contro" maxlength="20"/>
                     </div>
                     <div class="invalid-feedback">Required.</div>
                 </div>
                 <div class="d-flex mt-2">
                     <label class="m-auto">パスワード</label>
                     <div class="InputField_div">
-                        <input type="password" id="user_password" required="required" class="border-0 w-100 form-control" autocomplete="off" maxlength="20" data-maxlen=20 data-regexp="^[0-9a-z]{1,}$"/>
+                        <input type="password" id="user_password" required="required" class="border-0 w-100" autocomplete="off" maxlength="20" />
                         <span id="buttonEye" class="fa fa-eye-slash"></span>
                     </div>
                     <div class="invalid-feedback">Required.</div>
