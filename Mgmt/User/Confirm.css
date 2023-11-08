@@ -1,0 +1,16 @@
+﻿label{
+    width: 150px;
+    font-weight: bold;
+}
+.InputField_div{
+    display: flex;
+    border: 1px solid black;
+    margin-left: 5px;
+    width: 300px;
+}
+#buttonEye_1, #buttonEye_2{
+    margin: auto;
+}
+.error_div{
+    margin: auto;
+}
