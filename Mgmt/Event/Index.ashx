@@ -433,12 +433,13 @@ Public Class Index : Implements IHttpHandler
             End If
             '末尾のページに遷移したときのページャがおかしい
             If NowPage > cCom.gcPageNationNumCount \ 2 Then
-                For i As Integer = NowPage - ((cCom.gcPageNationNumCount - 1) \ 2) To NowPage + (cCom.gcPageNationNumCount \ 2)
+                Dim PageNationNumMax As Integer = Math.Min(NowPage + (cCom.gcPageNationNumCount \ 2), iCount \ 10 + 1)
+                For i As Integer = PageNationNumMax - cCom.gcPageNationNumCount + 1 To PageNationNumMax
                     If NowPage = i Then
                         sPageNationHTML.Append("<li class=""page-item disabled"" id=""pi" & i & """><a class=""page-link"">" & i & "</a></li>")
                     ElseIf i = 1 Then
                         sPageNationHTML.Append("<li class=""page-item"" id=""pi" & i & """><a class=""page-link"">" & i & "</a></li>")
-                    ElseIf i <> 1 AndAlso iCount \ ((i - 1) * 10) >= 1 Then
+                    ElseIf iCount \ ((i - 1) * 10) >= 1 Then
                         sPageNationHTML.Append("<li class=""page-item"" id=""pi" & i & """><a class=""page-link"">" & i & "</a></li>")
                     End If
                 Next
