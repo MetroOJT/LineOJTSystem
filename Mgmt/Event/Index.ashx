@@ -252,46 +252,47 @@ Public Class Index : Implements IHttpHandler
             'PageNation生成
             sPageNationHTML.Clear()
             sPageNationHTML.Append("<ul class=""pagination"" >")
-            sPageNationHTML.Append("<li class=""page-item disabled"" id=""pista"">")
-            sPageNationHTML.Append("<a class=""page-link"" aria-label=""Previous"">")
-            sPageNationHTML.Append("<span aria-hidden=""True"">&laquo;</span>")
-            sPageNationHTML.Append("</a>")
-            sPageNationHTML.Append("</li>")
-            sPageNationHTML.Append("<li class=""page-item disabled"" id=""piback""><a class=""page-link"">‹</a></li>")
-            sPageNationHTML.Append("<li class=""page-item disabled"" id=""pi1""><a class=""page-link"">1</a></li>")
-
-            '2ページ目が存在しない場合 "2" を押せなくする
             If iCount > 10 Then
-                sPageNationHTML.Append("<li class=""page-item"" id=""pi2""><a class=""page-link"">2</a></li>")
-            Else
-                sPageNationHTML.Append("<li class=""page-item disabled"" id=""pi2""><a class=""page-link"">2</a></li>")
-            End If
-
-            '3ページ目が存在しない場合 "3" を押せなくする
-            If iCount > 20 Then
-                sPageNationHTML.Append("<li class=""page-item"" id=""pi3""><a class=""page-link"">3</a></li>")
-            Else
-                sPageNationHTML.Append("<li class=""page-item disabled"" id=""pi3""><a class=""page-link"">3</a></li>")
-            End If
-
-            '次のページが存在しない場合 ">", ">>" を押せなくする
-            If iCount <= 10 Then
-                sPageNationHTML.Append("<li class=""page-item disabled"" id=""pinext""><a Class=""page-link"">›</a></li>")
-                sPageNationHTML.Append("<li class=""page-item disabled"" id=""piend"">")
-                sPageNationHTML.Append("<a class=""page-link"" aria-label=""Next"">")
-                sPageNationHTML.Append("<span aria-hidden=""true"">&raquo;</span>")
+                sPageNationHTML.Append("<li class=""page-item disabled"" id=""pista"">")
+                sPageNationHTML.Append("<a class=""page-link"" aria-label=""Previous"">")
+                sPageNationHTML.Append("<span aria-hidden=""True"">&laquo;</span>")
                 sPageNationHTML.Append("</a>")
                 sPageNationHTML.Append("</li>")
-                sPageNationHTML.AppendLine("</ul>")
-            Else
+                sPageNationHTML.Append("<li class=""page-item disabled"" id=""piback""><a class=""page-link"">‹</a></li>")
+            End If
+            sPageNationHTML.Append("<li class=""page-item disabled"" id=""pi1""><a class=""page-link"">1</a></li>")
+
+            For i As Integer = 1 To cCom.gcPageNationNumCount
+                If i = 1 Then
+                    sPageNationHTML.Append("<li class=""page-item disabled"" id=""pi" & i & """><a class=""page-link"">" & i & "</a></li>")
+                ElseIf i <> 1 AndAlso iCount \ ((i - 1) * 10) >= 1 Then
+                    sPageNationHTML.Append("<li class=""page-item"" id=""pi" & i & """><a class=""page-link"">" & i & "</a></li>")
+                End If
+            Next
+            ''2ページ目が存在しない場合 "2" を押せなくする
+            'If iCount > 10 Then
+            '    sPageNationHTML.Append("<li class=""page-item"" id=""pi2""><a class=""page-link"">2</a></li>")
+            'Else
+            '    sPageNationHTML.Append("<li class=""page-item disabled"" id=""pi2""><a class=""page-link"">2</a></li>")
+            'End If
+
+            ''3ページ目が存在しない場合 "3" を押せなくする
+            'If iCount > 20 Then
+            '    sPageNationHTML.Append("<li class=""page-item"" id=""pi3""><a class=""page-link"">3</a></li>")
+            'Else
+            '    sPageNationHTML.Append("<li class=""page-item disabled"" id=""pi3""><a class=""page-link"">3</a></li>")
+            'End If
+
+            '次のページが存在しない場合 ">", ">>" を押せなくする
+            If iCount > 10 Then
                 sPageNationHTML.Append("<li class=""page-item"" id=""pinext""><a Class=""page-link"">›</a></li>")
                 sPageNationHTML.Append("<li class=""page-item"" id=""piend"">")
                 sPageNationHTML.Append("<a class=""page-link"" aria-label=""Next"">")
                 sPageNationHTML.Append("<span aria-hidden=""true"">&raquo;</span>")
                 sPageNationHTML.Append("</a>")
                 sPageNationHTML.Append("</li>")
-                sPageNationHTML.AppendLine("</ul>")
             End If
+            sPageNationHTML.AppendLine("</ul>")
 
             iNowPage = Cki.Get_Cookies("EventNowPage")
 
@@ -411,61 +412,68 @@ Public Class Index : Implements IHttpHandler
             Loop
             sHTML.Append("</tr>")
             sHTML.Append("</table>")
-            If NowPage <= 1 Then
-                sPageNationHTML.Clear()
-                sPageNationHTML.Append("<ul class=""pagination"" >")
-                sPageNationHTML.Append("<li class=""page-item disabled"" id=""pista"">")
-                sPageNationHTML.Append("<a class=""page-link"" aria-label=""Previous"">")
-                sPageNationHTML.Append("<span aria-hidden=""True"">&laquo;</span>")
-                sPageNationHTML.Append("</a>")
-                sPageNationHTML.Append("</li>")
-                sPageNationHTML.Append("<li class=""page-item disabled"" id=""piback""><a class=""page-link"">‹</a></li>")
-            Else
-                sPageNationHTML.Clear()
-                sPageNationHTML.Append("<ul class=""pagination"" >")
-                sPageNationHTML.Append("<li class=""page-item"" id=""pista"">")
-                sPageNationHTML.Append("<a class=""page-link"" aria-label=""Previous"">")
-                sPageNationHTML.Append("<span aria-hidden=""True"">&laquo;</span>")
-                sPageNationHTML.Append("</a>")
-                sPageNationHTML.Append("</li>")
-                sPageNationHTML.Append("<li class=""page-item"" id=""piback""><a class=""page-link"">‹</a></li>")
+            sPageNationHTML.Clear()
+            sPageNationHTML.Append("<ul class=""pagination"" >")
+            If iCount > 10 Then
+                If NowPage <= 1 Then
+                    sPageNationHTML.Append("<li class=""page-item disabled"" id=""pista"">")
+                    sPageNationHTML.Append("<a class=""page-link"" aria-label=""Previous"">")
+                    sPageNationHTML.Append("<span aria-hidden=""True"">&laquo;</span>")
+                    sPageNationHTML.Append("</a>")
+                    sPageNationHTML.Append("</li>")
+                    sPageNationHTML.Append("<li class=""page-item disabled"" id=""piback""><a class=""page-link"">‹</a></li>")
+                Else
+                    sPageNationHTML.Append("<li class=""page-item"" id=""pista"">")
+                    sPageNationHTML.Append("<a class=""page-link"" aria-label=""Previous"">")
+                    sPageNationHTML.Append("<span aria-hidden=""True"">&laquo;</span>")
+                    sPageNationHTML.Append("</a>")
+                    sPageNationHTML.Append("</li>")
+                    sPageNationHTML.Append("<li class=""page-item"" id=""piback""><a class=""page-link"">‹</a></li>")
+                End If
             End If
-            If NowPage >= 3 And iCount \ (NowPage * 10) >= 1 And iCount Mod (NowPage * 10) >= 1 Then
-                For i As Integer = NowPage - 1 To NowPage + 1
+            '末尾のページに遷移したときのページャがおかしい
+            If NowPage > cCom.gcPageNationNumCount \ 2 Then
+                Dim PageNationNumMax As Integer = Math.Min(NowPage + (cCom.gcPageNationNumCount \ 2), iCount \ 10 + 1)
+                For i As Integer = PageNationNumMax - cCom.gcPageNationNumCount + 1 To PageNationNumMax
                     If NowPage = i Then
                         sPageNationHTML.Append("<li class=""page-item disabled"" id=""pi" & i & """><a class=""page-link"">" & i & "</a></li>")
-                    Else
+                    ElseIf i = 1 Then
+                        sPageNationHTML.Append("<li class=""page-item"" id=""pi" & i & """><a class=""page-link"">" & i & "</a></li>")
+                    ElseIf iCount \ ((i - 1) * 10) >= 1 Then
                         sPageNationHTML.Append("<li class=""page-item"" id=""pi" & i & """><a class=""page-link"">" & i & "</a></li>")
                     End If
                 Next
             Else
-                For i As Integer = Math.Max(1, NowPage - 2) To Math.Max(3, NowPage)
+                For i As Integer = 1 To cCom.gcPageNationNumCount
                     If i = NowPage Then
                         sPageNationHTML.Append("<li class=""page-item disabled"" id=""pi" & i & """><a class=""page-link"">" & i & "</a></li>")
-                    ElseIf iCount \ (i * 10) >= 1 Then
+                    ElseIf i = 1 Then
                         sPageNationHTML.Append("<li class=""page-item"" id=""pi" & i & """><a class=""page-link"">" & i & "</a></li>")
-                    Else
-                        sPageNationHTML.Append("<li class=""page-item disabled"" id=""pi" & i & """><a class=""page-link"">" & i & "</a></li>")
+                    ElseIf iCount \ ((i - 1) * 10) >= 1 Then
+                        sPageNationHTML.Append("<li class=""page-item"" id=""pi" & i & """><a class=""page-link"">" & i & "</a></li>")
+                        'Else
+                        '    sPageNationHTML.Append("<li class=""page-item disabled"" id=""pi" & i & """><a class=""page-link"">" & i & "</a></li>")
                     End If
                 Next
             End If
-            If iCount Mod (NowPage * 10) >= 1 And iCount \ (NowPage * 10) >= 1 Then
-                sPageNationHTML.Append("<li class=""page-item"" id=""pinext""><a Class=""page-link"">›</a></li>")
-                sPageNationHTML.Append("<li class=""page-item"" id=""piend"">")
-                sPageNationHTML.Append("<a class=""page-link"" aria-label=""Next"">")
-                sPageNationHTML.Append("<span aria-hidden=""true"">&raquo;</span>")
-                sPageNationHTML.Append("</a>")
-                sPageNationHTML.Append("</li>")
-                sPageNationHTML.AppendLine("</ul>")
-            Else
-                sPageNationHTML.Append("<li class=""page-item disabled"" id=""pinext""><a Class=""page-link"">›</a></li>")
-                sPageNationHTML.Append("<li class=""page-item disabled"" id=""piend"">")
-                sPageNationHTML.Append("<a class=""page-link"" aria-label=""Next"">")
-                sPageNationHTML.Append("<span aria-hidden=""true"">&raquo;</span>")
-                sPageNationHTML.Append("</a>")
-                sPageNationHTML.Append("</li>")
-                sPageNationHTML.AppendLine("</ul>")
+            If iCount > 10 Then
+                If iCount Mod (NowPage * 10) >= 1 And iCount \ (NowPage * 10) >= 1 Then
+                    sPageNationHTML.Append("<li class=""page-item"" id=""pinext""><a Class=""page-link"">›</a></li>")
+                    sPageNationHTML.Append("<li class=""page-item"" id=""piend"">")
+                    sPageNationHTML.Append("<a class=""page-link"" aria-label=""Next"">")
+                    sPageNationHTML.Append("<span aria-hidden=""true"">&raquo;</span>")
+                    sPageNationHTML.Append("</a>")
+                    sPageNationHTML.Append("</li>")
+                Else
+                    sPageNationHTML.Append("<li class=""page-item disabled"" id=""pinext""><a Class=""page-link"">›</a></li>")
+                    sPageNationHTML.Append("<li class=""page-item disabled"" id=""piend"">")
+                    sPageNationHTML.Append("<a class=""page-link"" aria-label=""Next"">")
+                    sPageNationHTML.Append("<span aria-hidden=""true"">&raquo;</span>")
+                    sPageNationHTML.Append("</a>")
+                    sPageNationHTML.Append("</li>")
+                End If
             End If
+            sPageNationHTML.AppendLine("</ul>")
 
 
         Catch ex As Exception
@@ -534,5 +542,4 @@ Public Class Index : Implements IHttpHandler
     End Property
 
 End Class
-
 
