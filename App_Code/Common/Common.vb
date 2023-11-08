@@ -14,6 +14,9 @@ Public Class Common
 
     Public gcFormatCouponCode As String = "{CouponCode}"
 
+    'gcPageNationNumCountは3以上
+    Public gcPageNationNumCount As Integer = 3
+
 #Region "Table"
     Public gctbl_EventMst As String = ""
     Public gctbl_LogMst As String = ""
