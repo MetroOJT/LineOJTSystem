@@ -258,7 +258,7 @@ Public Class Detail : Implements IHttpHandler
                     Case "Ins"
                         '登録するデータのイベントIDを設定
                         sSQL.Clear()
-                        sSQL.Append("Select MAX(EventID) As MaxID")
+                        sSQL.Append("Select IFNULL(MAX(EventID), 1) As MaxID")
                         sSQL.Append(" FROM " & cCom.gctbl_EventMst)
                         cDB.SelectSQL(sSQL.ToString)
 

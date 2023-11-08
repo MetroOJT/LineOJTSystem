@@ -19,14 +19,14 @@
             <div id="FormArea" class="">
                 <div id="ButtonArea" class="row mb-3">
                     <div class="col-2 d-grid">
-                        <input type="button" id="Savebtn" class="btn btn-outline-primary btn-lg" value="登録" />
+                        <input type="button" id="Savebtn" class="btn btn-outline-primary btn-lg" data-bs-toggle="modal" data-bs-target="#ConfirmModal" value="登録" />
                     </div>
                     <div class="col-2 d-grid">
-                        <input type="button" id="Deletebtn" class="btn btn-outline-danger btn-lg" value="削除" />
+                        <input type="button" id="Deletebtn" class="btn btn-outline-danger btn-lg" data-bs-toggle="modal" data-bs-target="#ConfirmModal"  value="削除" />
                     </div>
                     <div class="col-6"></div>
                     <div class="col-2 d-grid">
-                        <input type="button" id="Backbtn" class="btn btn-outline-secondary btn-lg" value="戻る" />
+                        <input type="button" id="Backbtn" class="btn btn-outline-secondary btn-lg" data-bs-toggle="modal" data-bs-target="#ConfirmModal"  value="戻る" />
                     </div>
                 </div>
                 <div class="row mb-3">
@@ -110,6 +110,7 @@
             </div>
         </form>
     </div>
+    <div id="ModalArea"></div>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
     <%="<script src='../../Common/js/Common.js?ts=" & cCom.CmnTimeStamp & "'></script>" %>
