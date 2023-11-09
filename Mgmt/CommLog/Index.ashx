@@ -230,30 +230,41 @@ Public Class Index : Implements IHttpHandler
             sPNList.Clear()
             sPNList.Append("<div class=""col"">")
             sPNList.Append("<ul class=""pagination"" >")
-            sPNList.Append("<li class=""page-item"" id=""pista"">")
-            sPNList.Append("<a class=""page-link"" href=""#"" aria-label=""Previous"">")
+            sPNList.Append("<li class=""page-item pe-none"" id=""pista"">")
+            sPNList.Append("<a class=""page-link"" href=""#"" style=""color:black; background-color:silver;"" aria-label=""Previous"">")
             sPNList.Append("<span aria-hidden=""True"">&laquo;</span>")
             sPNList.Append("</a>")
             sPNList.Append("</li>")
-            sPNList.Append("<li class=""page-item"" id=""piback""><a class=""page-link"" href=""#"">‹</a></li>")
-            sPNList.Append("<li class=""page-item"" id=""pi1""><a class=""page-link"" href=""#"" style=""background-color: silver;"">1</a></li>")
+            sPNList.Append("<li class=""page-item pe-none"" id=""piback""><a class=""page-link"" href=""#"" style=""color:black; background-color:silver;"">‹</a></li>")
+            sPNList.Append("<li class=""page-item"" id=""pi1""><a class=""page-link text-danger fw-bold"" href=""#"">1</a></li>")
             If iCount > 10 Then
                 sPNList.Append("<li class=""page-item"" id=""pi2""><a class=""page-link"" href=""#"">2</a></li>")
             Else
-                sPNList.Append("<li class=""page-item pe-none"" id=""pi2""><a class=""page-link text-dark"" href=""#"">2</a></li>")
+                sPNList.Append("<li class=""page-item pe-none"" id=""pi2""><a class=""page-link text-dark"" href=""#"" style=""background-color: silver;"">2</a></li>")
             End If
 
             If iCount > 20 Then
                 sPNList.Append("<li class=""page-item"" id=""pi3""><a class=""page-link"" href=""#"">3</a></li>")
             Else
-                sPNList.Append("<li class=""page-item pe-none"" id=""pi3""><a class=""page-link text-dark"" href=""#"">3</a></li>")
+                sPNList.Append("<li class=""page-item pe-none"" id=""pi3""><a class=""page-link text-dark"" href=""#"" style=""background-color: silver;"">3</a></li>")
             End If
-            sPNList.Append("<li class=""page-item"" id=""pinext""><a Class=""page-link"" href=""#"">›</a></li>")
-            sPNList.Append("<li class=""page-item"" id=""piend"">")
-            sPNList.Append("<a class=""page-link"" href=""#"" aria-label=""Next"">")
-            sPNList.Append("<span aria-hidden=""true"">&raquo;</span>")
-            sPNList.Append("</a>")
-            sPNList.Append("</li>")
+
+            If iCount > 30 Then
+                sPNList.Append("<li class=""page-item"" id=""pinext""><a Class=""page-link"" href=""#"">›</a></li>")
+                sPNList.Append("<li class=""page-item"" id=""piend"">")
+                sPNList.Append("<a class=""page-link"" href=""#"" aria-label=""Next"">")
+                sPNList.Append("<span aria-hidden=""true"">&raquo;</span>")
+                sPNList.Append("</a>")
+                sPNList.Append("</li>")
+            Else
+                sPNList.Append("<li class=""page-item pe-none"" id=""pinext""><a Class=""page-link"" href=""#"" style=""color:black; background-color:silver;"">›</a></li>")
+                sPNList.Append("<li class=""page-item pe-none"" id=""piend"">")
+                sPNList.Append("<a class=""page-link"" href=""#"" style=""color:black; background-color:silver;"" aria-label=""Next"">")
+                sPNList.Append("<span aria-hidden=""true"">&raquo;</span>")
+                sPNList.Append("</a>")
+                sPNList.Append("</li>")
+            End If
+
             sPNList.AppendLine("</ul>")
             sPNList.Append("</div>")
 
@@ -316,9 +327,14 @@ Public Class Index : Implements IHttpHandler
         Dim NowPage As Integer = 1
         Dim OffSet As Integer = 0
         Dim Page_Median As Integer
+        'ページネーション関係
         Dim Select_color_one As String = ""
         Dim Select_color_two As String = ""
         Dim Select_color_thr As String = ""
+        Dim Operation_none_color_start As String = ""
+        Dim Operation_none_color_end As String = ""
+        Dim Operation_none_class_start As String = ""
+        Dim Operation_none_class_end As String = ""
 
         Try
 
@@ -392,42 +408,65 @@ Public Class Index : Implements IHttpHandler
             sHTML.Append("</tr>")
             sHTML.Append("</table>")
 
-            'ページリンク(表示数字処理)
+            'ページリンク(表示数字処理) 上から 1 , 最後 , それ以外
+            '30件以下であれば 1, 2, 3固定にする
             Page_Median = NowPage
-            If (Page_Median = 1) Then
+            If (iCount < 31) Then
+                If (Page_Median = 1) Then
+                    Select_color_one = "style=color:red;font-weight:bold;"
+                ElseIf (Page_Median = 2) Then
+                    Select_color_two = "style=color:red;font-weight:bold;"
+                ElseIf (Page_Median = 3) Then
+                    Select_color_thr = "style=color:red;font-weight:bold;"
+                End If
                 Page_Median = 2
-                Select_color_one = "style=background-color:silver;"
+            ElseIf (Page_Median = 1) Then
+                Page_Median = 2
+                Select_color_one = "style=color:red;font-weight:bold;"
+                Operation_none_color_start = "style=color:black;background-color:silver;"
+                Operation_none_class_start = "pe-none"
             ElseIf (Page_Median = Math.Ceiling(iCount / 10)) Then
                 Page_Median -= 1
-                Select_color_thr = "style=background-color:silver;"
+                Select_color_thr = "style=color:red;font-weight:bold;"
+                Operation_none_color_end = "style=color:black;background-color:silver;"
+                Operation_none_class_end = "pe-none"
             Else
-                Select_color_two = "style=background-color:silver;"
+                Select_color_two = "style=color:red;font-weight:bold;"
+            End If
+
+            If (iCount < 31) Then
+                Operation_none_color_start = "style=color:black;background-color:silver;"
+                Operation_none_class_start = "pe-none"
+                Operation_none_color_end = "style=color:black;background-color:silver;"
+                Operation_none_class_end = "pe-none"
             End If
 
             sPNList.Clear()
             sPNList.Append("<div class=""col"">")
             sPNList.Append("<ul class=""pagination"" >")
-            sPNList.Append("<li class=""page-item"" id=""pista"">")
-            sPNList.Append("<a class=""page-link"" href=""#"" aria-label=""Previous"">")
+            sPNList.Append("<li class=""page-item " & Operation_none_class_start & """ id=""pista"">")
+            sPNList.Append("<a class=""page-link"" href=""#""  " & Operation_none_color_start & " aria-label=""Previous"">")
             sPNList.Append("<span aria-hidden=""True"">&laquo;</span>")
             sPNList.Append("</a>")
             sPNList.Append("</li>")
-            sPNList.Append("<li class=""page-item"" id=""piback""><a class=""page-link"" href=""#"">‹</a></li>")
+            sPNList.Append("<li class=""page-item " & Operation_none_class_start & """ id=""piback""><a class=""page-link"" href=""#"" " & Operation_none_color_start & ">‹</a></li>")
             sPNList.Append("<li class=""page-item"" id=""pi1""><a class=""page-link"" href=""#"" " & Select_color_one & ">" & Page_Median - 1 & "</a></li>")
-            If iCount > 10 Then
+
+            If iCount > 10 Then 'データが11件以上であればページ2も表示
                 sPNList.Append("<li class=""page-item"" id=""pi2""><a class=""page-link"" href=""#"" " & Select_color_two & ">" & Page_Median & "</a></li>")
             Else
-                sPNList.Append("<li class=""page-item pe-none"" id=""pi2""><a class=""page-link text-dark"" href=""#"" " & Select_color_two & ">" & Page_Median & "</a></li>")
+                sPNList.Append("<li class=""page-item pe-none"" id=""pi2""><a class=""page-link text-dark"" href=""#"" style=""background-color: silver;"" " & Select_color_two & ">" & Page_Median & "</a></li>")
             End If
 
-            If iCount > 20 Then
+            If iCount > 20 Then 'データが21件以上であればページ3も表示
                 sPNList.Append("<li class=""page-item"" id=""pi3""><a class=""page-link"" href=""#"" " & Select_color_thr & ">" & Page_Median + 1 & "</a></li>")
             Else
-                sPNList.Append("<li class=""page-item pe-none"" id=""pi3""><a class=""page-link text-dark"" href=""#"" " & Select_color_thr & ">" & Page_Median + 1 & "</a></li>")
+                sPNList.Append("<li class=""page-item pe-none"" id=""pi3""><a class=""page-link text-dark"" href=""#"" style=""background-color: silver;"" " & Select_color_thr & ">" & Page_Median + 1 & "</a></li>")
             End If
-            sPNList.Append("<li class=""page-item"" id=""pinext""><a Class=""page-link"" href=""#"">›</a></li>")
-            sPNList.Append("<li class=""page-item"" id=""piend"">")
-            sPNList.Append("<a class=""page-link"" href=""#"" aria-label=""Next"">")
+
+            sPNList.Append("<li class=""page-item " & Operation_none_class_end & """ id=""pinext""><a Class=""page-link"" href=""#"" " & Operation_none_color_end & ">›</a></li>")
+            sPNList.Append("<li class=""page-item " & Operation_none_class_end & """ id=""piend"">")
+            sPNList.Append("<a class=""page-link"" href=""#"" aria-label=""Next"" " & Operation_none_color_end & ">")
             sPNList.Append("<span aria-hidden=""true"">&raquo;</span>")
             sPNList.Append("</a>")
             sPNList.Append("</li>")
@@ -462,7 +501,7 @@ Public Class Index : Implements IHttpHandler
             hHash.Add("html", sHTML.ToString)
             hHash.Add("pnlist", sPNList.ToString)
             hHash.Add("count", iCount)
-            hHash.Add("pm", Page_Median)
+            hHash.Add("pm", NowPage)
 
             sJSON = jJSON.Serialize(hHash)
         End Try
