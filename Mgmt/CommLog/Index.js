@@ -120,7 +120,9 @@ function PagiNation(pid) {
         case "pi2":
             if (Npage == 1) {
                 Npage = 2;
-            } else if (Npage == Math.ceil(Nod / 10)) {
+            } else if (Npage == Math.ceil(Nod / 10) && Nod > 30) {
+                Npage -= 1;
+            } else if (Npage == 3 && Nod < 31) {
                 Npage -= 1;
             } else {
                 Npage = Npage
@@ -129,7 +131,7 @@ function PagiNation(pid) {
         case "pi3": // 現在表示しているページの１つ後
             if (Npage == 1) {
                 Npage = 3;
-            }else if (Npage < Math.ceil(Nod / 10)) {
+            } else if (Npage < Math.ceil(Nod / 10)) {
                 Npage += 1;
             }
             break;
@@ -183,6 +185,7 @@ function PagiNation(pid) {
                             });
                             detail_btn();
                         }
+                        console.log(data.pm)
                     } else {
                         document.getElementById("PNArea").innerHTML = "";
                         document.getElementById("ResultArea").innerText = "該当するデータが存在しませんでした。";
