@@ -6,7 +6,12 @@ let Ajax_File = "Detail.ashx";
 //直前に閲覧したページのURLを保持しておく変数
 let Referrer = document.referrer;
 
-
+let EventName;
+let EventStatus;
+let ScheduleFm;
+let ScheduleTo;
+let Keyword;
+let Messages;
 
 $(function () {
     //ヘッダーの担当者名を入れる関数
@@ -26,6 +31,32 @@ $(function () {
         $("#Deletebtn").prop("disabled", true);
     }
 })
+
+//モーダルを生成する関数
+function ModalSet(title, body, savebtn, savebtnstyle, cancelbtn, onclick) {
+    let Modal = "";
+    Modal += '<div class="modal fade" id="ConfirmModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">'
+    Modal += '    <div class="modal-dialog">'
+    Modal += '        <div class="modal-content">'
+    Modal += '            <div class="modal-header">'
+    Modal += '                <h1 class="modal-title fs-5" id="ConfirmModalTitle">'+ title +'</h1>'
+    Modal += '                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>'
+    Modal += '            </div>'
+    Modal += '            <div class="modal-body" id="ModalBody">'+ body +'</div>'
+    Modal += '            <div class="modal-footer">'
+    if(savebtn != ""){
+        Modal += '                <button type="button" id="ModalSavebtn" class="btn '+savebtnstyle +'">'+ savebtn +'</button>'
+    }
+    Modal += '                <button type="button" id="ModalBackbtn" class="btn btn-outline-secondary" data-bs-dismiss="modal">'+ cancelbtn +'</button>'
+    Modal += '            </div>'
+    Modal += '        </div>'
+    Modal += '    </div>'
+    Modal += '</div>'
+    document.getElementById("ModalArea").innerHTML = Modal;
+    if (savebtn != "") {
+        document.getElementById("ModalSavebtn").setAttribute("onclick", onclick)
+    }  
+}
 
 //更新するデータをロードする関数
 function EventLoad() {
@@ -84,31 +115,32 @@ function EventLoad() {
 //登録・更新を行う関数
 function SavebtnClick() {
 
-    let EventName = $("#txtEventName").val();
-    let EventStatus = "";
-    let ScheduleFm = $("#txtScheduleFm").val();
-    let ScheduleTo = $("#txtScheduleTo").val();
-    let Keyword = $("#txtKeyword").val();
-    let Messages = [];
-    let work = "";
+    EventName = $("#txtEventName").val();
+    EventStatus = "";
+    ScheduleFm = $("#txtScheduleFm").val();
+    ScheduleTo = $("#txtScheduleTo").val();
+    Keyword = $("#txtKeyword").val();
+    Messages = [];
+    work = "";
 
-    //スケジュールの日付を整形
+
     if ($("input[name=EventStatus]:checked").is(':checked')) {
         EventStatus = $('input[name="EventStatus"]:checked').val();
+    };
 
-        if (ScheduleFm != "" && ScheduleTo != "") {
-            if (ScheduleFm > ScheduleTo) {
-                work = ScheduleFm;
-                ScheduleFm = ScheduleTo;
-                ScheduleTo = work;
-                $("#txtScheduleFm").val(ScheduleFm);
-                $("#txtScheduleTo").val(ScheduleTo);
-            };
+    //スケジュールの日付を整形
+    if (ScheduleFm != "" && ScheduleTo != "") {
+        if (ScheduleFm > ScheduleTo) {
+            work = ScheduleFm;
+            ScheduleFm = ScheduleTo;
+            ScheduleTo = work;
+            $("#txtScheduleFm").val(ScheduleFm);
+            $("#txtScheduleTo").val(ScheduleTo);
         };
     };
+
     let form = document.querySelector('#main');
-    let elm = form.querySelectorAll('.form-control')
-    console.log(elm)
+    let elm = form.querySelectorAll('.form-control');
     //各データの入力チェック
     form.querySelectorAll('.form-control').forEach(function (elm) {
         let required = elm.required;
@@ -122,25 +154,66 @@ function SavebtnClick() {
             elm.classList.remove('is-invalid');
         }
     })
+    form.querySelectorAll('.form-check-input').forEach(function (elm) {
+        if (!elm.checked) {
+            elm.classList.add('is-invalid');
+            elm.classList.remove('is-valid');
+            event.preventDefault();
+            event.stopPropagation();
+        } else {
+            elm.classList.add('is-valid');
+            elm.classList.remove('is-invalid');
+        }
+    })
 
-    
+    //ステータスのエラー制御
+    if ($("#EventStatusOn").prop("checked") && !$("#EventStatusOff").prop("checked")) {
+        document.getElementById("EventStatusOff").classList.add('is-valid');
+        document.getElementById("EventStatusOff").classList.remove('is-invalid');
+        document.getElementById("Status-invalid-feedback").classList.remove("invalid-feedback-disp");
+        document.getElementById("Status-invalid-feedback").textContent = "";
+    } else if (!$("#EventStatusOn").prop("checked") && $("#EventStatusOff").prop("checked")) {
+        document.getElementById("EventStatusOn").classList.add('is-valid');
+        document.getElementById("EventStatusOn").classList.remove('is-invalid');
+        document.getElementById("Status-invalid-feedback").classList.remove("invalid-feedback-disp");
+        document.getElementById("Status-invalid-feedback").textContent = "";
+    } else if (!$("#EventStatusOn").prop("checked") && !$("#EventStatusOff").prop("checked")) {
+        document.getElementById("Status-invalid-feedback").classList.add("invalid-feedback-disp");
+        document.getElementById("Status-invalid-feedback").textContent = "ステータスを選択してください。";
+    } else {
+        document.getElementById("Status-invalid-feedback").classList.remove("invalid-feedback-disp");
+        document.getElementById("Status-invalid-feedback").textContent = "";
+    }
+
+
+    //スケジュールのエラー制御
+    if ($("#txtScheduleFm").val().length != 0 && $("#txtScheduleTo").val().length == 0) {
+        document.getElementById("txtScheduleTo").classList.add('is-valid');
+        document.getElementById("txtScheduleTo").classList.remove('is-invalid');
+        document.getElementById("Schedule-invalid-feedback").textContent = "";
+    } else if ($("#txtScheduleFm").val().length == 0 && $("#txtScheduleTo").val().length != 0) {
+        document.getElementById("txtScheduleFm").classList.add('is-valid');
+        document.getElementById("txtScheduleFm").classList.remove('is-invalid');
+        document.getElementById("Schedule-invalid-feedback").textContent = "";
+    } else if ($("#txtScheduleFm").val().length == 0 && $("#txtScheduleTo").val().length == 0) {
+        document.getElementById("Schedule-invalid-feedback").textContent = "スケジュールを選択してください。";
+    } else {
+        document.getElementById("Schedule-invalid-feedback").textContent = "";
+    }
+
     if (EventName == "") {
-        alert("イベント名を入力してください。")
         return false;
     };
 
     if (EventStatus == "") {
-        alert("ステータスを選択してください。")
         return false;
     };
 
     if (ScheduleFm == "" && ScheduleTo == "") {
-        alert("スケジュールを入力して下さい。");
         return false;
     };
 
     if (Keyword == "") {
-        alert("キーワードを入力して下さい。");
         return false;
     };
 
@@ -148,12 +221,10 @@ function SavebtnClick() {
     if (document.getElementsByClassName("txtMessage").length != 0) {
         for(ele of document.getElementsByClassName("txtMessage")) {
             if (ele.value == "") {
-                alert("メッセージを全て入力してください。");
                 return false;
             }
         }
     } else {
-        alert("メッセージを1つ以上入力してください。");
         return false;
     }
 
@@ -162,69 +233,72 @@ function SavebtnClick() {
         Messages.push(ele.value)
     }
 
-    //確認アラート表示
     if ($("#Savebtn").val() == "登録") {
-        if (!window.confirm("登録を行いますか？")) {
-            return false;
-        };
+        ModalSet("イベント登録", "登録しますか？", "登録", "btn-outline-primary", "戻る", "Modalsavebtnclick()");
     } else {
-        if (!window.confirm("更新を行いますか？")) {
-            return false;
-        };
+        ModalSet("イベント更新", "更新しますか？", "更新", "btn-outline-primary", "戻る", "Modalsavebtnclick()");
     }
-    
+};
+
+function Modalsavebtnclick() {
+
     $.ajax({
-        url: Ajax_File,
-        method: "POST",
-        data: {
-            "mode": "Save",
-            "EventName": EventName,
-            "EventStatus": EventStatus,
-            "ScheduleFm": ScheduleFm,
-            "ScheduleTo": ScheduleTo,
-            "Keyword": Keyword,
-            "Messages": Messages,
-            "Update_UserID": sessionStorage.getItem("UserID"),
-            "Update_EventID": sessionStorage.getItem("EventID")
-        },
-        dataType: "json",
-        success: function (data) {
-            if (data != "") {
-                if (data.status == "OK") {
+    url: Ajax_File,
+    method: "POST",
+    data: {
+        "mode": "Save",
+        "EventName": EventName,
+        "EventStatus": EventStatus,
+        "ScheduleFm": ScheduleFm,
+        "ScheduleTo": ScheduleTo,
+        "Keyword": Keyword,
+        "Messages": Messages,
+        "Update_UserID": sessionStorage.getItem("UserID"),
+        "Update_EventID": sessionStorage.getItem("EventID")
+    },
+    dataType: "json",
+    success: function (data) {
+        if (data != "") {
+            if (data.status == "OK") {
+                if (data.ErrorMessage != "") {
+                    document.getElementById("ModalSavebtn").style.display = "none";
+                    document.getElementById("ModalBackbtn").textContent = "閉じる";
+                    document.getElementById("ModalBody").textContent = data.ErrorMessage;
+                } else {
 
-                    if (data.ErrorMessage != "") {
-                        alert(data.ErrorMessage);
+                    //完了モーダル表示
+                    document.getElementById("ModalSavebtn").style.display = "none";
+                    document.getElementById("ModalBackbtn").textContent = "閉じる";
+                    if (data.Mode == "Ins") {
+                        document.getElementById("ModalBody").textContent = "登録が完了しました。";
+                        document.getElementById("Savebtn").value = "更新";
+                        $("#Deletebtn").prop("disabled", false);
                     } else {
-                        //完了アラート表示
-                        if (data.Mode == "Ins") {
-                            alert("登録が完了しました。");
-                        } else {
-                            alert("更新が完了しました。");
-                        }
-                        
-                        //更新・登録したEventIDをセッション変数としてセットする
-                        sessionStorage.setItem("EventID", data.EventID)
-
-                        //ページをリロードし、登録ページの場合は更新ページに切り替わる
-                        window.location.reload(true);
+                        document.getElementById("ModalBody").textContent = "更新が完了しました。";
                     }
 
-                } else {
-                    alert("エラーが発生しました。");
-                };
+                    //更新・登録したEventIDをセッション変数としてセットする
+                    sessionStorage.setItem("EventID", data.EventID)
+
+                }
+
+            } else {
+                document.getElementById("ModalSavebtn").style.display = "none";
+                document.getElementById("ModalBackbtn").textContent = "閉じる";
+                document.getElementById("ModalBody").textContent = "エラーが発生しました。";
             };
-        }
-    });
-};
+        };
+    }
+});
+
+}
 
 //データを削除する関数
 function DeletebtnClick() {
+    ModalSet("イベント削除", "削除しますか？", "削除", "btn-outline-danger", "戻る", "ModalDeletebtnClick()");
+};
 
-    //確認アラート
-    if (!window.confirm("本当に削除しますか？")) {
-        return false;
-    };
-
+function ModalDeletebtnClick(){
     $.ajax({
         url: Ajax_File,
         method: "POST",
@@ -237,20 +311,28 @@ function DeletebtnClick() {
             if (data != "") {
                 if (data.status == "OK") {
                     //完了アラート
-                    alert("データを削除しました。");
+                    document.getElementById("ModalSavebtn").style.display = "none";
+                    document.getElementById("ModalBackbtn").textContent = "閉じる";
+                    document.getElementById("ModalBody").textContent = "削除が完了しました。";
+                    document.getElementById("ModalBackbtn").setAttribute("onclick", "ModalClosebtnClick()");
 
                     //セッション変数「EventID」を削除する
                     sessionStorage.removeItem("EventID");
 
-                    //直前に閲覧したページに遷移する
-                    window.location.href = Referrer;
+                    
                 } else {
-                    alert("エラーが発生しました。");
+                    document.getElementById("ModalSavebtn").style.display = "none";
+                    document.getElementById("ModalBackbtn").textContent = "閉じる";
+                    document.getElementById("ModalBody").textContent = "エラーが発生しました。";
                 };
             };
         }
     });
-};
+}
+function ModalClosebtnClick() {
+    //直前に閲覧したページに遷移する
+    window.location.href = Referrer;
+}
 
 //直前に閲覧したページに戻る関数
 function BackbtnClick() {
@@ -302,7 +384,7 @@ function MessageUpbtnClick() {
     let MessageContainer = MessageArea.getElementsByClassName("MessageContainer");
     //位置替え対象コンテナのidを取得
     let UpId = $(event.target).parent().parent().parent().attr("id");
-    
+
     //位置替え対象のidを検索(idが順番通りに並んでいない可能性があるため)
     for (let i = 0; i < MessageContainer.length; i++) {
         if (UpId == MessageContainer[i].id) {
