@@ -10,7 +10,6 @@ console.log(User_ID);
 console.log(Password);
 console.log(User_Name);
 console.log(Admin_Check);
-console.log(typeof (Admin_Check));
 
 document.querySelector("#user_ID").value = User_ID;
 document.querySelector("#user_Name").value = User_Name;
@@ -31,34 +30,62 @@ $(function () {
 
 // 登録ボタンクリック
 function btnRegistrationClick() {
-    console.log("パスワードが一致しました");
-    $.ajax({
-        url: Ajax_File,
-        method: "POST",
-        data: {
-            mode: "Registration",
-            "User_ID": User_ID,
-            "Password": Password,
-            "User_Name": User_Name,
-            "Admin_Check": Admin_Check,
-            "Re_UserID": re_UserID
-        },
-        dataType: "json",
-        success: function (data) {
-            console.log(data);
+    const hUserID = sessionStorage.getItem("hUserID");
+    console.log("a", hUserID);
+    if (!hUserID) {
+        console.log("a");
+        $.ajax({
+            url: Ajax_File,
+            method: "POST",
+            data: {
+                mode: "Registration",
+                "User_ID": User_ID,
+                "Password": Password,
+                "User_Name": User_Name,
+                "Admin_Check": Admin_Check,
+                "Re_UserID": re_UserID
+            },
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
                 if (data != "") {
                     if (data.status == "OK") {
-                        if (ErrorMessage != "") {
-                            console.log(ErrorMessage);
-                        } else {
-                            console.log("追加しました");
-                        };
+                        alert("追加が完了しました");
                     } else {
                         alert("エラーが発生しました。");
                     };
                 };
-        }
-    });
+            }
+        });
+    } else {
+        console.log("b");
+        // 更新
+        $.ajax({
+            url: Ajax_File,
+            method: "POST",
+            data: {
+                mode: "Update",
+                "User_ID": User_ID,
+                "Password": Password,
+                "User_Name": User_Name,
+                "Admin_Check": Admin_Check,
+                "Re_UserID": re_UserID,
+                "hUser_ID": hUserID
+            },
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                if (data != "") {
+                    if (data.status == "OK") {
+                        console.log("更新しました");
+                    } else {
+                        alert("エラーが発生しました。");
+                    };
+                };
+            }
+        });
+    }
+    
 };
 
 function btnBackClick() {
