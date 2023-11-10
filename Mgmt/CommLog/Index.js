@@ -12,6 +12,9 @@ var Npage = 1; // ページ設定
 var page_item = document.querySelectorAll(".page-item");
 var detail_button = document.querySelectorAll(".btnDetail");
 
+var PageMedian = 2; // ページャの中央値 [ 1 , ② , 3 ]
+var StyleBold = 1; // 現在表示しているページの強調
+
 // 通信ログ検索
 function btnSearchClick() {
     Search();
@@ -104,47 +107,66 @@ function PagiNation(pid) {
     switch (pid) {
         case "pista":
             Npage = 1;
+            PageMedian = 2;
             break;
         case "piback":
             if (Npage > 1) {
                 Npage -= 1;
             }
+            if (Npage == 1) {
+                PageMedian = 2;
+            } else {
+                PageMedian = Npage;
+            }
             break;
         case "pi1": // 現在表示しているページの１つ前
-            if (Npage == Math.ceil(Nod / 10)) {
-                Npage -= 2;
-            }else if (Npage > 1) {
-                Npage -= 1;
+            Npage = PageMedian - 1;
+            if (Nod < 31 || Npage == 1) {
+                PageMedian = 2;
+            } else {
+                PageMedian = Npage;
             }
             break;
         case "pi2":
-            if (Npage == 1) {
-                Npage = 2;
-            } else if (Npage == Math.ceil(Nod / 10) && Nod > 30) {
-                Npage -= 1;
-            } else if (Npage == 3 && Nod < 31) {
-                Npage -= 1;
+            Npage = PageMedian;
+            if (Nod < 31) {
+                PageMedian = 2;
             } else {
-                Npage = Npage
+                PageMedian = Npage;
             }
             break;
         case "pi3": // 現在表示しているページの１つ後
-            if (Npage == 1) {
-                Npage = 3;
-            } else if (Npage < Math.ceil(Nod / 10)) {
-                Npage += 1;
+            Npage = PageMedian + 1;
+            if (Nod < 31) {
+                PageMedian = 2;
+            } else if(Npage == Math.ceil(Nod / 10)){
+                PageMedian = Npage - 1;
+            } else {
+                PageMedian = Npage;
             }
             break;
         case "pinext":
             if (Npage < Math.ceil(Nod / 10)) {
                 Npage += 1;
             }
+            if (Npage == Math.ceil(Nod / 10)) {
+                PageMedian = Npage - 1;
+            } else {
+                PageMedian = Npage;
+            }
             break;
         case "piend":
             Npage = Math.ceil(Nod / 10);
+            PageMedian = Npage - 1;
             break;
         default:
             Npage = pid;
+            PageMedian = Npage;
+            if (Npage <= 1 || Nod < 31) {
+                PageMedian = 2;
+            } else if (Npage >= Math.ceil(Nod / 10)) {
+                PageMedian = Math.ceil(Nod / 10) - 1;
+            }
             break;
     }
 
@@ -153,7 +175,8 @@ function PagiNation(pid) {
         method: "POST",
         data: {
             "mode": "PagiNation",
-            "nowpage": Npage
+            "nowpage": Npage,
+            "pagemedian": PageMedian
         },
         dataType: "json",
         success: function (data) {
@@ -183,9 +206,25 @@ function PagiNation(pid) {
                                     PagiNation(pi.id);
                                 });
                             });
+                            if (Npage == 1 || data.count < 31) {
+                                document.querySelector("#pista a").style.color = "black";
+                                document.querySelector("#pista a").style.backgroundColor = "silver";
+                                document.getElementById("pista").style.pointerEvents = "none";
+                                document.querySelector("#piback a").style.color = "black";
+                                document.querySelector("#piback a").style.backgroundColor = "silver";
+                                document.getElementById("piback").style.pointerEvents = "none";
+                            }
+                            if (Npage == Math.ceil(data.count / 10) || data.count < 31) {
+                                document.querySelector("#pinext a").style.color = "black";
+                                document.querySelector("#pinext a").style.backgroundColor = "silver";
+                                document.getElementById("pinext").style.pointerEvents = "none";
+                                document.querySelector("#piend a").style.color = "black";
+                                document.querySelector("#piend a").style.backgroundColor = "silver";
+                                document.getElementById("piend").style.pointerEvents = "none";
+                            }
+                            console.log(data.pm, PageMedian)
                             detail_btn();
                         }
-                        console.log(data.pm)
                     } else {
                         document.getElementById("PNArea").innerHTML = "";
                         document.getElementById("ResultArea").innerText = "該当するデータが存在しませんでした。";
