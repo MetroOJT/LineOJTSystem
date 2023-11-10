@@ -18,6 +18,9 @@ $(function () {
     //ヘッダーの担当者名を入れる関数
     DspLoginUserName();
 
+    document.getElementById("Savebtn").addEventListener("mousedown", ModalAreaClear, false);
+    document.getElementById("Deletebtn").addEventListener("mousedown", ModalAreaClear, false);
+
     document.getElementById("Savebtn").addEventListener("mouseup", SavebtnClick, false);
     document.getElementById("Deletebtn").addEventListener("mouseup", DeletebtnClick, false);
     document.getElementById("Backbtn").addEventListener("mouseup", BackbtnClick, false);
@@ -98,7 +101,7 @@ function ModalSet(Area, title, body, savebtn, savebtnstyle, cancelbtn, onclick) 
     if(savebtn != ""){
         Modal += '                <button type="button" id="ModalSavebtn" class="btn '+savebtnstyle +'">'+ savebtn +'</button>'
     }
-    Modal += '                <button type="button" id="ModalBackbtn" class="btn btn-outline-secondary" data-bs-dismiss="modal">'+ cancelbtn +'</button>'
+    Modal += '                <button type="button" id="ModalBackbtn" class="btn btn-outline-secondary" data-bs-dismiss="modal" onclick="ModalbtnCancelClick">'+ cancelbtn +'</button>'
     Modal += '            </div>'
     Modal += '        </div>'
     Modal += '    </div>'
@@ -164,6 +167,15 @@ function EventLoad() {
         }
     });
 };
+
+function ModalAreaClear() {
+    //if ($("#Savebtn").val() == "登録") {
+    //    ModalSet("ModalArea", "イベント登録", "登録しますか？", "登録", "btn-outline-primary", "戻る", "Modalsavebtnclick()");
+    //} else {
+    //    ModalSet("ModalArea", "イベント更新", "更新しますか？", "更新", "btn-outline-primary", "戻る", "Modalsavebtnclick()");
+    //}
+    document.getElementById("ModalArea").innerHTML = "";
+}
 
 //登録・更新を行う関数
 function SavebtnClick() {
@@ -520,7 +532,10 @@ function MessageDeletebtnClick() {
 function CouponCodeAddbtnClick() {
     let ID = $(event.target).attr("id").slice(-1);
     let CouponCode = getCookie("CouponCode");
-    document.getElementById("txtMessage" + ID).value += CouponCode;
+    if ($("#txtMessage" + ID).val().length + CouponCode.length <= 500) {
+        document.getElementById("txtMessage" + ID).value += CouponCode;
+    }
+    $("#txtCount" + ID).text($("#txtMessage" + ID).val().length + "/500");
 }
 
 //テキストエリア内の文字数をリアルタイムに反映する関数
