@@ -10,9 +10,12 @@ Public Class Index : Implements IHttpHandler
         Select Case context.Request.Item("mode")
             Case "Registration"
                 context.Response.Write(Registration(context))
+            Case "Update"
+                context.Response.Write(Update(context))
         End Select
     End Sub
 
+    'ユーザーマスタに新規登録する
     Public Function Registration(ByVal context As HttpContext) As String
         Dim cCom As New Common
         Dim cDB As New CommonDB
@@ -54,7 +57,7 @@ Public Class Index : Implements IHttpHandler
             sSQL.Clear()
             sSQL.Append("SELECT COUNT(*) AS sameUserID")
             sSQL.Append(" FROM " & cCom.gctbl_UserMst)
-            sSQL.Append(" WHERE UserID == @UserID")
+            sSQL.Append(" WHERE UserID = @UserID")
             cDB.SelectSQL(sSQL.ToString)
 
             If cDB.ReadDr Then
@@ -65,7 +68,6 @@ Public Class Index : Implements IHttpHandler
             End If
 
             If sErrorMessage = "" Then
-                'ユーザーマスタに新規登録する
                 sSQL.Clear()
                 sSQL.Append("INSERT INTO " & cCom.gctbl_UserMst)
                 sSQL.Append(" (")
@@ -90,6 +92,8 @@ Public Class Index : Implements IHttpHandler
                 If cDB.ReadDr Then
                     iCount = 1
                 End If
+            Else
+                hHash.Add("ErrorMessage", sErrorMessage)
             End If
 
         Catch ex As Exception
@@ -106,12 +110,89 @@ Public Class Index : Implements IHttpHandler
             hHash.Add("status", sStatus)
             hHash.Add("count", iCount)
             hHash.Add("Admin", rsameUserID.ToString)
-            hHash.Add("ErrorMessage", sErrorMessage)
 
             sJSON = jJSON.Serialize(hHash)
         End Try
         Return sJSON
     End Function
+
+    'ユーザーマスタの情報を更新する
+    Public Function Update(ByVal context As HttpContext) As String
+        Dim cCom As New Common
+        Dim cDB As New CommonDB
+        Dim Cki As New Cookie
+        Dim sSQL As New StringBuilder
+        Dim sWhere As New StringBuilder
+        Dim jJSON As New JavaScriptSerializer
+        Dim sJSON As String = ""
+        Dim hHash As New Hashtable
+        Dim sRet As String = ""
+        Dim sStatus As String = "OK"
+        Dim sTempTable As String = ""
+
+        Dim sUser_ID As String = ""
+        Dim sPassword As String = ""
+        Dim sUser_Name As String = ""
+        Dim sAdmin_Check As String = ""
+        Dim sRe_UserID As String = ""
+        Dim sH_UserID As String = ""
+
+        Dim iCount As Integer = 0
+
+        Try
+            sUser_ID = context.Request.Item("User_ID")
+            sPassword = context.Request.Item("Password")
+            sUser_Name = context.Request.Item("User_Name")
+            sAdmin_Check = context.Request.Item("Admin_Check")
+            sRe_UserID = context.Request.Item("Re_UserID")
+            sH_UserID = context.Request.Item("hUser_ID")
+
+            cDB.AddWithValue("@UserID", sUser_ID)
+            cDB.AddWithValue("@Password", sPassword)
+            cDB.AddWithValue("@User_Name", sUser_Name)
+            cDB.AddWithValue("@Admin_Check", sAdmin_Check)
+            cDB.AddWithValue("@Re_UserID", sRe_UserID)
+            cDB.AddWithValue("@H_UserID", sH_UserID)
+
+
+            sSQL.Clear()
+            sSQL.Append("UPDATE " & cCom.gctbl_UserMst)
+            sSQL.Append(" SET")
+            sSQL.Append(" (")
+            sSQL.Append(" UserID = @UserID")
+            sSQL.Append(" ,Password = @Password")
+            sSQL.Append(" ,UserName = @User_Name")
+            sSQL.Append(" ,Admin = b" & "'" & sAdmin_Check & "'")
+            sSQL.Append(" ,Update_Date = Now()")
+            sSQL.Append(" ,Update_ID = @Re_UserID")
+            sSQL.Append(" )")
+            sSQL.Append(" WHERE")
+            sSQL.Append(" UserID = @H_UserID")
+            cDB.ExecuteSQL(sSQL.ToString)
+
+            If cDB.ReadDr Then
+                iCount = 1
+            End If
+
+        Catch ex As Exception
+            sRet = ex.Message
+        Finally
+            cDB.DrClose()
+            cDB.Dispose()
+            If sRet <> "" Then
+                sStatus = "NG"
+                cCom.CmnWriteStepLog(sRet)
+            End If
+
+
+            hHash.Add("status", sStatus)
+            hHash.Add("count", iCount)
+
+            sJSON = jJSON.Serialize(hHash)
+        End Try
+        Return sJSON
+    End Function
+
 
     Public ReadOnly Property IsReusable() As Boolean Implements IHttpHandler.IsReusable
         Get
