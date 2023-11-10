@@ -21,6 +21,7 @@
         </div>
         <div id="option" class="w-100 d-flex flex-column mt-5">
             <div class="mx-auto m-2 mt-4">
+
                 <div class="d-flex">
                     <label class="m-auto" id="label_1">ユーザーID</label>
                     <div class="InputField_div">
@@ -28,6 +29,7 @@
                     </div>
                 </div>
                 <div id="error_message_div_1" style="margin-left: 155px;"></div>
+
                 <div class="d-flex mt-4">
                     <label class="m-auto" id="label_2">ユーザー名</label>
                     <div class="InputField_div">
@@ -35,6 +37,7 @@
                     </div>
                 </div>
                 <div id="error_message_div_2" style="margin-left: 155px;"></div>
+
                 <div class="d-flex mt-4">
                     <label class="mt-auto mb-auto" style="width: 100px" id="label_3">管理者</label>
                     <div style="display: flex; margin-left: 55px; width: 300px;" >
@@ -49,6 +52,7 @@
                     </div>
                 </div>
                 <div id="error_message_div_3" style="margin-left: 155px;"></div>
+
                 <div class="d-flex mt-4">
                     <label class="m-auto" id="label_4">パスワード</label>
                     <span class="InputField_div">
@@ -57,6 +61,7 @@
                     </span>
                 </div>
                 <div id="error_message_div_4" style="margin-left: 155px;"></div>
+
                 <div class="d-flex mt-4">
                     <label class="m-auto" id="label_5">パスワード（確認用）</label>
                     <span class="InputField_div">
@@ -65,6 +70,7 @@
                     </span>
                 </div>
                 <div id="error_message_div_5" style="margin-left: 155px;"></div>
+
             </div>
         </div>
     </form>

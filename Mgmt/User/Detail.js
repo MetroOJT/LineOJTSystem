@@ -8,8 +8,8 @@ $(function () {
     document.getElementById("buttonEye_2").addEventListener("click", btnEyeClick_2, false);
 });
 
-//sessionStorage.setItem('hUserID', 70000);
-sessionStorage.removeItem('hUserID');
+sessionStorage.setItem('hUserID', 80000);
+//sessionStorage.removeItem('hUserID');
 
 window.onload = function () {
     if (sessionStorage.getItem('hUserID') != null) {

@@ -1,4 +1,7 @@
-﻿var Ajax_File = "Detail.ashx";
+﻿//ログインなされているかをチェックする関数
+// function_login_check();
+
+var Ajax_File = "Confirm.ashx";
 
 const re_UserID = sessionStorage.getItem('UserID');
 const User_ID = sessionStorage.getItem("iUser_ID");
@@ -32,60 +35,39 @@ $(function () {
 function btnRegistrationClick() {
     const hUserID = sessionStorage.getItem("hUserID");
     console.log("a", hUserID);
-    if (!hUserID) {
-        console.log("a");
-        $.ajax({
-            url: Ajax_File,
-            method: "POST",
-            data: {
-                mode: "Registration",
-                "User_ID": User_ID,
-                "Password": Password,
-                "User_Name": User_Name,
-                "Admin_Check": Admin_Check,
-                "Re_UserID": re_UserID
-            },
-            dataType: "json",
-            success: function (data) {
-                console.log(data);
-                if (data != "") {
-                    if (data.status == "OK") {
-                        alert("追加が完了しました");
+    $.ajax({
+        url: Ajax_File,
+        method: "POST",
+        data: {
+            mode: "Save",
+            "User_ID": User_ID,
+            "Password": Password,
+            "User_Name": User_Name,
+            "Admin_Check": Admin_Check,
+            "Re_UserID": re_UserID,
+            "hUser_ID": hUserID
+        },
+        dataType: "json",
+        success: function (data) {
+            console.log(data);
+            if (data != "") {
+                if (data.status == "OK") {
+                    if (data.ErrorMessage == "") {
+                        if (data.Mode == "Ins") {
+                            alert("新規登録が完了しました。");
+                        } else {
+                            alert("更新が完了しました。");
+                        };
                     } else {
-                        alert("エラーが発生しました。");
-                    };
+                        alert(data.ErrorMessage);
+                        window.history.back();
+                    };                    
+                } else {
+                    alert("エラーが発生しました。");
                 };
-            }
-        });
-    } else {
-        console.log("b");
-        // 更新
-        $.ajax({
-            url: Ajax_File,
-            method: "POST",
-            data: {
-                mode: "Update",
-                "User_ID": User_ID,
-                "Password": Password,
-                "User_Name": User_Name,
-                "Admin_Check": Admin_Check,
-                "Re_UserID": re_UserID,
-                "hUser_ID": hUserID
-            },
-            dataType: "json",
-            success: function (data) {
-                console.log(data);
-                if (data != "") {
-                    if (data.status == "OK") {
-                        console.log("更新しました");
-                    } else {
-                        alert("エラーが発生しました。");
-                    };
-                };
-            }
-        });
-    }
-    
+            };
+        }
+    });
 };
 
 function btnBackClick() {
