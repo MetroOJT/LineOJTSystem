@@ -24,6 +24,7 @@ Public Class Common
     Public gctbl_MessageMst As String = ""
     Public gctbl_UsedKeyword As String = ""
     Public gctbl_UserMst As String = ""
+    Public gctbl_LineUserMst As String = ""
 #End Region
 
 #Region "コンストラクタ"
@@ -103,6 +104,7 @@ Public Class Common
             gctbl_MessageMst = scfg_LineMsg & "messagemst"
             gctbl_UsedKeyword = scfg_LineMsg & "usedkeyword"
             gctbl_UserMst = scfg_LineMsg & "usermst"
+            gctbl_LineUserMst = scfg_LineMsg & "lineusermst"
 
         Catch ex As Exception
 
