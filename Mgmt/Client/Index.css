@@ -1,0 +1,21 @@
+﻿body {
+}
+#ItiranBox {
+}
+img {
+    height: 60px;
+    width: 60px;
+}
+p {
+    margin: 0 auto;
+}
+#ItiranArea {
+    margin: 3px;
+}
+#MessageBody {
+    height: 500px;
+}
+#MessageHeader, #MessageBody, .LineUser {
+    border: 1px solid;
+    margin: 3px;
+}
