@@ -85,42 +85,7 @@ Public Class Detail : Implements IHttpHandler
                 'HTML要素の作成
                 sHTML.Clear()
                 Do Until Not cDB.ReadDr
-
-                    sHTML.Append("<div class=""MessageContainer border border-secondary border-3 mb-2"" id=""MessageContainer" & iCnt & """>")
-                    sHTML.Append("<div class=""MessagebtnArea row"">")
-                    sHTML.Append("<div class=""col-1""></div>")
-                    sHTML.Append("<div class=""col-7""></div>")
-                    sHTML.Append("<div class=""col-1 d-grid"">")
-                    sHTML.Append("<input type=""image"" style=""width:30px; height:30px;"" src=""../../Common/img/up_triangle.png"" id =""MessageUpbtn" & iCnt & """ onclick=""MessageUpbtnClick(); return false;""/>")
-                    sHTML.Append("</div>")
-                    sHTML.Append("<div class=""col-1 d-grid"">")
-                    sHTML.Append("<input type=""image"" style=""width:30px; height:30px;""  src=""../../Common/img/down_triangle.png"" id =""MessageDownbtn" & iCnt & """ onclick=""MessageDownbtnClick(); return false;""/>")
-                    sHTML.Append("</div>")
-                    sHTML.Append("<div class=""col-1 d-grid"">")
-                    sHTML.Append("<input type=""image"" style=""width:30px; height:30px;"" src=""../../Common/img/cross.png"" id =""MessageDeletebtn" & iCnt & """ onclick=""MessageDeletebtnClick(); return false;""/>")
-                    sHTML.Append("</div>")
-                    sHTML.Append("<div class=""col-1""></div>")
-                    sHTML.Append("</div>")
-                    sHTML.Append("<div class=""row"">")
-                    sHTML.Append("<div class=""col-1""></div>")
-                    sHTML.Append("<div class=""col-10"">")
-                    sHTML.Append("<textarea class=""txtMessage w-100 form-control"" id=""txtMessage" & iCnt & """ maxlength=500 rows=""5"" onkeyup=""txtCountUpd()"" required>" & cDB.DRData("Message") & "</textarea>")
-                    sHTML.Append("<div class=""invalid-feedback""><p class=""h6"">メッセージを入力してください。</p></div>")
-                    sHTML.Append("</div>")
-                    sHTML.Append("<div class=""col-1""></div>")
-                    sHTML.Append("</div>")
-                    sHTML.Append("<div class=""row mt-2 mb-2"">")
-                    sHTML.Append("<div class=""col-1""></div>")
-                    sHTML.Append("<div class=""col-2"">")
-                    sHTML.Append("<input type=""button"" class=""btn btn-success"" id =""CouponCodeAddbtn" & iCnt & """value=""クーポンコード追加"" onclick=""CouponCodeAddbtnClick()""/>")
-                    sHTML.Append("</div>")
-                    sHTML.Append("<div class=""col-7""></div>")
-                    sHTML.Append("<div class=""col-1"">")
-                    sHTML.Append("<p class=""txtCount m-0 text-end h5"" id=""txtCount" & iCnt & """>0/500</p>")
-                    sHTML.Append("</div>")
-                    sHTML.Append("<div class=""col-1""></div>")
-                    sHTML.Append("</div>")
-                    sHTML.Append("</div>")
+                    sHTML.Append(CreateMessageContainer(CStr(iCnt), cDB.DRData("Message")))
                     iCnt += 1
                 Loop
 
@@ -148,6 +113,48 @@ Public Class Detail : Implements IHttpHandler
         End Try
 
         Return sJSON
+    End Function
+
+    Public Function CreateMessageContainer(ByVal iCnt As String, Optional ByVal Data As String = "") As String
+        Dim sHTML As New StringBuilder
+
+        sHTML.Append("<div class=""MessageContainer border border-secondary border-3 mb-2"" id=""MessageContainer" & iCnt & """>")
+        sHTML.Append("<div class=""MessagebtnArea row"">")
+        sHTML.Append("<div class=""col-1""></div>")
+        sHTML.Append("<div class=""col-7""></div>")
+        sHTML.Append("<div class=""col-1 d-grid"">")
+        sHTML.Append("<input type=""image"" style=""width:30px; height:30px;"" src=""../../Common/img/up_triangle.png"" id =""MessageUpbtn" & iCnt & """ class=""MessageUpbtn"" onclick=""MessageUpbtnClick(); return false;""/>")
+        sHTML.Append("</div>")
+        sHTML.Append("<div class=""col-1 d-grid"">")
+        sHTML.Append("<input type=""image"" style=""width:30px; height:30px;""  src=""../../Common/img/down_triangle.png"" id =""MessageDownbtn" & iCnt & """ class=""MessageDownbtn"" onclick=""MessageDownbtnClick(); return false;""/>")
+        sHTML.Append("</div>")
+        sHTML.Append("<div class=""col-1 d-grid"">")
+        sHTML.Append("<input type=""image"" style=""width:30px; height:30px;"" src=""../../Common/img/cross.png"" id =""MessageDeletebtn" & iCnt & """ class=""MessageDeletebtn"" onclick=""MessageDeletebtnClick(); return false;""/>")
+        sHTML.Append("</div>")
+        sHTML.Append("<div class=""col-1""></div>")
+        sHTML.Append("</div>")
+        sHTML.Append("<div class=""row"">")
+        sHTML.Append("<div class=""col-1""></div>")
+        sHTML.Append("<div class=""col-10"">")
+        sHTML.Append("<textarea class=""txtMessage w-100 form-control"" id=""txtMessage" & iCnt & """ maxlength=500 rows=""5"" onkeyup=""txtCountUpd()"" required>" & Data & "</textarea>")
+        sHTML.Append("<div class=""invalid-feedback""><p class=""h6"">メッセージを入力してください。</p></div>")
+        sHTML.Append("</div>")
+        sHTML.Append("<div class=""col-1""></div>")
+        sHTML.Append("</div>")
+        sHTML.Append("<div class=""row mt-2 mb-2"">")
+        sHTML.Append("<div class=""col-1""></div>")
+        sHTML.Append("<div class=""col-2"">")
+        sHTML.Append("<input type=""button"" class=""btn btn-success CouponCodeAddbtn"" id =""CouponCodeAddbtn" & iCnt & """value=""クーポンコード追加"" onclick=""CouponCodeAddbtnClick()""/>")
+        sHTML.Append("</div>")
+        sHTML.Append("<div class=""col-7""></div>")
+        sHTML.Append("<div class=""col-1"">")
+        sHTML.Append("<p class=""txtCount m-0 text-end h5"" id=""txtCount" & iCnt & """>0/500</p>")
+        sHTML.Append("</div>")
+        sHTML.Append("<div class=""col-1""></div>")
+        sHTML.Append("</div>")
+        sHTML.Append("</div>")
+
+        Return sHTML.ToString
     End Function
 
     'データの登録・更新時に動作する関数
@@ -443,41 +450,8 @@ Public Class Detail : Implements IHttpHandler
 
             'メッセージコンテナ要素を作成
             sHTML.Clear()
-            sHTML.Append("<div class=""MessageContainer border border-secondary border-3 mb-2"" id=""MessageContainer" & iCnt & """>")
-            sHTML.Append("<div class=""MessagebtnArea row"">")
-            sHTML.Append("<div class=""col-1""></div>")
-            sHTML.Append("<div class=""col-7""></div>")
-            sHTML.Append("<div class=""col-1 d-grid"">")
-            sHTML.Append("<input type=""image"" style=""width:30px; height:30px;"" src=""../../Common/img/up_triangle.png"" class=""MessageUpbtn"" id =""MessageUpbtn" & iCnt & """ onclick=""MessageUpbtnClick(); return false;""/>")
-            sHTML.Append("</div>")
-            sHTML.Append("<div class=""col-1 d-grid"">")
-            sHTML.Append("<input type=""image"" style=""width:30px; height:30px;""  src=""../../Common/img/down_triangle.png"" class=""MessageDownbtn"" id =""MessageDownbtn" & iCnt & """ onclick=""MessageDownbtnClick(); return false;""/>")
-            sHTML.Append("</div>")
-            sHTML.Append("<div class=""col-1 d-grid"">")
-            sHTML.Append("<input type=""image"" style=""width:30px; height:30px;"" src=""../../Common/img/cross.png"" class=""MessageDeletebtn"" id =""MessageDeletebtn" & iCnt & """ onclick=""MessageDeletebtnClick(); return false;""/>")
-            sHTML.Append("</div>")
-            sHTML.Append("<div class=""col-1""></div>")
-            sHTML.Append("</div>")
-            sHTML.Append("<div class=""row"">")
-            sHTML.Append("<div class=""col-1""></div>")
-            sHTML.Append("<div class=""col-10"">")
-            sHTML.Append("<textarea class=""txtMessage w-100 form-control"" id=""txtMessage" & iCnt & """ maxlength=500 rows=""5"" onkeyup=""txtCountUpd()"" required></textarea>")
-            sHTML.Append("<div class=""invalid-feedback""><p class=""h6"">メッセージを入力してください。</p></div>")
-            sHTML.Append("</div>")
-            sHTML.Append("<div class=""col-1""></div>")
-            sHTML.Append("</div>")
-            sHTML.Append("<div class=""row mt-2 mb-2"">")
-            sHTML.Append("<div class=""col-1""></div>")
-            sHTML.Append("<div class=""col-2"">")
-            sHTML.Append("<input type=""button"" class=""btn btn-success CouponCodeAddbtn"" id =""CouponCodeAddbtn" & iCnt & """value=""クーポンコード追加"" onclick=""CouponCodeAddbtnClick()""/>")
-            sHTML.Append("</div>")
-            sHTML.Append("<div class=""col-7""></div>")
-            sHTML.Append("<div class=""col-1"">")
-            sHTML.Append("<p class=""txtCount m-0 text-end h5"" id=""txtCount" & iCnt & """>0/500</p>")
-            sHTML.Append("</div>")
-            sHTML.Append("<div class=""col-1""></div>")
-            sHTML.Append("</div>")
-            sHTML.Append("</div>")
+            sHTML.Append(CreateMessageContainer(CStr(iCnt)))
+
 
             '現在割り振られたid + 1をcookieにセットする
             iCnt = CStr(CInt(iCnt) + 1)

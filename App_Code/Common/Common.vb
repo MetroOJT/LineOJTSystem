@@ -415,13 +415,12 @@ Public Class Common
 
         sRet.Clear()
         sRet.Append("<div id = 'HeaderArea' Class='d-flex row' style='height: 150px'>")
-        sRet.Append("<div Class='col-2'></div>")
-        sRet.Append("<div Class='col-2'></div>")
+        sRet.Append("<div Class='col-3'></div>")
         sRet.Append("<div Class='col-6 h1 text-center m-0  d-flex align-items-center justify-content-start'>クーポン発行サービス</div>")
         If Mode = "Login" Then
-            sRet.Append("<div Class='col-2'></div>")
+            sRet.Append("<div Class='col-3'></div>")
         Else
-            sRet.Append("<div Class='col-2 text-end '>")
+            sRet.Append("<div Class='col-3 text-end '>")
             sRet.Append("<div Class='h-50 d-flex'>")
             sRet.Append("<div Class='d-grid align-items-center w-100'>")
             sRet.Append("<Input  type = 'button' value='ログアウト' id='LogOutbtn' Class='btn btn-warning btn-lg' style='height:64%;' onclick='LogOut()'/>")
