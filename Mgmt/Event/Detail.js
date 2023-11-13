@@ -41,6 +41,7 @@ $(function () {
     
 })
 
+//フォームが変更されたかされていないか検出するために使用する関数
 function CompareForm() {
     let form
     form += $("#txtEventName").val();
@@ -168,12 +169,8 @@ function EventLoad() {
     });
 };
 
+//直前に作成したモーダルを削除する関数
 function ModalAreaClear() {
-    //if ($("#Savebtn").val() == "登録") {
-    //    ModalSet("ModalArea", "イベント登録", "登録しますか？", "登録", "btn-outline-primary", "戻る", "Modalsavebtnclick()");
-    //} else {
-    //    ModalSet("ModalArea", "イベント更新", "更新しますか？", "更新", "btn-outline-primary", "戻る", "Modalsavebtnclick()");
-    //}
     document.getElementById("ModalArea").innerHTML = "";
 }
 
@@ -182,16 +179,15 @@ function SavebtnClick() {
 
     EventName = $("#txtEventName").val();
     EventStatus = "";
+    if ($("input[name=EventStatus]:checked").is(':checked')) {
+        EventStatus = $('input[name="EventStatus"]:checked').val();
+    };
     ScheduleFm = $("#txtScheduleFm").val();
     ScheduleTo = $("#txtScheduleTo").val();
     Keyword = $("#txtKeyword").val();
     Messages = [];
     work = "";
-
-
-    if ($("input[name=EventStatus]:checked").is(':checked')) {
-        EventStatus = $('input[name="EventStatus"]:checked').val();
-    };
+    
 
     //スケジュールの日付を整形
     if (ScheduleFm != "" && ScheduleTo != "") {
@@ -298,6 +294,7 @@ function SavebtnClick() {
         Messages.push(ele.value)
     }
 
+    // モーダルの表示
     if ($("#Savebtn").val() == "登録") {
         ModalSet("ModalArea", "イベント登録", "登録しますか？", "登録", "btn-outline-primary", "戻る", "Modalsavebtnclick()");
     } else {
@@ -305,6 +302,7 @@ function SavebtnClick() {
     }
 };
 
+//モーダルのsavebtnを押下した際に動く関数
 function Modalsavebtnclick() {
 
     $.ajax({
@@ -349,6 +347,7 @@ function Modalsavebtnclick() {
                 }
 
             } else {
+                //モーダルの内容をエラーに書き換える
                 document.getElementById("ModalSavebtn").style.display = "none";
                 document.getElementById("ModalBackbtn").textContent = "閉じる";
                 document.getElementById("ModalBody").textContent = "エラーが発生しました。";
@@ -387,7 +386,7 @@ function ModalDeletebtnClick(){
 
                     
                 } else {
-                    //エラーアラート
+                    //モーダルの内容をエラーに書き換える
                     document.getElementById("ModalSavebtn").style.display = "none";
                     document.getElementById("ModalBackbtn").textContent = "閉じる";
                     document.getElementById("ModalBody").textContent = "エラーが発生しました。";
@@ -396,6 +395,8 @@ function ModalDeletebtnClick(){
         }
     });
 }
+
+//モーダルからページ遷移する際に動作する関数
 function ModalClosebtnClick() {
     sessionStorage.removeItem("EventID");
     window.location.href = Referrer;
@@ -513,6 +514,7 @@ function MessageDeletebtnClick() {
         console.log(document.getElementsByClassName("MessageContainer").length)
         for (var i = 0; i <= document.getElementsByClassName("MessageContainer").length - 1; i++) {
             console.log(document.getElementsByClassName("MessageUpbtn")[i])
+            document.getElementsByClassName("MessageContainer")[i].id = "MessageContainer" + i;
             document.getElementsByClassName("MessageUpbtn")[i].id = "MessageUpbtn" + i;
             document.getElementsByClassName("MessageDownbtn")[i].id = "MessageDownbtn" + i;
             document.getElementsByClassName("MessageDeletebtn")[i].id = "MessageDeletebtn" + i;
