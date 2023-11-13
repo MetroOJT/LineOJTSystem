@@ -31,10 +31,14 @@ $(function () {
         //更新モード
         EventLoad();
         $("#Deletebtn").prop("disabled", false);
+        $("#Deletebtn").addClass("btn-outline-danger");
+        $("#Deletebtn").removeClass("btn-secondary");
     } else {
         //登録モード
         MessageAddbtnClick();
         $("#Deletebtn").prop("disabled", true);
+        $("#Deletebtn").addClass("btn-secondary");
+        $("#Deletebtn").removeClass("btn-outline-danger");
         iniForm = CompareForm();
     }
     
@@ -95,7 +99,6 @@ function ModalSet(Area, title, body, savebtn, savebtnstyle, cancelbtn, onclick) 
     Modal += '        <div class="modal-content">'
     Modal += '            <div class="modal-header">'
     Modal += '                <h1 class="modal-title fs-5" id="ConfirmModalTitle">'+ title +'</h1>'
-    Modal += '                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>'
     Modal += '            </div>'
     Modal += '            <div class="modal-body" id="ModalBody">'+ body +'</div>'
     Modal += '            <div class="modal-footer">'
@@ -336,6 +339,8 @@ function Modalsavebtnclick() {
                         document.getElementById("ModalBody").textContent = "登録が完了しました。";
                         document.getElementById("Savebtn").value = "更新";
                         $("#Deletebtn").prop("disabled", false);
+                        $("#Deletebtn").addClass("btn-outline-danger");
+                        $("#Deletebtn").removeClass("btn-secondary");
                     } else {
                         document.getElementById("ModalBody").textContent = "更新が完了しました。";
                     }
