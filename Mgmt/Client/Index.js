@@ -50,7 +50,36 @@ function MakeItiran() {
         success: function (data) {
             if (data != "") {
                 if (data.status == "OK") {
-                    document.getElementById("ItiranArea").innerHTML = data.html
+                    document.getElementById("ItiranArea").innerHTML = data.html;
+                    const LineUsers = document.querySelectorAll(".LineUser");
+                    LineUsers.forEach(LineUser => {
+                        LineUser.addEventListener("click", function () {
+                            MakeMessageBody(LineUser.id);
+                        })
+                    });
+                } else {
+                    alert("エラーが発生しました。");
+                };
+            };
+        }
+    });
+};
+
+// 一覧クリック
+function MakeMessageBody(SearchID) {
+    $.ajax({
+        url: Ajax_File,
+        method: "POST",
+        data: {
+            "mode": "MakeMessageBox",
+            "SearchID": SearchID.slice(6)
+        },
+        dataType: "json",
+        success: function (data) {
+            console.log(data);
+            if (data != "") {
+                if (data.status == "OK") {
+                    document.getElementById("MessageBox").innerHTML = data.html;
                 } else {
                     alert("エラーが発生しました。");
                 };

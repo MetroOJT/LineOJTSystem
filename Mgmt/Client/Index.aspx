@@ -38,8 +38,8 @@
             </div>
             <div id="MessageBox" class="w-75 d-flex flex-column">
                 <div id="MessageHeader" class="d-flex align-items-center">
-                    <img src=""/>
-                    <p>氏名</p>
+                    <img id="MessageHeaderImg" src=""/>
+                    <p id="MessageHeaderName">氏名</p>
                 </div>
                 <div id="MessageBody">
 

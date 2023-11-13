@@ -17,6 +17,8 @@ Public Class Index : Implements IHttpHandler
                 context.Response.Write(Search(context))
             Case "Itiran"
                 context.Response.Write(Itiran(context))
+            Case "MakeMessageBox"
+                context.Response.Write(MakeMessageBox(context))
         End Select
     End Sub
 
@@ -47,10 +49,11 @@ Public Class Index : Implements IHttpHandler
             sSQL.Clear()
             sSQL.Append("CREATE TABLE " & sTempTable)
             sSQL.Append(" (")
-            sSQL.Append("  wLine_UserID      VARCHAR(100) NOT NULL")
+            sSQL.Append("  SearchID          INT NOT NULL AUTO_INCREMENT")
+            sSQL.Append("  ,wLine_UserID     VARCHAR(100) NOT NULL")
             sSQL.Append("  ,wDisplayName     VARCHAR(100) NOT NULL")
             sSQL.Append("  ,wPictureUrl      VARCHAR(10000) NOT NULL")
-            sSQL.Append("  ,PRIMARY KEY (wLine_UserID) ")
+            sSQL.Append("  ,PRIMARY KEY (SearchID) ")
             sSQL.Append("  )")
             cDB.ExecuteSQL(sSQL.ToString)
 
@@ -62,6 +65,8 @@ Public Class Index : Implements IHttpHandler
             sSQL.Append(" ORDER BY Last_Log_Datetime DESC")
             cDB.SelectSQL(sSQL.ToString)
             sValues.Clear()
+
+            Dim SearchID As Integer = 1
             Do Until Not cDB.ReadDr
                 Dim Line_UserID As String = cDB.DRData("Line_UserID")
                 'ユーザ名とアイコン取得用のWebRequest
@@ -88,6 +93,11 @@ Public Class Index : Implements IHttpHandler
             End If
             sSQL.Clear()
             sSQL.Append(" INSERT INTO " & sTempTable)
+            sSQL.Append(" (")
+            sSQL.Append("  wLine_UserID")
+            sSQL.Append("  ,wDisplayName")
+            sSQL.Append("  ,wPictureUrl")
+            sSQL.Append(" )")
             sSQL.Append(" VALUES " & sValues.ToString)
             iCount = cDB.ExecuteSQL(sSQL.ToString)
 
@@ -123,7 +133,8 @@ Public Class Index : Implements IHttpHandler
             sTempTable = cCom.CmnGet_TableName("LineUserItiran")
             sSQL.Clear()
             sSQL.Append(" SELECT")
-            sSQL.Append(" wLine_UserID")
+            sSQL.Append(" SearchID")
+            sSQL.Append(" ,wLine_UserID")
             sSQL.Append(" ,wDisplayName")
             sSQL.Append(" ,wPictureUrl")
             sSQL.Append(" ,SendRecv")
@@ -157,7 +168,7 @@ Public Class Index : Implements IHttpHandler
                     Dim messageObj As Object = eventsObj("message")
                     sLastMessage = messageObj("text").ToString()
                 End If
-                sHTML.Append("<div class=""LineUser d-flex align-items-center""><img src=""" & cDB.DRData("wPictureUrl") & """ class=""rounded-circle""/><p>" & cDB.DRData("wDisplayName") & "<br>" & sLastMessage & "</p></div>")
+                sHTML.Append("<div id=Seatch" & cDB.DRData("SearchID") & " class=""LineUser d-flex align-items-center""><img src=""" & cDB.DRData("wPictureUrl") & """ class=""rounded-circle""/><p>" & cDB.DRData("wDisplayName") & "<br>" & sLastMessage & "</p></div>")
             Loop
         Catch ex As Exception
             sRet = ex.Message
@@ -176,6 +187,95 @@ Public Class Index : Implements IHttpHandler
         End Try
 
         Return sJSON
+    End Function
+
+    'メッセージボディー作成
+    Public Function MakeMessageBox(ByVal context As HttpContext) As String
+        Dim cCom As New Common
+        Dim cDB As New CommonDB
+        Dim sRet As String = ""
+        Dim sStatus As String = "OK"
+        Dim hHash As New Hashtable
+        Dim sHTML As New StringBuilder
+        Dim jJson As New JavaScriptSerializer
+        Dim sJson As String = ""
+        Dim sSQL As New StringBuilder
+
+        Try
+            Dim sTempTable = cCom.CmnGet_TableName("LineUserItiran")
+
+            '送信データ取得
+            Dim SearchID As Integer = context.Request.Item("SearchID")
+
+            'ヘッダーの生成
+            cDB.AddWithValue("@SearchID", SearchID)
+            sSQL.Clear()
+            sSQL.Append(" SELECT")
+            sSQL.Append(" wLine_UserID")
+            sSQL.Append(" ,wDisplayName")
+            sSQL.Append(" ,wPictureUrl")
+            sSQL.Append(" FROM " & sTempTable)
+            sSQL.Append(" WHERE SearchID = @SearchID")
+            cDB.SelectSQL(sSQL.ToString)
+            If cDB.ReadDr Then
+                sHTML.Clear()
+                sHTML.Append("<div id=""MessageHeader"" class=""d-flex align-items-center"">")
+                sHTML.Append("<img id=""MessageHeaderImg"" src=""" & cDB.DRData("wPictureUrl") & """ class=""rounded-circle""/>")
+                sHTML.Append("<p id=""MessageHeaderName"">" & cDB.DRData("wDisplayName") & "</p>")
+                sHTML.Append("</div>")
+                cDB.AddWithValue("@Line_UserID", cDB.DRData("wLine_UserID"))
+            End If
+
+            'ボディーの生成
+            'ログの読み込み
+            sSQL.Clear()
+            sSQL.Append(" SELECT")
+            sSQL.Append(" SendRecv")
+            sSQL.Append(" ,Log")
+            sSQL.Append(" ,Datetime")
+            sSQL.Append(" FROM " & cCom.gctbl_LogMst)
+            sSQL.Append(" WHERE Line_UserID = @Line_UserID")
+            sSQL.Append(" ORDER BY LogID")
+            cDB.SelectSQL(sSQL.ToString)
+
+            sHTML.Append("<div id=""MessageBody"">")
+            Do Until Not cDB.ReadDr
+                Dim sLog As String = cDB.DRData("Log")
+                Dim sMessage As String = ""
+                Dim jLog As Object = JsonConvert.DeserializeObject(sLog)
+                If cDB.DRData("SendRecv").ToString = "Send" Then
+                    Dim jMessages As Object
+                    Dim jMessage As Object = Nothing
+                    jMessages = jLog("messages")
+                    jMessage = jMessages.Last()
+                    sMessage = jMessage("text").ToString
+                    sHTML.Append("<p class=""pull-left"">" & sMessage & "</p>")
+                ElseIf cDB.DRData("SendRecv").ToString = "Recv" Then
+                    Dim eventsObj As Object = jLog("events")(0)
+                    Dim messageObj As Object = eventsObj("message")
+                    sMessage = messageObj("text").ToString()
+                    sHTML.Append("<p class=""pull-right"">" & sMessage & "</p>")
+                End If
+            Loop
+            sHTML.Append("</div>")
+
+        Catch ex As Exception
+            sRet = ex.Message
+        Finally
+            cDB.DrClose()
+            cDB.Dispose()
+            If sRet <> "" Then
+                sStatus = "NG"
+                cCom.CmnWriteStepLog(sRet)
+            End If
+
+            hHash.Add("status", sStatus)
+            hHash.Add("html", sHTML.ToString)
+
+            sJson = jJson.Serialize(hHash)
+        End Try
+
+        Return sJson
     End Function
 
     Public ReadOnly Property IsReusable() As Boolean Implements IHttpHandler.IsReusable
