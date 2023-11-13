@@ -6,7 +6,7 @@
 <head runat="server">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="Index.css" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous" />
     <%--<%="<script src='../../Common/js/Common.js?ts=" & cCom.CmnTimeStamp & "'></script>" %>--%>
     <title>ユーザー検索</title>
 </head>
@@ -31,19 +31,19 @@
                         
                         <div class="d-flex">
                             <label class="col-sm-2 col-form-label">ユーザーID</label>
-                            <input type="text" class="form-control w-25" />
+                            <input type="text" class="form-control w-25" id="user_ID" />
                         </div>
                         
                         <div class="d-flex">
                             <label class="col-sm-2 col-form-label">ユーザー名</label>
-                            <input type="text" class="form-control w-25" />
+                            <input type="text" class="form-control w-25" id="user_Name" />
                         </div>
 
                         <div>
                             <label class="col-sm-2 col-form-label">管理者</label>
-                            <input type="radio" class="form-check-input" style="margin-top: 10px" />
+                            <input type="radio" class="form-check-input" style="margin-top: 10px" name="contact" value="1" />
                             <label>オン</label>
-                            <input type="radio" class="form-check-input" style="margin-top: 10px" />
+                            <input type="radio" class="form-check-input" style="margin-top: 10px" name="contact" value="0" />
                             <label>オフ</label>
                         </div>
 
