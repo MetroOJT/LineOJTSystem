@@ -262,10 +262,8 @@ Public Class Index : Implements IHttpHandler
             End If
             sPageNationHTML.Append("<li class=""page-item disabled"" id=""pi1""><a class=""page-link"">1</a></li>")
 
-            For i As Integer = 1 To cCom.gcPageNationNumCount
-                If i = 1 Then
-                    sPageNationHTML.Append("<li class=""page-item disabled"" id=""pi" & i & """><a class=""page-link"">" & i & "</a></li>")
-                ElseIf i <> 1 AndAlso iCount \ ((i - 1) * 10) >= 1 Then
+            For i As Integer = 2 To cCom.gcPageNationNumCount
+                If iCount \ ((i - 1) * 10) >= 1 Then
                     sPageNationHTML.Append("<li class=""page-item"" id=""pi" & i & """><a class=""page-link"">" & i & "</a></li>")
                 End If
             Next
@@ -431,9 +429,9 @@ Public Class Index : Implements IHttpHandler
                     sPageNationHTML.Append("<li class=""page-item"" id=""piback""><a class=""page-link"">‹</a></li>")
                 End If
             End If
-            '末尾のページに遷移したときのページャがおかしい
+            '末尾のページに遷移したときのページャがおかしい:完了
             If NowPage > cCom.gcPageNationNumCount \ 2 Then
-                Dim PageNationNumMax As Integer = Math.Min(NowPage + (cCom.gcPageNationNumCount \ 2), iCount \ 10 + 1)
+                Dim PageNationNumMax As Integer = Math.Min(NowPage + (cCom.gcPageNationNumCount \ 2), (iCount - 1) \ 10 + 1)
                 For i As Integer = PageNationNumMax - cCom.gcPageNationNumCount + 1 To PageNationNumMax
                     If NowPage = i Then
                         sPageNationHTML.Append("<li class=""page-item disabled"" id=""pi" & i & """><a class=""page-link"">" & i & "</a></li>")
