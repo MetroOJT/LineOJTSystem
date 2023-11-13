@@ -231,35 +231,35 @@ Public Class Index : Implements IHttpHandler
             sPNList.Append("<div class=""col"">")
             sPNList.Append("<ul class=""pagination"" >")
             sPNList.Append("<li class=""page-item pe-none"" id=""pista"">")
-            sPNList.Append("<a class=""page-link"" href=""#"" style=""color:black; background-color:silver;"" aria-label=""Previous"">")
+            sPNList.Append("<a class=""page-link"" style=""color:black; background-color:silver;"" aria-label=""Previous"">")
             sPNList.Append("<span aria-hidden=""True"">&laquo;</span>")
             sPNList.Append("</a>")
             sPNList.Append("</li>")
-            sPNList.Append("<li class=""page-item pe-none"" id=""piback""><a class=""page-link"" href=""#"" style=""color:black; background-color:silver;"">‹</a></li>")
-            sPNList.Append("<li class=""page-item"" id=""pi1""><a class=""page-link text-danger fw-bold"" href=""#"">1</a></li>")
+            sPNList.Append("<li class=""page-item pe-none"" id=""piback""><a class=""page-link"" style=""color:black; background-color:silver;"">‹</a></li>")
+            sPNList.Append("<li class=""page-item"" id=""pi1""><a class=""page-link text-danger fw-bold"">1</a></li>")
             If iCount > 10 Then
-                sPNList.Append("<li class=""page-item"" id=""pi2""><a class=""page-link"" href=""#"">2</a></li>")
+                sPNList.Append("<li class=""page-item"" id=""pi2""><a class=""page-link"">2</a></li>")
             Else
-                sPNList.Append("<li class=""page-item pe-none"" id=""pi2""><a class=""page-link text-dark"" href=""#"" style=""background-color: silver;"">2</a></li>")
+                sPNList.Append("<li class=""page-item pe-none"" id=""pi2""><a class=""page-link text-dark"" style=""background-color: silver;"">2</a></li>")
             End If
 
             If iCount > 20 Then
-                sPNList.Append("<li class=""page-item"" id=""pi3""><a class=""page-link"" href=""#"">3</a></li>")
+                sPNList.Append("<li class=""page-item"" id=""pi3""><a class=""page-link"">3</a></li>")
             Else
-                sPNList.Append("<li class=""page-item pe-none"" id=""pi3""><a class=""page-link text-dark"" href=""#"" style=""background-color: silver;"">3</a></li>")
+                sPNList.Append("<li class=""page-item pe-none"" id=""pi3""><a class=""page-link text-dark"" style=""background-color: silver;"">3</a></li>")
             End If
 
             If iCount > 30 Then
-                sPNList.Append("<li class=""page-item"" id=""pinext""><a Class=""page-link"" href=""#"">›</a></li>")
+                sPNList.Append("<li class=""page-item"" id=""pinext""><a Class=""page-link"">›</a></li>")
                 sPNList.Append("<li class=""page-item"" id=""piend"">")
-                sPNList.Append("<a class=""page-link"" href=""#"" aria-label=""Next"">")
+                sPNList.Append("<a class=""page-link"" aria-label=""Next"">")
                 sPNList.Append("<span aria-hidden=""true"">&raquo;</span>")
                 sPNList.Append("</a>")
                 sPNList.Append("</li>")
             Else
-                sPNList.Append("<li class=""page-item pe-none"" id=""pinext""><a Class=""page-link"" href=""#"" style=""color:black; background-color:silver;"">›</a></li>")
+                sPNList.Append("<li class=""page-item pe-none"" id=""pinext""><a Class=""page-link"" style=""color:black; background-color:silver;"">›</a></li>")
                 sPNList.Append("<li class=""page-item pe-none"" id=""piend"">")
-                sPNList.Append("<a class=""page-link"" href=""#"" style=""color:black; background-color:silver;"" aria-label=""Next"">")
+                sPNList.Append("<a class=""page-link"" style=""color:black; background-color:silver;"" aria-label=""Next"">")
                 sPNList.Append("<span aria-hidden=""true"">&raquo;</span>")
                 sPNList.Append("</a>")
                 sPNList.Append("</li>")
@@ -407,42 +407,42 @@ Public Class Index : Implements IHttpHandler
             sPNList.Append("<div class=""col"">")
             sPNList.Append("<ul class=""pagination"" >")
             sPNList.Append("<li class=""page-item"" id=""pista"">")
-            sPNList.Append("<a class=""page-link"" href=""#"" aria-label=""Previous"">")
+            sPNList.Append("<a class=""page-link"" aria-label=""Previous"">")
             sPNList.Append("<span aria-hidden=""True"">&laquo;</span>")
             sPNList.Append("</a>")
             sPNList.Append("</li>")
-            sPNList.Append("<li class=""page-item"" id=""piback""><a class=""page-link"" href=""#"">‹</a></li>")
+            sPNList.Append("<li class=""page-item"" id=""piback""><a class=""page-link"">‹</a></li>")
             If NowPage = 1 Then
-                sPNList.Append("<li class=""page-item"" id=""pi1""><a class=""page-link text-danger fw-bold"" href=""#"">" & PageMedian - 1 & "</a></li>")
+                sPNList.Append("<li class=""page-item"" id=""pi1""><a class=""page-link text-danger fw-bold"">" & PageMedian - 1 & "</a></li>")
             Else
-                sPNList.Append("<li class=""page-item"" id=""pi1""><a class=""page-link"" href=""#"">" & PageMedian - 1 & "</a></li>")
+                sPNList.Append("<li class=""page-item"" id=""pi1""><a class=""page-link"">" & PageMedian - 1 & "</a></li>")
             End If
 
             If iCount > 10 Then 'データが11件以上であればページ2も表示
                 If NowPage <> 1 And NowPage <> Math.Ceiling(iCount / 10) Then
-                    sPNList.Append("<li class=""page-item"" id=""pi2""><a class=""page-link text-danger fw-bold"" href=""#"">" & PageMedian & "</a></li>")
+                    sPNList.Append("<li class=""page-item"" id=""pi2""><a class=""page-link text-danger fw-bold"">" & PageMedian & "</a></li>")
                 ElseIf NowPage = 2 And iCount < 21 Then
-                    sPNList.Append("<li class=""page-item"" id=""pi2""><a class=""page-link text-danger fw-bold"" href=""#"">" & PageMedian & "</a></li>")
+                    sPNList.Append("<li class=""page-item"" id=""pi2""><a class=""page-link text-danger fw-bold"">" & PageMedian & "</a></li>")
                 Else
-                    sPNList.Append("<li class=""page-item"" id=""pi2""><a class=""page-link"" href=""#"">" & PageMedian & "</a></li>")
+                    sPNList.Append("<li class=""page-item"" id=""pi2""><a class=""page-link"">" & PageMedian & "</a></li>")
                 End If
             Else
-                sPNList.Append("<li class=""page-item pe-none"" id=""pi2""><a class=""page-link text-dark"" href=""#"" style=""background-color: silver;"">" & PageMedian & "</a></li>")
+                sPNList.Append("<li class=""page-item pe-none"" id=""pi2""><a class=""page-link text-dark"" style=""background-color: silver;"">" & PageMedian & "</a></li>")
             End If
 
             If iCount > 20 Then 'データが21件以上であればページ3も表示
                 If NowPage = Math.Ceiling(iCount / 10) Then
-                    sPNList.Append("<li class=""page-item"" id=""pi3""><a class=""page-link text-danger fw-bold"" href=""#"" >" & PageMedian + 1 & "</a></li>")
+                    sPNList.Append("<li class=""page-item"" id=""pi3""><a class=""page-link text-danger fw-bold"" >" & PageMedian + 1 & "</a></li>")
                 Else
-                    sPNList.Append("<li class=""page-item"" id=""pi3""><a class=""page-link"" href=""#"" >" & PageMedian + 1 & "</a></li>")
+                    sPNList.Append("<li class=""page-item"" id=""pi3""><a class=""page-link"" >" & PageMedian + 1 & "</a></li>")
                 End If
             Else
-                sPNList.Append("<li class=""page-item pe-none"" id=""pi3""><a class=""page-link text-dark"" href=""#"" style=""background-color: silver;"">" & PageMedian + 1 & "</a></li>")
+                sPNList.Append("<li class=""page-item pe-none"" id=""pi3""><a class=""page-link text-dark"" style=""background-color: silver;"">" & PageMedian + 1 & "</a></li>")
             End If
 
-            sPNList.Append("<li class=""page-item"" id=""pinext""><a Class=""page-link"" href=""#"">›</a></li>")
+            sPNList.Append("<li class=""page-item"" id=""pinext""><a Class=""page-link"">›</a></li>")
             sPNList.Append("<li class=""page-item"" id=""piend"">")
-            sPNList.Append("<a class=""page-link"" href=""#"" aria-label=""Next"">")
+            sPNList.Append("<a class=""page-link"" aria-label=""Next"">")
             sPNList.Append("<span aria-hidden=""true"">&raquo;</span>")
             sPNList.Append("</a>")
             sPNList.Append("</li>")

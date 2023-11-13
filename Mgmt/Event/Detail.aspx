@@ -104,10 +104,10 @@
                 <!-- ここにメッセージコンテナが入る-->
             </div>
             <div id="MessagebtnArea" class="row mt-2 mb-2">
-                <div class="col-2">
+                <div class="col-3">
                     <input type="button" id="MessageAddbtn" class="btn btn-primary btn-lg w-100"　data-bs-toggle="modal" data-bs-target="#ConfirmMessageModal" value="メッセージ追加" />
                 </div>
-                <div class="col-10"></div>
+                <div class="col-9"></div>
             </div>
         </form>
     </div>

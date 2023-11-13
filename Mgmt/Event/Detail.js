@@ -18,6 +18,9 @@ $(function () {
     //ヘッダーの担当者名を入れる関数
     DspLoginUserName();
 
+    document.getElementById("Savebtn").addEventListener("mousedown", ModalAreaClear, false);
+    document.getElementById("Deletebtn").addEventListener("mousedown", ModalAreaClear, false);
+
     document.getElementById("Savebtn").addEventListener("mouseup", SavebtnClick, false);
     document.getElementById("Deletebtn").addEventListener("mouseup", DeletebtnClick, false);
     document.getElementById("Backbtn").addEventListener("mouseup", BackbtnClick, false);
@@ -28,16 +31,21 @@ $(function () {
         //更新モード
         EventLoad();
         $("#Deletebtn").prop("disabled", false);
+        $("#Deletebtn").addClass("btn-outline-danger");
+        $("#Deletebtn").removeClass("btn-secondary");
     } else {
         //登録モード
         MessageAddbtnClick();
         $("#Deletebtn").prop("disabled", true);
+        $("#Deletebtn").addClass("btn-secondary");
+        $("#Deletebtn").removeClass("btn-outline-danger");
         iniForm = CompareForm();
     }
     
     
 })
 
+//フォームが変更されたかされていないか検出するために使用する関数
 function CompareForm() {
     let form
     form += $("#txtEventName").val();
@@ -91,14 +99,13 @@ function ModalSet(Area, title, body, savebtn, savebtnstyle, cancelbtn, onclick) 
     Modal += '        <div class="modal-content">'
     Modal += '            <div class="modal-header">'
     Modal += '                <h1 class="modal-title fs-5" id="ConfirmModalTitle">'+ title +'</h1>'
-    Modal += '                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>'
     Modal += '            </div>'
     Modal += '            <div class="modal-body" id="ModalBody">'+ body +'</div>'
     Modal += '            <div class="modal-footer">'
     if(savebtn != ""){
         Modal += '                <button type="button" id="ModalSavebtn" class="btn '+savebtnstyle +'">'+ savebtn +'</button>'
     }
-    Modal += '                <button type="button" id="ModalBackbtn" class="btn btn-outline-secondary" data-bs-dismiss="modal">'+ cancelbtn +'</button>'
+    Modal += '                <button type="button" id="ModalBackbtn" class="btn btn-outline-secondary" data-bs-dismiss="modal" onclick="ModalbtnCancelClick">'+ cancelbtn +'</button>'
     Modal += '            </div>'
     Modal += '        </div>'
     Modal += '    </div>'
@@ -165,21 +172,25 @@ function EventLoad() {
     });
 };
 
+//直前に作成したモーダルを削除する関数
+function ModalAreaClear() {
+    document.getElementById("ModalArea").innerHTML = "";
+}
+
 //登録・更新を行う関数
 function SavebtnClick() {
 
     EventName = $("#txtEventName").val();
     EventStatus = "";
+    if ($("input[name=EventStatus]:checked").is(':checked')) {
+        EventStatus = $('input[name="EventStatus"]:checked').val();
+    };
     ScheduleFm = $("#txtScheduleFm").val();
     ScheduleTo = $("#txtScheduleTo").val();
     Keyword = $("#txtKeyword").val();
     Messages = [];
     work = "";
-
-
-    if ($("input[name=EventStatus]:checked").is(':checked')) {
-        EventStatus = $('input[name="EventStatus"]:checked').val();
-    };
+    
 
     //スケジュールの日付を整形
     if (ScheduleFm != "" && ScheduleTo != "") {
@@ -286,6 +297,7 @@ function SavebtnClick() {
         Messages.push(ele.value)
     }
 
+    // モーダルの表示
     if ($("#Savebtn").val() == "登録") {
         ModalSet("ModalArea", "イベント登録", "登録しますか？", "登録", "btn-outline-primary", "戻る", "Modalsavebtnclick()");
     } else {
@@ -293,6 +305,7 @@ function SavebtnClick() {
     }
 };
 
+//モーダルのsavebtnを押下した際に動く関数
 function Modalsavebtnclick() {
 
     $.ajax({
@@ -326,6 +339,8 @@ function Modalsavebtnclick() {
                         document.getElementById("ModalBody").textContent = "登録が完了しました。";
                         document.getElementById("Savebtn").value = "更新";
                         $("#Deletebtn").prop("disabled", false);
+                        $("#Deletebtn").addClass("btn-outline-danger");
+                        $("#Deletebtn").removeClass("btn-secondary");
                     } else {
                         document.getElementById("ModalBody").textContent = "更新が完了しました。";
                     }
@@ -337,6 +352,7 @@ function Modalsavebtnclick() {
                 }
 
             } else {
+                //モーダルの内容をエラーに書き換える
                 document.getElementById("ModalSavebtn").style.display = "none";
                 document.getElementById("ModalBackbtn").textContent = "閉じる";
                 document.getElementById("ModalBody").textContent = "エラーが発生しました。";
@@ -375,7 +391,7 @@ function ModalDeletebtnClick(){
 
                     
                 } else {
-                    //エラーアラート
+                    //モーダルの内容をエラーに書き換える
                     document.getElementById("ModalSavebtn").style.display = "none";
                     document.getElementById("ModalBackbtn").textContent = "閉じる";
                     document.getElementById("ModalBody").textContent = "エラーが発生しました。";
@@ -384,6 +400,8 @@ function ModalDeletebtnClick(){
         }
     });
 }
+
+//モーダルからページ遷移する際に動作する関数
 function ModalClosebtnClick() {
     sessionStorage.removeItem("EventID");
     window.location.href = Referrer;
@@ -501,6 +519,7 @@ function MessageDeletebtnClick() {
         console.log(document.getElementsByClassName("MessageContainer").length)
         for (var i = 0; i <= document.getElementsByClassName("MessageContainer").length - 1; i++) {
             console.log(document.getElementsByClassName("MessageUpbtn")[i])
+            document.getElementsByClassName("MessageContainer")[i].id = "MessageContainer" + i;
             document.getElementsByClassName("MessageUpbtn")[i].id = "MessageUpbtn" + i;
             document.getElementsByClassName("MessageDownbtn")[i].id = "MessageDownbtn" + i;
             document.getElementsByClassName("MessageDeletebtn")[i].id = "MessageDeletebtn" + i;
@@ -520,7 +539,10 @@ function MessageDeletebtnClick() {
 function CouponCodeAddbtnClick() {
     let ID = $(event.target).attr("id").slice(-1);
     let CouponCode = getCookie("CouponCode");
-    document.getElementById("txtMessage" + ID).value += CouponCode;
+    if ($("#txtMessage" + ID).val().length + CouponCode.length <= 500) {
+        document.getElementById("txtMessage" + ID).value += CouponCode;
+    }
+    $("#txtCount" + ID).text($("#txtMessage" + ID).val().length + "/500");
 }
 
 //テキストエリア内の文字数をリアルタイムに反映する関数
