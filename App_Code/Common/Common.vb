@@ -416,7 +416,7 @@ Public Class Common
         sRet.Clear()
         sRet.Append("<div id = 'HeaderArea' Class='d-flex row' style='height: 150px'>")
         sRet.Append("<div Class='col-3'></div>")
-        sRet.Append("<div Class='col-6 h1 text-center m-0  d-flex align-items-center justify-content-start'>クーポン発行サービス</div>")
+        sRet.Append("<div Class='col-6 h1 text-center m-0  d-flex align-items-center justify-content-center'>クーポン発行サービス</div>")
         If Mode = "Login" Then
             sRet.Append("<div Class='col-3'></div>")
         Else
