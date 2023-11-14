@@ -24,10 +24,19 @@ if (Admin_Check == 0) {
 } else if (Admin_Check == 1) {
     document.querySelector("#Admin_input").value = "オン";
 };
-
+const dUser_ID = sessionStorage.getItem("dUser_ID");
+if (dUser_ID) {
+    const registration_button = document.getElementById("registration_button");
+    registration_button.id = "delete_button";
+    registration_button.value = "削除";
+    registration_button.classList.remove("btn-outline-primary");
+    registration_button.classList.add("btn-outline-danger");
+    document.getElementById("delete_button").addEventListener("click", btnDeleteClick, false);
+} else {
+    document.getElementById("registration_button").addEventListener("click", btnRegistrationClick, false);
+};
 
 $(function () {
-    document.getElementById("registration_button").addEventListener("click", btnRegistrationClick, false);
     document.getElementById("back_button").addEventListener("click", btnBackClick, false);
 });
 
@@ -58,9 +67,13 @@ function btnRegistrationClick() {
                         } else {
                             alert("更新が完了しました。");
                         };
+                        sessionStorage.removeItem('hUserID');
+                        if (sessionStorage.getItem("dUser_ID")) {
+                            sessionStrorage.removeItem('dUser_ID');
+                        }
+                        window.location.href = "Index.aspx";
                     } else {
                         alert(data.ErrorMessage);
-                        window.history.back();
                     };                    
                 } else {
                     alert("エラーが発生しました。");
@@ -69,6 +82,36 @@ function btnRegistrationClick() {
         }
     });
 };
+
+// 該当するデータを削除する
+function btnDeleteClick() {
+    if (window.confirm("本当に削除しますか？")) {
+        const hUserID = sessionStorage.getItem('hUserID');
+        console.log(hUserID);
+        $.ajax({
+            url: Ajax_File,
+            method: "POST",
+            data: {
+                mode: "Delete",
+                "User_ID": hUserID
+            },
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                if (data != "") {
+                    if (data.status == "OK") {
+                        // 表示するコードを書く
+                        console.log("削除が完了しました");
+                        sessionStorage.removeItem("hUserID");
+                        window.location.href = "index.aspx";
+                    } else {
+                        alert("エラーが発生しました。");
+                    };
+                };
+            }
+        })
+    }
+}
 
 function btnBackClick() {
     window.history.back();
