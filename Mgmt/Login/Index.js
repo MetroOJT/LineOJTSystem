@@ -103,7 +103,7 @@ function btnLoginClick() {
                             error_p.textContent = "該当するユーザーが存在しません";
                             error_p.style.color = "red";
                             error_div.appendChild(error_p);
-                           user_ID_input.focus();
+                            user_ID_input.focus();
                         };
                     } else {
                         alert("エラーが発生しました。");

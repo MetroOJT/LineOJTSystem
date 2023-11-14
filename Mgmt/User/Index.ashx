@@ -12,8 +12,8 @@ Public Class Index : Implements IHttpHandler
                 context.Response.Write(sea(context))
             Case "MakeResult"
                 context.Response.Write(mr(context))
-                'Case "PagiNation"
-                '    context.Response.Write(pn(context))
+            Case "PagiNation"
+                context.Response.Write(pn(context))
         End Select
     End Sub
 
@@ -156,6 +156,7 @@ Public Class Index : Implements IHttpHandler
         Dim iCount As Integer = 0
 
         Dim Admin As String = ""
+        Dim wCount As Integer = 0
 
         Try
 
@@ -170,7 +171,7 @@ Public Class Index : Implements IHttpHandler
 
 
             If cDB.ReadDr Then
-                iCount = cDB.DRData("count")
+                iCount = cDB.DRData("Count")
             End If
 
             sSQL.Clear()
@@ -192,7 +193,7 @@ Public Class Index : Implements IHttpHandler
             sHTML.Append("<th width=""15%"" class=""text-center"">管理者</th>")
             sHTML.Append("<th width=""40%"" class=""text-center"">登録日</th>")
             Do Until Not cDB.ReadDr
-
+                wCount += 1
                 sRow = ""
                 If iCnt Mod 2 = 0 Then
                     sRow = " evenRow"
@@ -205,8 +206,8 @@ Public Class Index : Implements IHttpHandler
                 End If
 
                 sHTML.Append("<tr class=""" & sRow & """>")
-                sHTML.Append("<td class=""text-center"">" & cDB.DRData("wUserID") & "</td>")
-                sHTML.Append("<td class=""text-center UserName"" id=""UserName" & cDB.DRData("wRowNo") & """>" & cDB.DRData("wUserName") & "</td>")
+                sHTML.Append("<td class=""text-center"" id=""UserID" & wCount & """>" & cDB.DRData("wUserID") & "</td>")
+                sHTML.Append("<td class=""text-center UserName"" id=""UserName" & wCount & """ style=""color: #1a0dab; text-decoration:underline; text-decoration-color:#1a0dab;"">" & cDB.DRData("wUserName") & "</td>")
                 sHTML.Append("<td class=""text-center"">" & Admin & "</td>")
                 sHTML.Append("<td class=""text-center"">" & cDB.DRData("wUpdate_Date") & "</td>")
                 sHTML.Append("</tr>")
@@ -316,6 +317,8 @@ Public Class Index : Implements IHttpHandler
         Dim NowPage As Integer = 1
         Dim OffSet As Integer = 0
         Dim PageMedian As Integer
+        Dim wCount As Integer = 0
+
 
         Try
 
@@ -326,7 +329,7 @@ Public Class Index : Implements IHttpHandler
             PageMedian = context.Request.Item("pagemedian")
             Cki.Set_Cookies("pagemedian", PageMedian, 1)
 
-            sTempTable = Cki.Get_Cookies("logitiran")
+            sTempTable = Cki.Get_Cookies("Useritiran")
 
             sSQL.Clear()
             sSQL.Append(" Select")
@@ -336,7 +339,7 @@ Public Class Index : Implements IHttpHandler
 
 
             If cDB.ReadDr Then
-                iCount = cDB.DRData("count")
+                iCount = cDB.DRData("Count")
             End If
 
             If NowPage > Math.Ceiling(iCount / 10) Then
@@ -349,45 +352,37 @@ Public Class Index : Implements IHttpHandler
 
             sSQL.Clear()
             sSQL.Append(" Select")
-            sSQL.Append(" wRowNo")
-            sSQL.Append(" ,wSendRecv")
-            sSQL.Append(" ,wStatusNumber")
-            sSQL.Append(" ,wLog")
-            sSQL.Append(" ,DATE_FORMAT(wDatetime,'%Y/%m/%d %T') AS wDatetime")
+            sSQL.Append(" wUserID")
+            sSQL.Append(" ,wUserName")
+            sSQL.Append(" ,wAdmin")
+            sSQL.Append(" ,DATE_FORMAT(wUpdate_Date,'%Y/%m/%d %T') AS wUpdate_Date")
             sSQL.Append(" FROM " & sTempTable)
-            sSQL.Append(" ORDER BY wRowNo")
+            sSQL.Append(" ORDER BY wUserID")
             sSQL.Append(" LIMIT 10 OFFSET " & OffSet)
             cDB.SelectSQL(sSQL.ToString)
 
             sHTML.Clear()
             sHTML.Append("<table id=""table"" border=""1"" width=""1000px"" style=""border-collapse: collapse;"" class=""table table-striped table-bordered"">")
             sHTML.Append("<tr style=""background-color: #CCCCCC;"">")
-            sHTML.Append("<th width=""05%"" class=""text-center"">詳細</th >")
-            sHTML.Append("<th width=""15%"" class=""text-center"">送信/受信</th>")
-            sHTML.Append("<th width=""15%"" class=""text-center"">ステータス</th>")
-            sHTML.Append("<th width=""35%"" class=""text-center"">通信ログ</th>")
-            sHTML.Append("<th width=""30%"" class=""text-center"">通信時間</th>")
+            sHTML.Append("<th width=""20%"" class=""text-center"">ユーザーID</th >")
+            sHTML.Append("<th width=""25%"" class=""text-center"">ユーザー名</th>")
+            sHTML.Append("<th width=""15%"" class=""text-center"">管理者</th>")
+            sHTML.Append("<th width=""40%"" class=""text-center"">登録日</th>")
             Do Until Not cDB.ReadDr
-
                 sRow = ""
                 If iCnt Mod 2 = 0 Then
                     sRow = " evenRow"
                 End If
 
-                sError = ""
-                If cDB.DRData("wStatusNumber") <> "200" Then
-                    sError = " text-danger"
-                End If
-
-                sHTML.Append("<tr class=""" & sRow & "" & sError & """>")
-                sHTML.Append("<td><input type=""button""name=""detail"" value=""詳細"" class=""btn btn-success btn-sm btnDetail"" id=""detail" & cDB.DRData("wRowNo") & """ value=""詳細"" /></td>")
-                sHTML.Append("<td class=""" & sError & " text-center"">&nbsp;" & cDB.DRData("wSendRecv") & "</td>")
-                sHTML.Append("<td class=""" & sError & " text-center"">" & cDB.DRData("wStatusNumber") & "</td>")
-                sHTML.Append("<td align=""left"" class=""" & sError & " text-truncate"" style=""max-width:0px;"">&nbsp;" & cDB.DRData("wLog") & "</td>")
-                sHTML.Append("<td class=""" & sError & " text-center"">" & cDB.DRData("wDatetime") & "</td>")
+                sHTML.Append("<tr class=""" & sRow & """>")
+                sHTML.Append("<td class=""text-center"" id=""UserID" & OffSet & """>" & cDB.DRData("wUserID") & "</td>")
+                sHTML.Append("<td class=""text-center UserName"" id=""UserName" & OffSet & """ style=""color: #1a0dab; text-decoration:underline; text-decoration-color:#1a0dab;"">" & cDB.DRData("wUserName") & "</td>")
+                sHTML.Append("<td class=""text-center"">" & cDB.DRData("wAdmin") & "</td>")
+                sHTML.Append("<td class=""text-center"">" & cDB.DRData("wUpdate_Date") & "</td>")
                 sHTML.Append("</tr>")
 
                 iCnt = iCnt + 1
+                OffSet += 1
             Loop
             sHTML.Append("</tr>")
             sHTML.Append("</table>")
