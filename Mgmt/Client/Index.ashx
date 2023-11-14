@@ -17,8 +17,10 @@ Public Class Index : Implements IHttpHandler
                 context.Response.Write(Search(context))
             Case "Itiran"
                 context.Response.Write(Itiran(context))
-            Case "MakeMessageBox"
-                context.Response.Write(MakeMessageBox(context))
+            Case "MessageBox"
+                context.Response.Write(MessageBox(context))
+            Case "PushMessage"
+                context.Response.Write(PushMessage(context))
         End Select
     End Sub
 
@@ -190,7 +192,7 @@ Public Class Index : Implements IHttpHandler
     End Function
 
     'メッセージボディー作成
-    Public Function MakeMessageBox(ByVal context As HttpContext) As String
+    Public Function MessageBox(ByVal context As HttpContext) As String
         Dim cCom As New Common
         Dim cDB As New CommonDB
         Dim sRet As String = ""
@@ -200,6 +202,7 @@ Public Class Index : Implements IHttpHandler
         Dim jJson As New JavaScriptSerializer
         Dim sJson As String = ""
         Dim sSQL As New StringBuilder
+        Dim dLogDate As Date = Nothing
 
         Try
             Dim sTempTable = cCom.CmnGet_TableName("LineUserItiran")
@@ -243,18 +246,37 @@ Public Class Index : Implements IHttpHandler
                 Dim sLog As String = cDB.DRData("Log")
                 Dim sMessage As String = ""
                 Dim jLog As Object = JsonConvert.DeserializeObject(sLog)
+                Dim dLogDatetime As Date = Date.Parse(cDB.DRData("Datetime").ToString)
+                If dLogDate = Nothing OrElse dLogDate.Year < dLogDatetime.Year OrElse dLogDate.Month < dLogDatetime.Month OrElse dLogDate.Day < dLogDatetime.Day Then
+                    dLogDate = Date.Parse(cDB.DRData("Datetime").ToString)
+                    sHTML.Append("<div class=""text-center"">" & dLogDate.ToString("yyyy/MM/dd") & "</div>")
+                End If
                 If cDB.DRData("SendRecv").ToString = "Send" Then
                     Dim jMessages As Object
                     Dim jMessage As Object = Nothing
                     jMessages = jLog("messages")
                     jMessage = jMessages.Last()
                     sMessage = jMessage("text").ToString
-                    sHTML.Append("<p class=""pull-left"">" & sMessage & "</p>")
+                    sHTML.Append("<div class=""row"">")
+                    sHTML.Append("<div class=""col-6""></div>")
+                    sHTML.Append("<div class=""col-6 text-end""><span class=""border rounded-pill MessageText"" style=""background:rgba(76,199,100,0.5);"">" & sMessage & "</span></div>")
+                    sHTML.Append("</div>")
+                    sHTML.Append("<div class=""row"">")
+                    sHTML.Append("<div class=""col-6""></div>")
+                    sHTML.Append("<div class=""col-6 text-end"">" & dLogDatetime.ToString("hh:mm") & "</div>")
+                    sHTML.Append("</div>")
                 ElseIf cDB.DRData("SendRecv").ToString = "Recv" Then
                     Dim eventsObj As Object = jLog("events")(0)
                     Dim messageObj As Object = eventsObj("message")
                     sMessage = messageObj("text").ToString()
-                    sHTML.Append("<p class=""pull-right"">" & sMessage & "</p>")
+                    sHTML.Append("<div class=""row"">")
+                    sHTML.Append("<div class=""col-6 text-start""><span class="" border rounded-pill MessageText"">" & sMessage & "</span></div>")
+                    sHTML.Append("<div class=""col-6""></div>")
+                    sHTML.Append("</div>")
+                    sHTML.Append("<div class=""row"">")
+                    sHTML.Append("<div class=""col-6 text-start"">" & dLogDatetime.ToString("hh:mm") & "</div>")
+                    sHTML.Append("<div class=""col-6""></div>")
+                    sHTML.Append("</div>")
                 End If
             Loop
             sHTML.Append("</div>")
@@ -271,6 +293,39 @@ Public Class Index : Implements IHttpHandler
 
             hHash.Add("status", sStatus)
             hHash.Add("html", sHTML.ToString)
+
+            sJson = jJson.Serialize(hHash)
+        End Try
+
+        Return sJson
+    End Function
+
+    Public Function PushMessage(ByVal context As HttpContext) As String
+        Dim cCom As New Common
+        Dim cDB As New CommonDB
+        Dim sRet As String = ""
+        Dim sStatus = "OK"
+        Dim hHash As New Hashtable
+        Dim jJson As New JavaScriptSerializer
+        Dim sJson As String = ""
+        Try
+            '送信データ取得
+            Dim message As String = context.Request.Item("message")
+            Dim nowSearchID As Integer = context.Request.Item("nowSearchID")
+
+                'ここから送信処理作っていきますよー
+
+        Catch ex As Exception
+            sRet = ex.Message
+        Finally
+            cDB.DrClose()
+            cDB.Dispose()
+            If sRet <> "" Then
+                sStatus = "NG"
+                cCom.CmnWriteStepLog(sRet)
+            End If
+
+            hHash.Add("status", sStatus)
 
             sJson = jJson.Serialize(hHash)
         End Try
