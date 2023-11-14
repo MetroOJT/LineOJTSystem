@@ -369,20 +369,20 @@ Public Class Index : Implements IHttpHandler
             sHTML.Append("<th width=""15%"" class=""text-center"">管理者</th>")
             sHTML.Append("<th width=""40%"" class=""text-center"">登録日</th>")
             Do Until Not cDB.ReadDr
-
                 sRow = ""
                 If iCnt Mod 2 = 0 Then
                     sRow = " evenRow"
                 End If
 
                 sHTML.Append("<tr class=""" & sRow & """>")
-                sHTML.Append("<td class=""text-center"" id=""UserID" & wCount & """>" & cDB.DRData("wUserID") & "</td>")
-                sHTML.Append("<td class=""text-center UserName"" id=""UserName" & wCount & """ style=""color: #1a0dab; text-decoration:underline; text-decoration-color:#1a0dab;"">" & cDB.DRData("wUserName") & "</td>")
+                sHTML.Append("<td class=""text-center"" id=""UserID" & OffSet & """>" & cDB.DRData("wUserID") & "</td>")
+                sHTML.Append("<td class=""text-center UserName"" id=""UserName" & OffSet & """ style=""color: #1a0dab; text-decoration:underline; text-decoration-color:#1a0dab;"">" & cDB.DRData("wUserName") & "</td>")
                 sHTML.Append("<td class=""text-center"">" & cDB.DRData("wAdmin") & "</td>")
                 sHTML.Append("<td class=""text-center"">" & cDB.DRData("wUpdate_Date") & "</td>")
                 sHTML.Append("</tr>")
 
                 iCnt = iCnt + 1
+                OffSet += 1
             Loop
             sHTML.Append("</tr>")
             sHTML.Append("</table>")
