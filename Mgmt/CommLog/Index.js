@@ -13,10 +13,14 @@ var page_item = document.querySelectorAll(".page-item");
 var detail_button = document.querySelectorAll(".btnDetail");
 
 var PageMedian = 2; // ページャの中央値 [ 1 , ② , 3 ]
-var StyleBold = 1; // 現在表示しているページの強調
+
+// 初期検索
+Search();
 
 // 通信ログ検索
 function btnSearchClick() {
+    NowPage = 1;
+    document.cookie = "LogNowPage=" + NowPage + "; max-age=86400; path=/";
     Search();
 }
 
@@ -62,25 +66,39 @@ function btnCloseClick() {
     }
 }
 
+// 検索
 function Search() {
-    let SendRecv = $("#txtSendRecv").val();
-    let StatusNumber = $("#txtStatusNumber").val();
-    let Log = $("#txtLog").val();
+    // 入力値取得
+    let DateFm = $("#DateFm").val();
+    let DateTo = $("#DateTo").val();
+    let Sere = $("#Sere").val();
+    let Status = $("#Status").val();
+    let Order = $("#Order").val();
+
+    // 通信ログ時間のFm,Toを正す
+    if (DateFm != "" && DateTo != "") {
+        if (DateFm > DateTo) {
+            let work = DateFm;
+            DateFm = DateTo;
+            DateTo = work;
+            $("#DateFm").val(DateFm);
+            $("#DateTo").val(DateTo);
+        };
+    };
+
     let DateTime = $("#txtDateTime").val();
-    let DateFm = document.getElementById("DateFm").value; // 通信時間(前)
-    let DateTo = document.getElementById("DateTo").value; // 通信時間(後)
-    let Sere = document.getElementById("Sere").value; // 送信,受信
-    let Status = document.getElementById("Status").value; // ステータス
-    let Order = document.getElementById("Order").value; // 並べ替え
+
+    //let DateFm = document.getElementById("DateFm").value; // 通信時間(前)
+    //let DateTo = document.getElementById("DateTo").value; // 通信時間(後)
+    //let Sere = document.getElementById("Sere").value; // 送信,受信
+    //let Status = document.getElementById("Status").value; // ステータス
+    //let Order = document.getElementById("Order").value; // 並べ替え
 
     $.ajax({
         url: Ajax_File,
         method: "POST",
         data: {
             "mode": "Search",
-            "SendRecv": SendRecv,
-            "StatusNumber": StatusNumber,
-            "Log": Log,
             "DateTime": DateTime,
             "DateFm": DateFm,
             "DateTo": DateTo,
@@ -93,7 +111,10 @@ function Search() {
             if (data != "") {
                 if (data.status == "OK") {
                     Nod = data.count;
-                    MakeResult();
+                    if (getCookie("LogNowPage") == "")
+                        MakeResult();
+                    else
+                        PagiNation(getCookie("LogNowPage"));
                 } else {
                     alert(data.status);
                 };
@@ -169,7 +190,6 @@ function PagiNation(pid) {
             }
             break;
     }
-
     $.ajax({
         url: Ajax_File,
         method: "POST",
@@ -180,6 +200,7 @@ function PagiNation(pid) {
         },
         dataType: "json",
         success: function (data) {
+            console.log(data.test, "q")
             if (data != "") {
                 if (data.status == "OK") {
                     if (Number(data.count) > 0) {
@@ -207,22 +228,17 @@ function PagiNation(pid) {
                                 });
                             });
                             if (Npage == 1 || data.count < 31) {
-                                document.querySelector("#pista a").style.color = "black";
-                                document.querySelector("#pista a").style.backgroundColor = "silver";
+                                document.querySelector("#pista a").classList.add("disabled");
                                 document.getElementById("pista").style.pointerEvents = "none";
-                                document.querySelector("#piback a").style.color = "black";
-                                document.querySelector("#piback a").style.backgroundColor = "silver";
+                                document.querySelector("#piback a").classList.add("disabled");
                                 document.getElementById("piback").style.pointerEvents = "none";
                             }
                             if (Npage == Math.ceil(data.count / 10) || data.count < 31) {
-                                document.querySelector("#pinext a").style.color = "black";
-                                document.querySelector("#pinext a").style.backgroundColor = "silver";
+                                document.querySelector("#pinext a").classList.add("disabled");
                                 document.getElementById("pinext").style.pointerEvents = "none";
-                                document.querySelector("#piend a").style.color = "black";
-                                document.querySelector("#piend a").style.backgroundColor = "silver";
+                                document.querySelector("#piend a").classList.add("disabled");
                                 document.getElementById("piend").style.pointerEvents = "none";
                             }
-                            console.log(data.pm, PageMedian)
                             detail_btn();
                         }
                     } else {
@@ -251,7 +267,10 @@ function MakeResult() {
         success: function (data) {
             if (data != "") {
                 if (data.status == "OK") {
-                    if (Number(data.count) > 0) {
+                    if (data.NowPage && Nod > (data.NowPage - 1) * 10) {
+                        PagiNation("pi" + data.NowPage);
+                    }else if(Number(data.count) > 0){
+                        document.cookie = "LogNowPage=" + Npage + "; max-age=86400; path=/";
                         const NpageFm = (parseInt(Npage) - 1) * 10 + 1;
                         var NpageTo = 0;
                         if (Npage == Math.ceil(data.count / 10)) {
