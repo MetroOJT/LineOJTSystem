@@ -30,17 +30,15 @@ $(function () {
     if (sessionStorage.getItem("EventID") != null) {
         //更新モード
         EventLoad();
-        $("#Deletebtn").prop("disabled", false);
-        $("#Deletebtn").addClass("btn-outline-danger");
-        $("#Deletebtn").removeClass("btn-secondary");
+        $("#Deletebtn").css("display", "grid");
+
     } else {
         //登録モード
         MessageAddbtnClick();
-        $("#Deletebtn").prop("disabled", true);
-        $("#Deletebtn").addClass("btn-secondary");
-        $("#Deletebtn").removeClass("btn-outline-danger");
+        $("#Deletebtn").css("display", "none");
         iniForm = CompareForm();
     }
+    $("#txtEventName").focus();
     
     
 })
@@ -49,36 +47,30 @@ $(function () {
 function CompareForm() {
     let form
     form += $("#txtEventName").val();
-    console.log("EventName:" + $("#txtEventName").val())
     if ($("#EventStatusOn").prop("checked")) {
         form += "1"
     } else {
         form += "0"
     }
-    console.log("EventStatusOn:" + $("#EventStatusOn").prop("checked"))
     if ($("#EventStatusOff").prop("checked")) {
         form += "1"
     } else {
         form += "0"
     }
-    console.log("EventStatusOff:" + $("#EventStatusOff").prop("checked"))
     if ($("#txtScheduleFm").val() == "") {
         form += "1900-01-01";
     } else {
         form += $("#txtScheduleFm").val();
     }
-    console.log("ScheduleFm:" + $("#txtScheduleFm").val())
     if ($("#txtScheduleTo").val() == "") {
         form += "2099-12-31";
     } else {
         form += $("#txtScheduleTo").val();
     }
-    console.log("ScheduleTo:" + $("txtScheduleTo").val())
     form += $("#txtKeyword").val();
-    console.log("Keyword:"  + $("#txtKeyword").val());
     for(ele of document.getElementsByClassName("txtMessage")) {
         form += ele.value;
-        console.log("Message:" + ele.value);
+
     }
     
     return form;
@@ -177,8 +169,80 @@ function ModalAreaClear() {
     document.getElementById("ModalArea").innerHTML = "";
 }
 
+function SameCheck(Flg) {
+    let EventNameFlg = true;
+    let KeywordFlg = true;
+    let BrunkFlg = Flg;
+    let SameFlg = false;
+
+    
+    //if (BrunkFlg) {
+    //    if ($("#Savebtn").val() == "登録") {
+    //        ModalSet("ModalArea", "イベント登録", "登録しますか？", "登録", "btn-outline-primary", "戻る", "Modalsavebtnclick()");
+    //    } else {
+    //        ModalSet("ModalArea", "イベント更新", "更新しますか？", "更新", "btn-outline-primary", "戻る", "Modalsavebtnclick()");
+    //    }
+    //}
+
+    $.ajax({
+        url: Ajax_File,
+        method: "POST",
+        data: {
+            "mode": "FinalCheck",
+            "EventName": EventName,
+            "Keyword":Keyword,
+            "Update_EventID": sessionStorage.getItem("EventID")
+        },
+        dataType: "json",
+        success: function (data) {
+            if (data != "") {
+                if (data.status == "OK") {
+                    
+                    if (data.EventNameErrMsg != "") {
+                        $("#EventName-invalid-feedback").text("このイベント名は既に登録されています。");
+                        $("#txtEventName").addClass("is-invalid");
+                        $("#txtEventName").removeClass("is-valid");
+                        EventNameFlg = false;
+                    }
+ 
+                    if (data.KeywordErrMsg != "") {
+                        $("#Keyword-invalid-feedback").text("このキーワードは既に登録されています。");
+                        $("#txtKeyword").addClass("is-invalid");
+                        $("#txtKeyword").removeClass("is-valid");
+                        KeywordFlg = false;
+                    }
+
+                    if(EventNameFlg && KeywordFlg){
+                        SameFlg = true;
+                    }
+
+                    FinalCheck(BrunkFlg, SameFlg)
+                    $('#Savebtn').trigger("click");
+                    $("#" + $(".is-invalid").first().attr('id')).focus();
+                } else {
+                    alert("エラーが発生しました。");
+                    return false;
+                };
+            };
+        }
+    });
+}
+
+function FinalCheck(Flg1, Flg2) {
+    if (Flg1 && Flg2) {
+        if ($("#Savebtn").val() == "登録") {
+            ModalSet("ModalArea", "イベント登録", "登録しますか？", "登録", "btn-outline-primary", "戻る", "Modalsavebtnclick()");
+        } else {
+            ModalSet("ModalArea", "イベント更新", "更新しますか？", "更新", "btn-outline-primary", "戻る", "Modalsavebtnclick()");
+        }
+    }
+}
+
 //登録・更新を行う関数
 function SavebtnClick() {
+    let EventNameCheckFlag;
+    let KeywordCheckFlag;
+    let flag = true;
 
     EventName = $("#txtEventName").val();
     EventStatus = "";
@@ -250,45 +314,80 @@ function SavebtnClick() {
     }
 
 
-    //スケジュールのエラー制御
-    if ($("#txtScheduleFm").val().length != 0 && $("#txtScheduleTo").val().length == 0) {
-        document.getElementById("txtScheduleTo").classList.add('is-valid');
-        document.getElementById("txtScheduleTo").classList.remove('is-invalid');
-        document.getElementById("Schedule-invalid-feedback").textContent = "";
-    } else if ($("#txtScheduleFm").val().length == 0 && $("#txtScheduleTo").val().length != 0) {
-        document.getElementById("txtScheduleFm").classList.add('is-valid');
-        document.getElementById("txtScheduleFm").classList.remove('is-invalid');
-        document.getElementById("Schedule-invalid-feedback").textContent = "";
-    } else if ($("#txtScheduleFm").val().length == 0 && $("#txtScheduleTo").val().length == 0) {
-        document.getElementById("Schedule-invalid-feedback").textContent = "スケジュールを選択してください。";
-    } else {
-        document.getElementById("Schedule-invalid-feedback").textContent = "";
-    }
+    ////スケジュールのエラー制御
+    //if ($("#txtScheduleFm").val().length != 0 && $("#txtScheduleTo").val().length == 0) {
+    //    document.getElementById("txtScheduleTo").classList.add('is-valid');
+    //    document.getElementById("txtScheduleTo").classList.remove('is-invalid');
+    //    document.getElementById("Schedule-invalid-feedback").textContent = "";
+    //} else if ($("#txtScheduleFm").val().length == 0 && $("#txtScheduleTo").val().length != 0) {
+    //    document.getElementById("txtScheduleFm").classList.add('is-valid');
+    //    document.getElementById("txtScheduleFm").classList.remove('is-invalid');
+    //    document.getElementById("Schedule-invalid-feedback").textContent = "";
+    //} else if ($("#txtScheduleFm").val().length == 0 && $("#txtScheduleTo").val().length == 0) {
+    //    document.getElementById("Schedule-invalid-feedback").textContent = "スケジュールを選択してください。";
+    //} else {
+    //    document.getElementById("Schedule-invalid-feedback").textContent = "";
+    //}
 
     if (EventName == "") {
-        return false;
-    };
+        $("#EventName-invalid-feedback").text("イベント名を入力してください。");
+        flag = false;
+    }
 
     if (EventStatus == "") {
-        return false;
+        flag = false;
     };
 
+    console.log(document.getElementById("txtScheduleFm").validity.valid)
+    console.log(document.getElementById("txtScheduleFm").value)
+    console.log(document.getElementById("txtScheduleTo").validity.valid)
     if (ScheduleFm == "" && ScheduleTo == "") {
-        return false;
-    };
+        document.getElementById("txtScheduleFm").classList.add('is-invalid');
+        document.getElementById("txtScheduleFm").classList.remove('is-valid');
+        document.getElementById("txtScheduleTo").classList.add('is-invalid');
+        document.getElementById("txtScheduleTo").classList.remove('is-valid');
+        if (document.getElementById("txtScheduleFm").validity.valid && document.getElementById("txtScheduleTo").validity.valid) {
+            $("#Schedule-invalid-feedback").text("スケジュールを選択してください。");           
+        } else {
+            $("#Schedule-invalid-feedback").text("無効な日付です。");
+        }
+    } else {
+        
+        if (document.getElementById("txtScheduleFm").validity.valid && document.getElementById("txtScheduleTo").validity.valid) {
+            $("#Schedule-invalid-feedback").text("");
+            document.getElementById("txtScheduleFm").classList.add('is-valid');
+            document.getElementById("txtScheduleFm").classList.remove('is-invalid');
+            document.getElementById("txtScheduleTo").classList.add('is-valid');
+            document.getElementById("txtScheduleTo").classList.remove('is-invalid');
+        } else {
+            $("#Schedule-invalid-feedback").text("無効な日付です。");
+            document.getElementById("txtScheduleFm").classList.add('is-invalid');
+            document.getElementById("txtScheduleFm").classList.remove('is-valid');
+            document.getElementById("txtScheduleTo").classList.add('is-invalid');
+            document.getElementById("txtScheduleTo").classList.remove('is-valid');
+        }
+    }
 
     if (Keyword == "") {
-        return false;
-    };
+        $("#Keyword-invalid-feedback").text("キーワードを入力してください。");
+        flag = false;
+    } 
 
     //空白のメッセージコンテナがないか、メッセージが一つ以上入力されているかを判別
-    if (document.getElementsByClassName("txtMessage").length != 0) {
+    if (document.getElementsByClassName("txtMessage").length > 0) {
         for(ele of document.getElementsByClassName("txtMessage")) {
-            if (ele.value == "") {
-                return false;
+            if (ele.value === "") {
+                flag = false;
             }
         }
     } else {
+        flag = false;
+        alert("エラー")
+    }
+
+    SameCheck(flag);
+
+    if (!flag) {
         return false;
     }
 
@@ -297,12 +396,6 @@ function SavebtnClick() {
         Messages.push(ele.value)
     }
 
-    // モーダルの表示
-    if ($("#Savebtn").val() == "登録") {
-        ModalSet("ModalArea", "イベント登録", "登録しますか？", "登録", "btn-outline-primary", "戻る", "Modalsavebtnclick()");
-    } else {
-        ModalSet("ModalArea", "イベント更新", "更新しますか？", "更新", "btn-outline-primary", "戻る", "Modalsavebtnclick()");
-    }
 };
 
 //モーダルのsavebtnを押下した際に動く関数
@@ -330,7 +423,28 @@ function Modalsavebtnclick() {
                     document.getElementById("ModalSavebtn").style.display = "none";
                     document.getElementById("ModalBackbtn").textContent = "閉じる";
                     document.getElementById("ModalBody").textContent = data.ErrorMessage;
+                    if (data.ErrorMessage == "同じイベント名は登録できません。") {
+                        $("#EventName-invalid-feedback").text("このイベント名は既に登録されています。");
+                        $("#txtEventName").addClass("is-invalid");
+                        $("#txtEventName").removeClass("is-valid");
+                    } else if (data.ErrorMessage == "同じキーワードは登録できません。") {
+                        $("#Keyword-invalid-feedback").text("このキーワードは既に登録されています。");
+                        $("#txtKeyword").addClass("is-invalid");
+                        $("#txtKeyword").removeClass("is-valid");
+                    }
                 } else {
+
+                    //登録・更新完了後チェックを外す
+
+                    let form = document.querySelector('#main');
+                    let elm = form.querySelectorAll('.form-control');
+
+                    form.querySelectorAll('.form-control').forEach(function (elm) {
+                        elm.classList.remove("is-valid");
+                    })
+                    form.querySelectorAll('.form-check-input').forEach(function (elm) {
+                        elm.classList.remove("is-valid");
+                    })
 
                     //完了モーダル表示
                     document.getElementById("ModalSavebtn").style.display = "none";
@@ -338,9 +452,8 @@ function Modalsavebtnclick() {
                     if (data.Mode == "Ins") {
                         document.getElementById("ModalBody").textContent = "登録が完了しました。";
                         document.getElementById("Savebtn").value = "更新";
-                        $("#Deletebtn").prop("disabled", false);
-                        $("#Deletebtn").addClass("btn-outline-danger");
-                        $("#Deletebtn").removeClass("btn-secondary");
+                        $("#Deletebtn").css("display", "grid");
+                        
                     } else {
                         document.getElementById("ModalBody").textContent = "更新が完了しました。";
                     }
@@ -451,6 +564,10 @@ function MessageAddbtnClick() {
                         //メッセージエリアにメッセージコンテナを追加する
                         document.getElementById("MessageArea").appendChild(html);
 
+                        if ($(".MessageContainer").length > 1) {
+                            $("#txtMessage" + ($(".MessageContainer").length - 1)).focus();
+                        }     
+
                         if (document.getElementsByClassName("MessageContainer").length == 5) {
                             $("#MessageAddbtn").prop("disabled", true);
                             $("#MessageAddbtn").addClass("btn-secondary");
@@ -551,5 +668,3 @@ function txtCountUpd() {
     let ID = $(event.target).attr("id").slice(-1);
     $("#txtCount" + ID).text(txtMessagelength + "/500");
 }
-
-

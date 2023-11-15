@@ -5,9 +5,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css"/>
     <link rel="stylesheet" href="Detail.css" />
 
     <title>イベント登録画面</title>
@@ -32,19 +33,19 @@
                 </div>
                 <div class="row mb-3">
                     <div class="col-3 text-center">
-                        <label style="font-weight: bold;">イベント名</label>
+                        <label class="h6">イベント名</label>
                     </div>
                     <div class="col-5">
-                        <input type="text" id="txtEventName" class="form-control" maxlength="50" required />
+                        <input type="text" id="txtEventName" class="form-control" maxlength="50" required="required"/>
                         <div class="invalid-feedback">
-                            <p class="h6">イベント名を入力してください。</p>
+                            <p id="EventName-invalid-feedback" class="h6">イベント名を入力してください。</p>
                         </div>
                     </div>
                     <div class="col-4"></div>
                 </div>
                 <div class="row">
                     <div class="col-3 text-center">
-                        <label style="font-weight: bold;">ステータス</label>
+                        <label class="h6">ステータス</label>
                     </div>
                     <div class="col-1">
                         <div class="form-check">
@@ -71,13 +72,13 @@
                         <label style="font-weight: bold;">スケジュール</label>
                     </div>
                     <div class="col-2">
-                        <input type="date" class="form-control" id="txtScheduleFm" required />
+                        <input type="date" class="form-control" id="txtScheduleFm" min="<%=DefaultDate %>" max="<%=EndDate %>" required="required"/>
                     </div>
                     <div class="col-1 text-center">
                         <p class="h6">～</p>
                     </div>
                     <div class="col-2">
-                        <input type="date" class="form-control" id="txtScheduleTo" required />
+                        <input type="date" class="form-control" id="txtScheduleTo" min="<%=DefaultDate %>" max="<%=EndDate %>" required="required"/>
                     </div>
                 </div>
                 <div class="row" style="margin-top: 4px; margin-bottom: 21px;">
@@ -91,9 +92,9 @@
                         <label style="font-weight: bold;">キーワード</label>
                     </div>
                     <div class="col-5">
-                        <input type="text" id="txtKeyword" class="form-control" maxlength="30" required />
+                        <input type="text" id="txtKeyword" class="form-control" maxlength="30" required="required" />
                         <div class="invalid-feedback">
-                            <p class="h6">キーワードを入力してください。</p>
+                            <p id="Keyword-invalid-feedback" class="h6">キーワードを入力してください。</p>
                         </div>
                     </div>
                     <div class="col-4"></div>
@@ -115,6 +116,7 @@
     <div id="MessageModalArea"></div>    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
     <%="<script src='../../Common/js/Common.js?ts=" & cCom.CmnTimeStamp & "'></script>" %>
     <%="<script src='Detail.js?ts=" & cCom.CmnTimeStamp & "'></script>" %>
 </body>
