@@ -6,16 +6,15 @@
 <head runat="server">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="Index.css" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous" />
     <%--<%="<script src='../../Common/js/Common.js?ts=" & cCom.CmnTimeStamp & "'></script>" %>--%>
     <title>ユーザー検索</title>
 </head>
 <body>
     <form runat="server" id="form1" style="margin: 0 auto;" onsubmit="return false">
     <div>
-        <%-- type > value > name > id > class > style --%>
         <div class="container">
-            <%--<%=cCom.CmnDspHeader() %>--%>
+            <%=cCom.CmnDspHeader() %>
         </div>
 
         <div class="accordion" style="width: 90%; margin: 0 auto;">
@@ -31,19 +30,19 @@
                         
                         <div class="d-flex">
                             <label class="col-sm-2 col-form-label">ユーザーID</label>
-                            <input type="text" class="form-control w-25" />
+                            <input type="text" class="form-control w-25" id="user_ID" />
                         </div>
                         
                         <div class="d-flex">
                             <label class="col-sm-2 col-form-label">ユーザー名</label>
-                            <input type="text" class="form-control w-25" />
+                            <input type="text" class="form-control w-25" id="user_Name" />
                         </div>
 
                         <div>
                             <label class="col-sm-2 col-form-label">管理者</label>
-                            <input type="radio" class="form-check-input" style="margin-top: 10px" />
+                            <input type="radio" class="form-check-input" style="margin-top: 10px" name="contact" value="1" />
                             <label>オン</label>
-                            <input type="radio" class="form-check-input" style="margin-top: 10px" />
+                            <input type="radio" class="form-check-input" style="margin-top: 10px" name="contact" value="0" />
                             <label>オフ</label>
                         </div>
 
@@ -72,27 +71,27 @@
             <div id="ResultArea"></div>
         </div>
         <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" id="error_modal" style="display:none;">
-  Launch demo modal
-</button>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" id="error_modal" style="display:none;">
+          Launch demo modal
+        </button>
 
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Error</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        検索するページを入力してください。
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
-      </div>
-    </div>
-  </div>
-</div>
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Error</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                検索するページを入力してください。
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+              </div>
+            </div>
+          </div>
+        </div>
     </div>
     </form>
     <script src="../../Common/js/Common.js"></script>

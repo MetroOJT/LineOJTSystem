@@ -14,8 +14,14 @@ p {
 }
 #MessageBody {
     height: 500px;
+    overflow-x: hidden;
+    overflow-y: scroll;
 }
-#MessageHeader, #MessageBody, .LineUser {
+#MessageHeader, #MessageBody, .LineUser, #PushMessage {
     border: 1px solid;
     margin: 3px;
+    padding: 5px;
+}
+.MessageText {
+    padding: 0 0.5rem;
 }

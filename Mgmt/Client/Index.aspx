@@ -25,7 +25,7 @@
         <div class="d-flex">
             <div id="ItiranBox" class="w-25">
                 <div class="input-group">
-                    <input type="text" class="form-control" id="txtDisplayName" placeholder="検索" runat="server" maxlength="50"/>
+                    <input type="text" class="form-control" id="txtDisplayName" placeholder="検索" runat="server" maxlength="40"/>
                     <a class="btn btn-outline-success" id="btnSearch">
                         <i class="bi bi-search">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
@@ -36,13 +36,21 @@
                 </div>
                 <div id="ItiranArea" class="d-flex flex-column"></div>
             </div>
-            <div id="MessageBox" class="w-75 d-flex flex-column">
-                <div id="MessageHeader" class="d-flex align-items-center">
-                    <img src=""/>
-                    <p>氏名</p>
+            <div id="MessageArea" class="w-75 d-flex flex-column">
+                <div id="MessageBox">
+                    <div id="MessageHeader" class="d-flex align-items-center">
+                        <img id="MessageHeaderImg" src=""/>
+                        <p id="MessageHeaderName">氏名</p>
+                    </div>
+                    <div id="MessageBody"></div>
                 </div>
-                <div id="MessageBody">
-
+                <div id="PushMessage">
+                    <form id="form1" runat="server">
+                        <div class="input-group">
+                            <textarea class="form-control" id="txtPushMessage" maxlength="500"></textarea>
+                            <input type="button" class="btn disabled" id="btnPushMessage" value="送信" />
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

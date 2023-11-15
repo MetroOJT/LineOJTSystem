@@ -1,2 +1,2 @@
-多分、detailとconfirmは終わった
-indexのhtml
+あとすること
+・ヘッダー

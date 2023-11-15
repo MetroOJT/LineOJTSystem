@@ -11,6 +11,8 @@ Public Class Confirm : Implements IHttpHandler
         Select Case context.Request.Item("mode")
             Case "Save"
                 context.Response.Write(Save(context))
+            Case "Delete"
+                context.Response.Write(Delete(context))
         End Select
     End Sub
 
@@ -148,6 +150,58 @@ Public Class Confirm : Implements IHttpHandler
             hHash.Add("count", iCount)
             hHash.Add("Mode", sMode)
             hHash.Add("ErrorMessage", sErrorMessage)
+
+            sJSON = jJSON.Serialize(hHash)
+        End Try
+        Return sJSON
+    End Function
+
+    ' ユーザーマスタから該当行の削除
+    Public Function Delete(ByVal context As HttpContext) As String
+        Dim cCom As New Common
+        Dim cDB As New CommonDB
+        Dim Cki As New Cookie
+        Dim sSQL As New StringBuilder
+        Dim sWhere As New StringBuilder
+        Dim jJSON As New JavaScriptSerializer
+        Dim sJSON As String = ""
+        Dim hHash As New Hashtable
+        Dim sRet As String = ""
+        Dim sStatus As String = "OK"
+        Dim sTempTable As String = ""
+
+        Dim sUser_ID As String = ""
+
+        Dim iCount As Integer = 0
+
+        Try
+            sUser_ID = context.Request.Item("User_ID")
+
+            cDB.AddWithValue("@UserID", sUser_ID)
+
+            'ユーザーマスタに新規登録する
+            sSQL.Clear()
+            sSQL.Append("DELETE")
+            sSQL.Append(" FROM " & cCom.gctbl_UserMst)
+            sSQL.Append(" WHERE UserID = @UserID")
+            cDB.ExecuteSQL(sSQL.ToString)
+
+            If cDB.ReadDr Then
+                iCount = 1
+            End If
+
+        Catch ex As Exception
+            sRet = ex.Message
+        Finally
+            cDB.DrClose()
+            cDB.Dispose()
+            If sRet <> "" Then
+                sStatus = "NG"
+                cCom.CmnWriteStepLog(sRet)
+            End If
+
+            hHash.Add("status", sStatus)
+            hHash.Add("count", iCount)
 
             sJSON = jJSON.Serialize(hHash)
         End Try
