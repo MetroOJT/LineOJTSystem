@@ -4,11 +4,12 @@
 $(function () {
     document.getElementById("registration_button").addEventListener("click", btnRegistrationClick, false);
     document.getElementById("delete_button").addEventListener("click", btnDeleteClick, false);
+    document.getElementById("back_button").addEventListener("click", btnBackClick, false);
     document.getElementById("buttonEye_1").addEventListener("click", btnEyeClick_1, false);
     document.getElementById("buttonEye_2").addEventListener("click", btnEyeClick_2, false);
 });
 
-sessionStorage.setItem('hUserID', 80000);
+//sessionStorage.setItem('hUserID', 80000);
 //sessionStorage.removeItem('hUserID');
 
 window.onload = function () {
@@ -124,6 +125,7 @@ function btnRegistrationClick() {
             elm.parentNode.style.borderColor = "#198754";
         }
     });
+
     // ラジオボタンのバリデータ
     let c_radio = [];
     form.querySelectorAll('.form-check-input').forEach(function (elm) {
@@ -217,35 +219,18 @@ function btnRegistrationClick() {
 };
 
 // 該当するデータを削除する
-function btnDeleteClick () {
-    if (window.confirm("本当に削除しますか？")) {
-        const hUserID = sessionStorage.getItem('hUserID');
-        console.log(hUserID);
-        $.ajax({
-            url: Ajax_File,
-            method: "POST",
-            data: {
-                mode: "Delete",
-                "User_ID": hUserID
-            },
-            dataType: "json",
-            success: function (data) {
-                console.log(data);
-                if (data != "") {
-                    if (data.status == "OK") {
-                        // 表示するコードを書く
-                        console.log("削除が完了しました");
-                        sessionStorage.removeItem("hUserID");
-                        window.history.back();
-                    } else {
-                        alert("エラーが発生しました。");
-                    };
-                };
-            }
-        })
-    }
+function btnDeleteClick() {
+    var User_ID = $("#user_ID").val();
+    sessionStorage.setItem("dUser_ID", User_ID);
+    console.log(User_ID)
+    window.location.href = "Confirm.aspx";
 }
 
+// 戻るボタンを押したときの処理
+function btnBackClick() {
+    sessionStorage.removeItem('hUserID');
+    window.history.back();
+};
 
 // パスワード入力欄の横にある👁を押すと、入力したパスワードが見えるようになったり見えなくなったりするようになる
 function btnEyeClick_1() {

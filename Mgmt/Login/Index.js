@@ -41,8 +41,6 @@ function go_login() {
 function btnLoginClick() {
     var User_ID = $("#user_ID").val();
     var Password = $("#user_password").val();
-    console.log(User_ID);
-    console.log(Password);
     
     const error_div = document.querySelector('.error_div');
     error_div.innerHTML = '';
@@ -84,7 +82,6 @@ function btnLoginClick() {
             },
             dataType: "json",
             success: function (data) {
-                console.log(data);
                 if (data != "") {
                     if (data.status == "OK") {
                         if (Number(data.count) > 0) {
@@ -106,7 +103,7 @@ function btnLoginClick() {
                             error_p.textContent = "該当するユーザーが存在しません";
                             error_p.style.color = "red";
                             error_div.appendChild(error_p);
-                           user_ID_input.focus();
+                            user_ID_input.focus();
                         };
                     } else {
                         alert("エラーが発生しました。");

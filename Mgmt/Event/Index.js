@@ -257,7 +257,21 @@ function PagiNation(pid) {
 
 // 戻るボタンの処理
 function btnBackClick() {
-    location.href = "../Menu/Index.aspx";
+    $.ajax({
+        url: Ajax_File,
+        method: "POST",
+        data: {
+            "mode": "Clear"
+        },
+        dataType: "json",
+        success: function (data) {
+            if (data != "") {
+                if (data.status == "OK") {
+                    location.href = "../Menu/Index.aspx";
+                }
+            }
+        }
+    })
 };
 
 // 閉じるボタンの処理
