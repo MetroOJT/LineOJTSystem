@@ -66,6 +66,7 @@ function btnCloseClick() {
     }
 }
 
+// 検索
 function Search() {
     // 入力値取得
     let DateFm = $("#DateFm").val();
@@ -110,8 +111,10 @@ function Search() {
             if (data != "") {
                 if (data.status == "OK") {
                     Nod = data.count;
-                    console.log(data.sql)
-                    MakeResult();
+                    if (getCookie("LogNowPage") == "")
+                        MakeResult();
+                    else
+                        PagiNation(getCookie("LogNowPage"));
                 } else {
                     alert(data.status);
                 };
@@ -187,7 +190,6 @@ function PagiNation(pid) {
             }
             break;
     }
-
     $.ajax({
         url: Ajax_File,
         method: "POST",
@@ -198,6 +200,7 @@ function PagiNation(pid) {
         },
         dataType: "json",
         success: function (data) {
+            console.log(data.test, "q")
             if (data != "") {
                 if (data.status == "OK") {
                     if (Number(data.count) > 0) {
@@ -267,7 +270,7 @@ function MakeResult() {
                     if (data.NowPage && Nod > (data.NowPage - 1) * 10) {
                         PagiNation("pi" + data.NowPage);
                     }else if(Number(data.count) > 0){
-                        document.cookie = "EventNowPage=" + Npage + "; max-age=86400; path=/";
+                        document.cookie = "LogNowPage=" + Npage + "; max-age=86400; path=/";
                         const NpageFm = (parseInt(Npage) - 1) * 10 + 1;
                         var NpageTo = 0;
                         if (Npage == Math.ceil(data.count / 10)) {

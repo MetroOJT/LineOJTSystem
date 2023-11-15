@@ -349,6 +349,9 @@ Public Class Index : Implements IHttpHandler
             If NowPage > Math.Ceiling(iCount / 10) Then
                 NowPage = Math.Ceiling(iCount / 10)
                 OffSet = 10 * (NowPage - 1)
+                If (NowPage < 1) Then
+                        OffSet = 0
+                End If
             ElseIf NowPage < 1 Then
                 NowPage = 1
                 OffSet = 0
@@ -477,6 +480,7 @@ Public Class Index : Implements IHttpHandler
             hHash.Add("pnlist", sPNList.ToString)
             hHash.Add("count", iCount)
             hHash.Add("NowPage", NowPage)
+            hHash.Add("test", NowPage)
 
             sJSON = jJSON.Serialize(hHash)
         End Try
