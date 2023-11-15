@@ -1,5 +1,6 @@
 ﻿//ログインなされているかをチェックする関数
-// function_login_check();
+function_login_check();
+DspLoginUserName();
 
 var Ajax_File = "Index.ashx";
 
@@ -53,11 +54,11 @@ function btnSearchClick() {
         Admin_Check = "";
     };
 
-    console.log(User_ID);
-    console.log(User_Name);
-    console.log(Admin_Check);
-    console.log(Date_Fm);
-    console.log(Date_To);
+    //console.log(User_ID);
+    //console.log(User_Name);
+    //console.log(Admin_Check);
+    //console.log(Date_Fm);
+    //console.log(Date_To);
 
     $.ajax({
         url: Ajax_File,
@@ -72,13 +73,13 @@ function btnSearchClick() {
         },
         dataType: "json",
         success: function (data) {
-            console.log(data);
+            //console.log(data);
             if (data != "") {
                 if (data.status == "OK") {
                     Nod = data.count;
                     MakeResult();
                 } else {
-                    alert(data.status);
+                    alert("エラーが発生しました。");
                 };
             };
         }
@@ -124,7 +125,7 @@ function MakeResult() {
                         document.getElementById("ResultArea").innerText = "該当するデータが存在しませんでした。";
                     }
                 } else {
-                    alert(data.status);
+                    alert("エラーが発生しました。");
                 }
             }
         }
@@ -137,11 +138,7 @@ function transition() {
     transition_element.forEach(elm => {
         elm.addEventListener('click', function () {
             const UserName = elm.innerHTML;
-            console.log(UserName);
-            console.log(elm.id);
             const id_number = elm.id.replace("UserName", "");
-            console.log(`#UserID${id_number}`);
-            console.log(document.querySelector(`#UserID${id_number}`).textContent);
             const hUserID = document.querySelector(`#UserID${id_number}`).textContent;
             
             sessionStorage.setItem("hUserID", hUserID);
@@ -280,7 +277,7 @@ function PagiNation(pid) {
                                 document.querySelector("#piend a").style.backgroundColor = "silver";
                                 document.getElementById("piend").style.pointerEvents = "none";
                             }
-                            console.log(data.pm, PageMedian)
+                            //console.log(data.pm, PageMedian)
                             transition();
                         }
                     } else {
@@ -288,7 +285,7 @@ function PagiNation(pid) {
                         document.getElementById("ResultArea").innerText = "該当するデータが存在しませんでした。";
                     }
                 } else {
-                    alert(data.status);
+                    alert("エラーが発生しました。");
                 }
             }
         }

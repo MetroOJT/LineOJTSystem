@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="Index.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous" />
-    <%--<%="<script src='../../Common/js/Common.js?ts=" & cCom.CmnTimeStamp & "'></script>" %>--%>
+    <%="<script src='../../Common/js/Common.js?ts=" & cCom.CmnTimeStamp & "'></script>" %>
     <title>ユーザー検索</title>
 </head>
 <body>
@@ -22,7 +22,7 @@
                 <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
                     <div id="btnOption" class="row accordion-body">
                         <input type="button" value="検索" name="Search" id="btnSearch" class="col-sm btn btn-outline-primary" />
-                        <input type="button" value="新規登録" name="Clear" id="btnSign_up" class="col-sm btn btn-outline-danger" />
+                        <input type="button" value="新規登録" name="Clear" id="btnSign_up" class="col-sm btn btn-outline-success" />
                         <div class="col-sm"></div>
                         <input type="button" value="戻る" name="Back" id="btnBack" class="col-sm btn btn-outline-secondary" />
                     </div>
@@ -92,7 +92,7 @@
             </div>
           </div>
         </div>
-    </div>
+    <%=cCom.CmnDspFooter() %>
     </form>
     <script src="../../Common/js/Common.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>

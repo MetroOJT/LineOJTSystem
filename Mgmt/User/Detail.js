@@ -1,5 +1,6 @@
 ﻿var Ajax_File = "Detail.ashx";
-
+function_login_check();
+DspLoginUserName();
 
 $(function () {
     document.getElementById("registration_button").addEventListener("click", btnRegistrationClick, false);
@@ -15,7 +16,7 @@ $(function () {
 window.onload = function () {
     if (sessionStorage.getItem('hUserID') != null) {
         const hUserID = sessionStorage.getItem('hUserID');
-        console.log(hUserID);
+        //console.log(hUserID);
         $.ajax({
             url: Ajax_File,
             method: "POST",
@@ -25,7 +26,7 @@ window.onload = function () {
             },
             dataType: "json",
             success: function (data) {
-                console.log(data);
+                //console.log(data);
                 if (data != "") {
                     if (data.status == "OK") {
                         if (Number(data.count) > 0) {
@@ -34,7 +35,7 @@ window.onload = function () {
                             document.querySelector("#user_Name").value = data.UserName;
                             document.querySelector("#user_password").value = data.Password;
                             document.querySelector("#user_password_confirmation").value = data.Password;
-                            console.log(data.Admin);
+                            //console.log(data.Admin);
                             if (data.admin != "") {
                                 if (data.Admin == 1) {
                                     $('input[value="0"]').prop('checked', true);
@@ -51,6 +52,8 @@ window.onload = function () {
         });
     } else {
         document.getElementById("delete_button").disabled = true;
+        document.getElementById("delete_button").classList.remove("btn-outline-danger");
+        document.getElementById("delete_button").classList.add("btn-secondary");
     }
 }
 
@@ -78,13 +81,6 @@ function btnRegistrationClick() {
     } else if (Admin_Check == "1") {
         Admin_Check = 0;
     };
-
-    console.log(User_ID);
-    console.log(Password);
-    console.log(Password_confirmation);
-    console.log(User_Name);
-    console.log(Admin_Check);
-    console.log(typeof (Admin_Check));
 
     // ラジオボタン以外のバリデータ
     const form = document.querySelector("#form1");
@@ -114,6 +110,15 @@ function btnRegistrationClick() {
             error_message_p.style.color = "#dc3545";
             
             const p_textcontent = document.querySelector(`#label_${c_element}`).textContent;
+            //if (c_element == 1) {
+            //    error_message_p.textContent = "ユーザーIDは半角数字で5文字入力してください。";
+            //} else if (c_element == 4) {
+            //    error_message_p.textContent = "パスワードは半角英数字で8文字以上20文字以下で入力してください。";
+            //} else if (c_element == 5) {
+            //    error_message_p.textContent = "パスワード（確認）は半角英数字で8文字以上20文字以下で入力してください。";
+            //} else {
+            //    error_message_p.textContent = `${p_textcontent}を入力してください。`;
+            //};
             error_message_p.textContent = `${p_textcontent}を入力してください。`;
             error_message_div.appendChild(error_message_p);
 
@@ -163,12 +168,11 @@ function btnRegistrationClick() {
     // パスワードが一致しているか
     if (error_judgement[2] == 0 && error_judgement[3] == 0) {
         if (document.querySelector("#user_password").value == document.querySelector("#user_password_confirmation").value) {
+            // パスワードが一致している場合
             error_judgement.push(0);
-            console.log("パスワードが一致");
         } else {
+            // パスワードが一致していない場合
             error_judgement.push(1);
-            console.log("パスワードが不一致");
-            console.log(document.querySelector("#user_password"));
             const user_password = document.querySelector("#user_password");
             const user_password_confirmation = document.querySelector("#user_password_confirmation");
             user_password.classList.add('is-invalid');
@@ -192,44 +196,27 @@ function btnRegistrationClick() {
             document.querySelector("#error_message_div_5").appendChild(error_message_p_2);
         };
     };
-    
-    console.log(error_judgement);
 
-    if (User_ID == "") {
-        console.log("ユーザーIDを入力してください");
-    } else if (User_Name == "") {
-        console.log("ユーザー名を入力してください");
-    } else if ((Admin_Check != 0) && (Admin_Check != 1)) {
-        console.log("管理者権限を付与するか選択してください");
-    } else if (Password == "") {
-        console.log("パスワードを入力してください");
-    } else if (Password_confirmation == "") {
-        console.log("確認用のパスワードを入力してください");
-    } else if (Password != Password_confirmation) {
-        console.log("パスワードが一致しません");
-    } else if (error_judgement.every(v => v == 0)){
-        console.log("OK");
+if (error_judgement.every(v => v == 0)){
         sessionStorage.setItem("iUser_ID", User_ID);
         sessionStorage.setItem("iPassword", Password);
         sessionStorage.setItem("iUser_Name", User_Name);
         sessionStorage.setItem("iAdmin_Check", Admin_Check);
         window.location.href = "Confirm.aspx";
     };
-
 };
 
 // 該当するデータを削除する
 function btnDeleteClick() {
     var User_ID = $("#user_ID").val();
     sessionStorage.setItem("dUser_ID", User_ID);
-    console.log(User_ID)
     window.location.href = "Confirm.aspx";
 }
 
 // 戻るボタンを押したときの処理
 function btnBackClick() {
     sessionStorage.removeItem('hUserID');
-    window.history.back();
+    window.location.href = "Index.aspx";
 };
 
 // パスワード入力欄の横にある👁を押すと、入力したパスワードが見えるようになったり見えなくなったりするようになる
