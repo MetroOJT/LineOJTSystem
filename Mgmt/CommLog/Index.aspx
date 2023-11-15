@@ -30,23 +30,23 @@
                     <div id="Condition" class="accordion-body">
                         <div> 
                             <label class="col-sm-2 col-form-label">通信日時</label>
-                            <input type="datetime-local" id="DateFm" class="form-control initial-time" style="margin-right: 20px;" />～
-                            <input type="datetime-local" id="DateTo" class="form-control initial-time" style="margin-left: 20px"; />
+                            <input type="datetime-local" id="DateFm" class="form-control initial-time" runat="server" style="margin-right: 20px;" />～
+                            <input type="datetime-local" id="DateTo" class="form-control initial-time" runat="server" style="margin-left: 20px;" />
                         </div>
                         
                         <div>
                             <label class="col-sm-2 col-form-label">送信/受信</label>
-                            <select aria-label="全て" class="form-select form-select-sm" style="display: inline-block; width: 20%;" id="Sere">
-                                <option value="all" selected>全て</option>
-                                <option value="send">送信</option>
-                                <option value="reception">受信</option>
+                            <select aria-label="全て" class="form-select form-select-sm" runat="server" style="display: inline-block; width: 20%;" id="Sere">
+                                <option value="" selected>全て</option>
+                                <option value="Send">送信</option>
+                                <option value="Recv">受信</option>
                             </select>
                         </div>
                         
                         <div>
                             <label class="col-sm-2 col-form-label">ステータス</label>
-                            <select aria-label="全て" class="form-select form-select-sm" style="display: inline-block; width: 20%;" id="Status">
-                                <option value="all" selected>全て</option>
+                            <select aria-label="全て" class="form-select form-select-sm" runat="server" style="display: inline-block; width: 20%;" id="Status">
+                                <option value="" selected>全て</option>
                                 <option value="normal">正常</option>
                                 <option value="abnormality">異常</option>
                             </select>
@@ -54,7 +54,7 @@
 
                         <div>
                             <label class="col-sm-2 col-form-label">並べ替え</label>
-                            <select aria-label="全て" class="form-select form-select-sm" style="display: inline-block; width: 20%;" id="Order">
+                            <select aria-label="全て" class="form-select form-select-sm" runat="server" style="display: inline-block; width: 20%;" id="Order">
                                 <option value="all" selected>指定なし</option>
                                 <option value="time_asc">通信日時(昇順)</option>
                                 <option value="time_desc">通信日時(降順)</option>
