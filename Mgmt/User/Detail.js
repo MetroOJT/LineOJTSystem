@@ -9,53 +9,52 @@ $(function () {
     document.getElementById("buttonEye_1").addEventListener("click", btnEyeClick_1, false);
     document.getElementById("buttonEye_2").addEventListener("click", btnEyeClick_2, false);
 });
-
-//sessionStorage.setItem('hUserID', 80000);
-//sessionStorage.removeItem('hUserID');
-
-window.onload = function () {
-    if (sessionStorage.getItem('hUserID') != null) {
-        const hUserID = sessionStorage.getItem('hUserID');
-        //console.log(hUserID);
-        $.ajax({
-            url: Ajax_File,
-            method: "POST",
-            data: {
-                mode: "Load",
-                "User_ID": hUserID
-            },
-            dataType: "json",
-            success: function (data) {
-                //console.log(data);
-                if (data != "") {
-                    if (data.status == "OK") {
-                        if (Number(data.count) > 0) {
-                            // 表示するコードを書く
-                            document.querySelector("#user_ID").value = data.UserID;
-                            document.querySelector("#user_Name").value = data.UserName;
-                            document.querySelector("#user_password").value = data.Password;
-                            document.querySelector("#user_password_confirmation").value = data.Password;
-                            //console.log(data.Admin);
-                            if (data.admin != "") {
-                                if (data.Admin == 1) {
-                                    $('input[value="0"]').prop('checked', true);
-                                } else if (data.Admin == 0) {
-                                    $('input[value="1"]').prop('checked', true);
-                                };
+console.log(sessionStorage.getItem('hUserID'));
+if (sessionStorage.getItem('hUserID') != null) {
+    const hUserID = sessionStorage.getItem('hUserID');
+    //console.log(hUserID);
+    $.ajax({
+        url: Ajax_File,
+        method: "POST",
+        data: {
+            mode: "Load",
+            "User_ID": hUserID
+        },
+        dataType: "json",
+        success: function (data) {
+            //console.log(data);
+            if (data != "") {
+                if (data.status == "OK") {
+                    if (Number(data.count) > 0) {
+                        // 表示するコードを書く
+                        var iUserID = data.UserID;
+                        var iUserName = data.UserName;
+                        var iPassword = data.Password;
+                        document.querySelector("#user_ID").value = iUserID;
+                        document.querySelector("#user_Name").value = iUserName;
+                        document.querySelector("#user_password").value = iPassword;
+                        document.querySelector("#user_password_confirmation").value = iPassword;
+                        //console.log(data.Admin);
+                        if (data.admin != "") {
+                            if (data.Admin == 1) {
+                                $('input[value="0"]').prop('checked', true);
+                            } else if (data.Admin == 0) {
+　                               $('input[value="1"]').prop('checked', true);
                             };
                         };
-                    } else {
-                        alert("エラーが発生しました。");
                     };
+                } else {
+                    alert("エラーが発生しました。");
                 };
-            }
-        });
-    } else {
-        document.getElementById("delete_button").disabled = true;
-        document.getElementById("delete_button").classList.remove("btn-outline-danger");
-        document.getElementById("delete_button").classList.add("btn-secondary");
-    }
+            };
+        }
+    });
+} else {
+    document.getElementById("delete_button").disabled = true;
+    document.getElementById("delete_button").classList.remove("btn-outline-danger");
+    document.getElementById("delete_button").classList.add("btn-secondary");
 }
+
 
 // #dc3545 赤
 // #198754 緑
@@ -206,9 +205,17 @@ if (error_judgement.every(v => v == 0)){
     };
 };
 
-// 該当するデータを削除する
+// 削除ボタンを押された時の処理
 function btnDeleteClick() {
     var User_ID = $("#user_ID").val();
+    var Password = $("#user_password").val();
+    var Password_confirmation = $("#user_password_confirmation").val();
+    var User_Name = $("#user_Name").val();
+    var Admin_Check = $('input[name="contact"]:checked').val();
+    sessionStorage.setItem("iUser_ID", User_ID);
+    sessionStorage.setItem("iPassword", Password);
+    sessionStorage.setItem("iUser_Name", User_Name);
+    sessionStorage.setItem("iAdmin_Check", Admin_Check);
     sessionStorage.setItem("dUser_ID", User_ID);
     window.location.href = "Confirm.aspx";
 }
@@ -216,6 +223,7 @@ function btnDeleteClick() {
 // 戻るボタンを押したときの処理
 function btnBackClick() {
     sessionStorage.removeItem('hUserID');
+    sessionStorage.removeItem('dUser_ID');
     window.location.href = "Index.aspx";
 };
 

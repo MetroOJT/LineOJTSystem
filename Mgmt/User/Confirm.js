@@ -8,7 +8,17 @@ const User_ID = sessionStorage.getItem("iUser_ID");
 const User_Name = sessionStorage.getItem("iUser_Name");
 const Admin_Check = sessionStorage.getItem("iAdmin_Check");
 const Password = sessionStorage.getItem("iPassword");
+const hUser_ID = sessionStorage.getItem("hUserID");
 
+console.log(re_UserID);
+console.log(User_ID);
+console.log(User_Name);
+console.log(Admin_Check);
+console.log(Password);
+// ここに何かをしようとした
+if (hUser_ID) {
+
+}
 document.querySelector("#user_ID").value = User_ID;
 document.querySelector("#user_Name").value = User_Name;
 document.querySelector("#user_password").value = Password;
@@ -21,6 +31,7 @@ if (Admin_Check == 0) {
 };
 
 const dUser_ID = sessionStorage.getItem("dUser_ID");
+console.log(dUser_ID);
 if (dUser_ID) {
     const registration_button = document.getElementById("registration_button");
     registration_button.id = "delete_button";
@@ -58,16 +69,19 @@ function btnRegistrationClick() {
                 if (data.status == "OK") {
                     if (data.ErrorMessage == "") {
                         if (data.Mode == "Ins") {
+                            // 新規登録が完了した
                             $('#staticBackdrop1').modal('show');
                         } else {
-                            $('#staticBackdrop2').modal('show');
+                            // 更新が完了した
+                            const modal_sentence1 = document.querySelector('#modal_sentence1');
+                            modal_sentence1.textContent = "更新が完了しました";
+                            $('#staticBackdrop1').modal('show');
                         };
                         sessionStorage.removeItem('hUserID');
                         if (sessionStorage.getItem("dUser_ID")) {
                             sessionStrorage.removeItem('dUser_ID');
                         }
                         document.querySelector('#modal_close1').addEventListener('click', functionSeni_Index);
-                        document.querySelector('#modal_close2').addEventListener('click', functionSeni_Index);
                     } else {
                         $('#staticBackdrop3').modal('show');
                         document.querySelector('#modal_close3').addEventListener('click', functionSeni_Detail);
@@ -79,6 +93,7 @@ function btnRegistrationClick() {
         }
     });
 };
+
 function functionSeni_Index() {
     window.location.href = "Index.aspx";
 };
@@ -113,8 +128,10 @@ function fnc_Yes() {
                     if (sessionStorage.getItem("dUser_ID")) {
                         sessionStorage.removeItem("dUser_ID");
                     };
-                    $('#staticBackdrop4').modal('show');
-                    document.querySelector('#modal_close4').addEventListener('click', functionSeni_Index);
+                    const modal_sentence2 = document.querySelector('#modal_sentence1');
+                    modal_sentence2.textContent = "削除が完了しました";
+                    $('#staticBackdrop1').modal('show');
+                    document.querySelector('#modal_close1').addEventListener('click', functionSeni_Index);
                 } else {
                     alert("エラーが発生しました。");
                 };
@@ -128,6 +145,12 @@ function fnc_No() {
 };
 
 function btnBackClick() {
-    sessionStorage.removeItem("dUser_ID");
+    sessionStorage.removeItem('iUser_ID');
+    sessionStorage.removeItem('iPassword');
+    sessionStorage.removeItem('iUser_Name');
+    sessionStorage.removeItem('iAdmin_Check');
+    if (sessionStorage.getItem('dUser_ID')) {
+        sessionStorage.removeItem('dUser_ID');
+    }
     window.location.href = "Detail.aspx";
 };
