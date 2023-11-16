@@ -59,7 +59,7 @@
             </div>
         </div>
         <!-- Modal -->
-        <%--新規登録が完了したときのモーダル--%>
+        <%--新規登録・更新・削除が完了したときのモーダル--%>
         <div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -67,29 +67,11 @@
                         <h1 class="modal-title fs-5" id="staticBackdropLabel1">成功</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="functionSeni_Index()"></button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body" id="modal_sentence1">
                         新規登録が完了しました
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="modal_close1">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Modal -->
-        <%--更新が完了したときのモーダル--%>
-        <div class="modal fade" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="staticBackdropLabel2">成功</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="functionSeni_Index()"></button>
-                    </div>
-                    <div class="modal-body">
-                        更新が完了しました
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="modal_close2">Close</button>
                     </div>
                 </div>
             </div>
@@ -108,24 +90,6 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="modal_close3">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Modal -->
-        <%--削除が完了したときのモーダル--%>
-        <div class="modal fade" id="staticBackdrop4" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="staticBackdropLabel4">成功</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="functionSeni_Index()"></button>
-                    </div>
-                    <div class="modal-body">
-                        削除が完了しました
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="modal_close4">Close</button>
                     </div>
                 </div>
             </div>
