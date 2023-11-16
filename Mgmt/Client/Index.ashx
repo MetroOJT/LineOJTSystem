@@ -11,6 +11,24 @@ Public Class Index : Implements IHttpHandler
     '公式アカウントアクセス用のトークン
     Const AccessToken As String = "p/w9bCbcf1BCehRo4gVCvfz7mG+sCLiUF3AeLm3kzrL8ugjKA0JsRYMx/WDnoqNzQhqLjbFXX9QFn/mBQr5wpC9Nrd7uDVjtBGVLDGqlIsbUh+ycI9zhl1rw/UJE6BUawPXWJZ4VMLRk/ItsQkKA3QdB04t89/1O/w1cDnyilFU="
 
+    'LINEに送るJSONオブジェクトのためのクラス
+    Public Class Requestmessage
+        Public Property [to] As String
+        Public Property messages As New List(Of Object)
+        Public Sub add_message(str As String)
+            Dim message As Messages = New Messages
+            message.type = "text"
+            message.text = str
+            messages.Add(message)
+        End Sub
+    End Class
+
+    'Requestmessage.messagesに追加するJSONオブジェクトのクラス
+    Public Class Messages
+        Public Property type As String
+        Public Property text As String
+    End Class
+
     Public Sub ProcessRequest(ByVal context As HttpContext) Implements IHttpHandler.ProcessRequest
         Select Case context.Request.Item("mode")
             Case "Search"
@@ -35,7 +53,7 @@ Public Class Index : Implements IHttpHandler
         Dim enc As Encoding = Encoding.GetEncoding("UTF-8")
         Dim sSQL As New StringBuilder
         Dim sValues As New StringBuilder
-        Dim sTempTable As String = ""
+
         Dim sDisplayName As String = ""
         Dim iCount As Integer = 0
 
@@ -44,7 +62,7 @@ Public Class Index : Implements IHttpHandler
             sDisplayName = context.Request.Item("DisplayName")
 
             '作業用テーブルの生成
-            sTempTable = cCom.CmnGet_TableName("LineUserItiran")
+            Dim sTempTable As String = cCom.CmnGet_TableName("LineUserItiran")
             cDB.DeleteTable(sTempTable)
 
             'メモ：連番を与えてそれを主キーにする
@@ -127,12 +145,11 @@ Public Class Index : Implements IHttpHandler
         Dim sStatus As String = "OK"
         Dim hHash As New Hashtable
         Dim jJson As New JavaScriptSerializer
-        Dim sJson As String
-        Dim sTempTable As String = ""
+        Dim sJson As String = ""
         Dim sSQL As New StringBuilder
         Dim sHTML As New StringBuilder
         Try
-            sTempTable = cCom.CmnGet_TableName("LineUserItiran")
+            Dim sTempTable As String = cCom.CmnGet_TableName("LineUserItiran")
             sSQL.Clear()
             sSQL.Append(" SELECT")
             sSQL.Append(" SearchID")
@@ -205,7 +222,7 @@ Public Class Index : Implements IHttpHandler
         Dim dLogDate As Date = Nothing
 
         Try
-            Dim sTempTable = cCom.CmnGet_TableName("LineUserItiran")
+            Dim sTempTable As String = cCom.CmnGet_TableName("LineUserItiran")
 
             '送信データ取得
             Dim SearchID As Integer = context.Request.Item("SearchID")
@@ -244,7 +261,7 @@ Public Class Index : Implements IHttpHandler
             sHTML.Append("<div id=""MessageBody"">")
             Do Until Not cDB.ReadDr
                 Dim sLog As String = cDB.DRData("Log")
-                Dim sMessage As String = ""
+                Dim sMessage As New StringBuilder
                 Dim jLog As Object = JsonConvert.DeserializeObject(sLog)
                 Dim dLogDatetime As Date = Date.Parse(cDB.DRData("Datetime").ToString)
                 If dLogDate = Nothing OrElse dLogDate.Year < dLogDatetime.Year OrElse dLogDate.Month < dLogDatetime.Month OrElse dLogDate.Day < dLogDatetime.Day Then
@@ -256,10 +273,18 @@ Public Class Index : Implements IHttpHandler
                     Dim jMessage As Object = Nothing
                     jMessages = jLog("messages")
                     jMessage = jMessages.Last()
-                    sMessage = jMessage("text").ToString
+                    sMessage.Clear()
+                    sMessage.Append(jMessage("text").ToString)
                     sHTML.Append("<div class=""row"">")
                     sHTML.Append("<div class=""col-6""></div>")
-                    sHTML.Append("<div class=""col-6 text-end""><span class=""border rounded-pill MessageText"" style=""background:rgba(76,199,100,0.5);"">" & sMessage & "</span></div>")
+                    sHTML.Append("<div class=""col-6 text-end"">")
+                    sHTML.Append("<div class=""border MessageTextArea"" style=""background:rgba(76,199,100,0.5);"">")
+                    If sMessage.ToString.Substring(sMessage.Length - 1) = vbLf Then
+                        sMessage.Append("&thinsp;")
+                    End If
+                    sHTML.Append("<span class=""MessageText"">" & sMessage.ToString & "</span>")
+                    sHTML.Append("</div>")
+                    sHTML.Append("</div>")
                     sHTML.Append("</div>")
                     sHTML.Append("<div class=""row"">")
                     sHTML.Append("<div class=""col-6""></div>")
@@ -268,9 +293,17 @@ Public Class Index : Implements IHttpHandler
                 ElseIf cDB.DRData("SendRecv").ToString = "Recv" Then
                     Dim eventsObj As Object = jLog("events")(0)
                     Dim messageObj As Object = eventsObj("message")
-                    sMessage = messageObj("text").ToString()
+                    sMessage.Clear()
+                    sMessage.Append(messageObj("text").ToString())
                     sHTML.Append("<div class=""row"">")
-                    sHTML.Append("<div class=""col-6 text-start""><span class="" border rounded-pill MessageText"">" & sMessage & "</span></div>")
+                    sHTML.Append("<div class=""col-6 text-start"">")
+                    sHTML.Append("<div class=""border MessageTextArea"">")
+                    If sMessage.ToString.Substring(sMessage.Length - 1) = vbLf Then
+                        sMessage.Append("&thinsp;")
+                    End If
+                    sHTML.Append("<span class=""MessageText"">" & sMessage.ToString & "</span>")
+                    sHTML.Append("</div>")
+                    sHTML.Append("</div>")
                     sHTML.Append("<div class=""col-6""></div>")
                     sHTML.Append("</div>")
                     sHTML.Append("<div class=""row"">")
@@ -308,12 +341,70 @@ Public Class Index : Implements IHttpHandler
         Dim hHash As New Hashtable
         Dim jJson As New JavaScriptSerializer
         Dim sJson As String = ""
+        Dim sSQL As New StringBuilder
+        Dim enc As Encoding = Encoding.GetEncoding("UTF-8")
         Try
+            'Requestmessageのインスタンス化
+            Dim requestmessage As Requestmessage = New Requestmessage
+
+            Dim sTempTable As String = cCom.CmnGet_TableName("LineUserItiran")
+
             '送信データ取得
             Dim message As String = context.Request.Item("message")
             Dim nowSearchID As Integer = context.Request.Item("nowSearchID")
 
-                'ここから送信処理作っていきますよー
+            cDB.AddWithValue("@SearchID", nowSearchID)
+            sSQL.Clear()
+            sSQL.Append(" SELECT")
+            sSQL.Append(" wLine_UserID")
+            sSQL.Append(" FROM " & sTempTable)
+            sSQL.Append(" WHERE SearchID = @SearchID")
+            cDB.SelectSQL(sSQL.ToString)
+            If cDB.ReadDr Then
+                Dim Line_UserID As String = cDB.DRData("wLine_UserID")
+                requestmessage.to = Line_UserID
+                requestmessage.add_message(message)
+
+                '仮送信ログを登録
+                cDB.AddWithValue("@Send", "Send")
+                cDB.AddWithValue("@Line_UserID", Line_UserID)
+                sSQL.Clear()
+                sSQL.Append(" INSERT INTO " & cCom.gctbl_LogMst)
+                sSQL.Append(" (SendRecv, Line_UserID, Status, Log, Datetime)")
+                sSQL.Append(" VALUES(@Send, @Line_UserID, 999, 'Log', NOW())")
+                cDB.ExecuteSQL(sSQL.ToString)
+
+                'PushMessageのWebRequest
+                Dim req As System.Net.WebRequest =
+                    System.Net.WebRequest.Create("https://api.line.me/v2/bot/message/push")
+                'POST送信するデータを作成
+                Dim postData As String = JsonConvert.SerializeObject(requestmessage)
+                req.Method = "POST"
+                req.ContentType = "application/json"
+                req.Headers.Add("Authorization", "Bearer " & AccessToken)
+
+                Using reqStream As New System.IO.StreamWriter(req.GetRequestStream())
+                    'POST送信
+                    reqStream.Write(postData)
+                End Using
+                'サーバーからの応答を受信するためのWebResponseを取得
+                Dim res As System.Net.HttpWebResponse = req.GetResponse()
+                '応答データを受信するためのStreamを取得
+                Dim resStream As System.IO.Stream = res.GetResponseStream()
+                '受信して表示
+                Dim sr As New System.IO.StreamReader(resStream, enc)
+                Dim statuscode As Integer = res.StatusCode
+                cDB.AddWithValue("@SendLog", postData)
+                cDB.AddWithValue("@Status", statuscode)
+
+                '送信ログを更新
+                sSQL.Clear()
+                sSQL.Append(" UPDATE " & cCom.gctbl_LogMst)
+                sSQL.Append(" SET Status = @Status, Log = @SendLog")
+                sSQL.Append(" ORDER BY LogID DESC LIMIT 1")
+                cDB.ExecuteSQL(sSQL.ToString)
+
+            End If
 
         Catch ex As Exception
             sRet = ex.Message
