@@ -14,3 +14,6 @@
 .error_div{
     margin: auto;
 }
+#buttonArea input, #buttonArea div{
+    margin: 0 20px 12px 20px;
+}

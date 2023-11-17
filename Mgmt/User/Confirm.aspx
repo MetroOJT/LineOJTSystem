@@ -13,9 +13,11 @@
     <form id="form1" runat="server" style="width: 80%; margin: 0 auto" class="needs-validation" novalidate>
     <div class="container">
         <%=cCom.CmnDspHeader() %>
-        <div id="buttonArea">
-            <input type="button" value="登録" id="registration_button" class="btn btn-outline-primary shadow h-50 mt-4 me-auto mb-4 ms-auto w-25 h5" />
-            <input type="button" value="戻る" id="back_button" class="btn btn-outline-secondary shadow h-50 mt-4 me-auto mb-4 ms-auto w-25 h5" />
+        <div id="buttonArea" class="row">
+            <input type="button" value="登録" id="registration_button" class="btn btn-outline-primary col-sm" />
+            <div class="col-sm"></div>
+            <div class="col-sm"></div>
+            <input type="button" value="戻る" id="back_button" class="btn btn-outline-secondary col-sm" />
         </div>
         <div id="option" class="w-100 d-flex flex-column mt-5">
             <div class="mx-auto m-2 mt-4">
@@ -56,8 +58,64 @@
                 <div class="invalid-feedback">Required.</div>
             </div>
         </div>
-    </div>
+        <!-- Modal -->
+        <%--新規登録・更新・削除が完了したときのモーダル--%>
+        <div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel1">成功</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="functionSeni_Index()"></button>
+                    </div>
+                    <div class="modal-body" id="modal_sentence1">
+                        新規登録が完了しました
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="modal_close1">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+        <%--追加したいユーザーのユーザーIDが既にあったときのモーダル--%>
+        <div class="modal fade" id="staticBackdrop3" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel3">失敗</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="functionSeni_Detail()"></button>
+                    </div>
+                    <div class="modal-body">
+                        そのユーザーIDはすでに登録されています
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="modal_close3">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+        <%--削除をしていいのかを問うモーダル--%>
+        <div class="modal fade" id="staticBackdrop5" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel5">確認</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="fnc_No()"></button>
+                    </div>
+                    <div class="modal-body">
+                        本当に削除しますか？
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-danger btn-lg" data-bs-dismiss="modal" id="modal_Yes">削除</button>
+                        <button type="button" class="btn btn-outline-secondary btn-lg" data-bs-dismiss="modal" id="modal_No">キャンセル</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <%=cCom.CmnDspFooter() %>
     </form>
+    <script src="../../Common/js/Common.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="Confirm.js"></script>

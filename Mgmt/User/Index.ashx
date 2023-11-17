@@ -53,9 +53,11 @@ Public Class Index : Implements IHttpHandler
             sTempTable = cCom.CmnGet_TableName("Useritiran")
             cDB.DeleteTable(sTempTable)
 
-            Cki.Set_Cookies("User_ID", sUser_ID, 1)
+            Cki.Set_Cookies("u_User_ID", sUser_ID, 1)
             Cki.Set_Cookies("User_Name", sUser_Name, 1)
             Cki.Set_Cookies("Admin_Check", sAdmin_Check, 1)
+            Cki.Set_Cookies("DateFm", sDateFm, 1)
+            Cki.Set_Cookies("DateTo", sDateTo, 1)
             Cki.Set_Cookies("Useritiran", sTempTable, 1)
 
             sSQL.Clear()

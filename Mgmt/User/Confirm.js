@@ -1,6 +1,6 @@
 ﻿//ログインなされているかをチェックする関数
-// function_login_check();
-
+function_login_check();
+DspLoginUserName();
 var Ajax_File = "Confirm.ashx";
 
 const re_UserID = sessionStorage.getItem('UserID');
@@ -8,12 +8,17 @@ const User_ID = sessionStorage.getItem("iUser_ID");
 const User_Name = sessionStorage.getItem("iUser_Name");
 const Admin_Check = sessionStorage.getItem("iAdmin_Check");
 const Password = sessionStorage.getItem("iPassword");
+const hUser_ID = sessionStorage.getItem("hUserID");
 
+console.log(re_UserID);
 console.log(User_ID);
-console.log(Password);
 console.log(User_Name);
 console.log(Admin_Check);
+console.log(Password);
+// ここに何かをしようとした
+if (hUser_ID) {
 
+}
 document.querySelector("#user_ID").value = User_ID;
 document.querySelector("#user_Name").value = User_Name;
 document.querySelector("#user_password").value = Password;
@@ -24,7 +29,9 @@ if (Admin_Check == 0) {
 } else if (Admin_Check == 1) {
     document.querySelector("#Admin_input").value = "オン";
 };
+
 const dUser_ID = sessionStorage.getItem("dUser_ID");
+console.log(dUser_ID);
 if (dUser_ID) {
     const registration_button = document.getElementById("registration_button");
     registration_button.id = "delete_button";
@@ -43,7 +50,6 @@ $(function () {
 // 登録ボタンクリック
 function btnRegistrationClick() {
     const hUserID = sessionStorage.getItem("hUserID");
-    console.log("a", hUserID);
     $.ajax({
         url: Ajax_File,
         method: "POST",
@@ -58,22 +64,27 @@ function btnRegistrationClick() {
         },
         dataType: "json",
         success: function (data) {
-            console.log(data);
+            //console.log(data);
             if (data != "") {
                 if (data.status == "OK") {
                     if (data.ErrorMessage == "") {
                         if (data.Mode == "Ins") {
-                            alert("新規登録が完了しました。");
+                            // 新規登録が完了した
+                            $('#staticBackdrop1').modal('show');
                         } else {
-                            alert("更新が完了しました。");
+                            // 更新が完了した
+                            const modal_sentence1 = document.querySelector('#modal_sentence1');
+                            modal_sentence1.textContent = "更新が完了しました";
+                            $('#staticBackdrop1').modal('show');
                         };
                         sessionStorage.removeItem('hUserID');
                         if (sessionStorage.getItem("dUser_ID")) {
                             sessionStrorage.removeItem('dUser_ID');
                         }
-                        window.location.href = "Index.aspx";
+                        document.querySelector('#modal_close1').addEventListener('click', functionSeni_Index);
                     } else {
-                        alert(data.ErrorMessage);
+                        $('#staticBackdrop3').modal('show');
+                        document.querySelector('#modal_close3').addEventListener('click', functionSeni_Detail);
                     };                    
                 } else {
                     alert("エラーが発生しました。");
@@ -83,36 +94,63 @@ function btnRegistrationClick() {
     });
 };
 
+function functionSeni_Index() {
+    window.location.href = "Index.aspx";
+};
+
+function functionSeni_Detail() {
+    window.location.href = "Detail.aspx";
+};
+
 // 該当するデータを削除する
 function btnDeleteClick() {
-    if (window.confirm("本当に削除しますか？")) {
-        const hUserID = sessionStorage.getItem('hUserID');
-        console.log(hUserID);
-        $.ajax({
-            url: Ajax_File,
-            method: "POST",
-            data: {
-                mode: "Delete",
-                "User_ID": hUserID
-            },
-            dataType: "json",
-            success: function (data) {
-                console.log(data);
-                if (data != "") {
-                    if (data.status == "OK") {
-                        // 表示するコードを書く
-                        console.log("削除が完了しました");
-                        sessionStorage.removeItem("hUserID");
-                        window.location.href = "index.aspx";
-                    } else {
-                        alert("エラーが発生しました。");
-                    };
-                };
-            }
-        })
-    }
+    $('#staticBackdrop5').modal('show');
+    document.querySelector('#modal_Yes').addEventListener('click', fnc_Yes);
+    document.querySelector('#modal_No').addEventListener('click', fnc_No);
 }
 
+function fnc_Yes() {
+    const hUserID = sessionStorage.getItem('hUserID');
+    $.ajax({
+        url: Ajax_File,
+        method: "POST",
+        data: {
+            mode: "Delete",
+            "User_ID": hUserID
+        },
+        dataType: "json",
+        success: function (data) {
+            //console.log(data);
+            if (data != "") {
+                if (data.status == "OK") {
+                    // 表示するコードを書く
+                    sessionStorage.removeItem("hUserID");
+                    if (sessionStorage.getItem("dUser_ID")) {
+                        sessionStorage.removeItem("dUser_ID");
+                    };
+                    const modal_sentence2 = document.querySelector('#modal_sentence1');
+                    modal_sentence2.textContent = "削除が完了しました";
+                    $('#staticBackdrop1').modal('show');
+                    document.querySelector('#modal_close1').addEventListener('click', functionSeni_Index);
+                } else {
+                    alert("エラーが発生しました。");
+                };
+            };
+        }
+    })
+};
+
+function fnc_No() {
+    $('#staticBackdrop5').modal('hide');
+};
+
 function btnBackClick() {
-    window.history.back();
+    sessionStorage.removeItem('iUser_ID');
+    sessionStorage.removeItem('iPassword');
+    sessionStorage.removeItem('iUser_Name');
+    sessionStorage.removeItem('iAdmin_Check');
+    if (sessionStorage.getItem('dUser_ID')) {
+        sessionStorage.removeItem('dUser_ID');
+    }
+    window.location.href = "Detail.aspx";
 };
