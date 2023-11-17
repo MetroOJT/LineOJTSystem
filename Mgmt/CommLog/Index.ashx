@@ -10,10 +10,8 @@ Public Class Index : Implements IHttpHandler
         Select Case context.Request.Item("mode")
             Case "Search"
                 context.Response.Write(sea(context))
-            Case "MakeResult"
-                context.Response.Write(mr(context))
-            Case "PagiNation"
-                context.Response.Write(pn(context))
+            Case "MakeLogTable"
+                context.Response.Write(mlt(context))
         End Select
     End Sub
 
@@ -139,8 +137,8 @@ Public Class Index : Implements IHttpHandler
         Return sJSON
     End Function
     '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    '検索結果表示
-    Public Function mr(ByVal context As HttpContext) As String
+    '通信ログテーブル表示
+    Public Function mlt(ByVal context As HttpContext) As String
         Dim cCom As New Common
         Dim cDB As New CommonDB
         Dim Cki As New Cookie
@@ -156,182 +154,16 @@ Public Class Index : Implements IHttpHandler
 
         Dim sTempTable As String = ""
 
-        Dim sHTML As New StringBuilder
-        Dim sPNList As New StringBuilder
-        Dim iCount As Integer = 0
+        Dim sHTML As New StringBuilder 'テーブル
+        Dim sPNList As New StringBuilder 'ページャリスト
+        Dim iCount As Integer = 0 '検索ヒット数
+        Dim NowPage As Integer = 1 '表示ページ
+        Dim OffSet As Integer = 0 '表示するデータの開始地点
+        Dim PageMedian As Integer 'ページャの中央値
+        Dim SearchPage As Integer '表示したいページ
+        Dim TotalPage As Integer
 
         Try
-
-            sTempTable = Cki.Get_Cookies("logitiran")
-
-            sSQL.Clear()
-            sSQL.Append(" SELECT")
-            sSQL.Append(" COUNT(*) AS Count")
-            sSQL.Append(" FROM " & sTempTable)
-            cDB.SelectSQL(sSQL.ToString)
-
-
-            If cDB.ReadDr Then
-                iCount = cDB.DRData("count")
-            End If
-
-            '検索ヒットしたデータを表示
-            sSQL.Clear()
-            sSQL.Append(" SELECT")
-            sSQL.Append(" wRowNo")
-            sSQL.Append(" ,wSendRecv")
-            sSQL.Append(" ,wStatusNumber")
-            sSQL.Append(" ,wLog")
-            sSQL.Append(" ,DATE_FORMAT(wDatetime,'%Y/%m/%d %T') AS wDatetime")
-            sSQL.Append(" FROM " & sTempTable)
-            sSQL.Append(" ORDER BY wRowNo")
-            sSQL.Append(" LIMIT 10 OFFSET 0")
-            cDB.SelectSQL(sSQL.ToString)
-
-            sHTML.Clear()
-            sHTML.Append("<table id=""table"" border=""1"" width=""1000px"" style=""border-collapse: collapse;"" class=""table table-striped table-bordered"">")
-            sHTML.Append("<tr style=""background-color: #CCCCCC;"">")
-            sHTML.Append("<th width=""05%"" class=""text-center"">詳細</th >")
-            sHTML.Append("<th width=""15%"" class=""text-center"">送信/受信</th>")
-            sHTML.Append("<th width=""15%"" class=""text-center"">ステータス</th>")
-            sHTML.Append("<th width=""35%"" class=""text-center"">通信ログ</th>")
-            sHTML.Append("<th width=""30%"" class=""text-center"">通信時間</th>")
-            Do Until Not cDB.ReadDr
-
-                sRow = ""
-                If iCnt Mod 2 = 0 Then
-                    sRow = " evenRow"
-                End If
-
-                If cDB.DRData("wStatusNumber") <> "200" Then
-                    sError = " text-danger"
-                End If
-
-                sHTML.Append("<tr class=""" & sRow & """>")
-                sHTML.Append("<td><input type=""button""name=""detail"" class=""btn btn-success btn-sm btnDetail"" id=""detail" & cDB.DRData("wRowNo") & """ value=""詳細"" /></td>")
-                sHTML.Append("<td class=""" & sError & " text-center"">&nbsp;" & cDB.DRData("wSendRecv") & "</td>")
-                sHTML.Append("<td class=""" & sError & " text-center"">" & cDB.DRData("wStatusNumber") & "</td>")
-                sHTML.Append("<td align=""left"" class=""" & sError & " text-truncate"" style=""max-width:0px;"">&nbsp;" & cDB.DRData("wLog") & "</td>")
-                sHTML.Append("<td class=""" & sError & " text-center"">" & cDB.DRData("wDatetime") & "</td>")
-                sHTML.Append("</tr>")
-
-                iCnt = iCnt + 1
-            Loop
-            sHTML.Append("</tr>")
-            sHTML.Append("</table>")
-
-            'ページネーション作成
-            sPNList.Clear()
-            sPNList.Append("<div class=""col"">")
-            sPNList.Append("<ul class=""pagination"" >")
-            sPNList.Append("<li class=""page-item pe-none"" id=""pista"">")
-            sPNList.Append("<a class=""page-link disabled"" aria-label=""Previous"">")
-            sPNList.Append("<span aria-hidden=""True"">&laquo;</span>")
-            sPNList.Append("</a>")
-            sPNList.Append("</li>")
-            sPNList.Append("<li class=""page-item pe-none"" id=""piback""><a class=""page-link disabled"">‹</a></li>")
-            sPNList.Append("<li class=""page-item pe-none"" id=""pi1""><a class=""page-link disabled"">1</a></li>")
-            If iCount > 10 Then
-                sPNList.Append("<li class=""page-item"" id=""pi2""><a class=""page-link"">2</a></li>")
-            Else
-                sPNList.Append("<li class=""page-item pe-none"" id=""pi2""><a class=""page-link disabled"">2</a></li>")
-            End If
-
-            If iCount > 20 Then
-                sPNList.Append("<li class=""page-item"" id=""pi3""><a class=""page-link"">3</a></li>")
-            Else
-                sPNList.Append("<li class=""page-item pe-none"" id=""pi3""><a class=""page-link disabled"">3</a></li>")
-            End If
-
-            If iCount > 30 Then
-                sPNList.Append("<li class=""page-item"" id=""pinext""><a Class=""page-link"">›</a></li>")
-                sPNList.Append("<li class=""page-item"" id=""piend"">")
-                sPNList.Append("<a class=""page-link"" aria-label=""Next"">")
-                sPNList.Append("<span aria-hidden=""true"">&raquo;</span>")
-                sPNList.Append("</a>")
-                sPNList.Append("</li>")
-            Else
-                sPNList.Append("<li class=""page-item pe-none"" id=""pinext""><a Class=""page-link disabled"">›</a></li>")
-                sPNList.Append("<li class=""page-item pe-none"" id=""piend"">")
-                sPNList.Append("<a class=""page-link disabled"" aria-label=""Next"">")
-                sPNList.Append("<span aria-hidden=""true"">&raquo;</span>")
-                sPNList.Append("</a>")
-                sPNList.Append("</li>")
-            End If
-
-            sPNList.AppendLine("</ul>")
-            sPNList.Append("</div>")
-
-            'ページ検索作成
-            sPNList.Append("<div class=""col"">")
-            sPNList.Append("<div Class=""row g-3 align-items-center"">")
-            sPNList.Append("<div Class=""col-auto"">")
-            sPNList.Append("<Label for=""PageNumber"" class=""col-form-label"">ページ検索</label>")
-            sPNList.Append("</div>")
-            sPNList.Append("<div Class=""col-auto"">")
-            sPNList.Append("<input type=""text"" inputmode=""numeric"" pattern=""^[1-9][0-9]*$"" maxlength=""8"" oninput=""value = value.replace(/[^0-9]+/i,'');"" id=""PageNumber"" Class=""form-control"" aria-labelledby=""passwordHelpInline"">")
-            sPNList.Append("</div>")
-            sPNList.Append("<div Class=""col-auto"">")
-            sPNList.Append("<input type=""button"" class=""btn btn-primary"" onclick=""PageNumber_Search()"" value=""検索"" />")
-            sPNList.Append("</div>")
-            sPNList.Append("</div>")
-            sPNList.Append("</div>")
-
-        Catch ex As Exception
-            sRet = ex.Message
-        Finally
-            cDB.DrClose()
-            cDB.Dispose()
-            If sRet <> "" Then
-                sStatus = "NG"
-                cCom.CmnWriteStepLog(sRet)
-            End If
-
-            hHash.Add("status", sStatus)
-            hHash.Add("html", sHTML.ToString)
-            hHash.Add("pnlist", sPNList.ToString)
-            hHash.Add("NowPage", 1)
-            hHash.Add("count", iCount)
-
-            sJSON = jJSON.Serialize(hHash)
-        End Try
-
-        Return sJSON
-
-    End Function
-    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    'ページネーション
-    Public Function pn(ByVal context As HttpContext) As String
-        Dim cCom As New Common
-        Dim cDB As New CommonDB
-        Dim Cki As New Cookie
-        Dim sSQL As New StringBuilder
-        Dim jJSON As New JavaScriptSerializer
-        Dim sJSON As String = ""
-        Dim hHash As New Hashtable
-        Dim sRet As String = ""
-        Dim sStatus As String = "OK"
-        Dim iCnt As Integer = 1
-        Dim sRow As String = ""
-        Dim sError As String = ""
-
-        Dim sTempTable As String = ""
-
-        Dim sHTML As New StringBuilder
-        Dim sPNList As New StringBuilder
-        Dim iCount As Integer = 0
-        Dim NowPage As Integer = 1
-        Dim OffSet As Integer = 0
-        Dim PageMedian As Integer
-
-        Try
-
-            NowPage = context.Request.Item("nowpage")
-            Cki.Set_Cookies("LogNowPage", NowPage, 1)
-            OffSet = 10 * (NowPage - 1)
-
-            PageMedian = context.Request.Item("pagemedian")
-            Cki.Set_Cookies("pagemedian", PageMedian, 1)
 
             sTempTable = Cki.Get_Cookies("logitiran")
 
@@ -341,21 +173,31 @@ Public Class Index : Implements IHttpHandler
             sSQL.Append(" FROM " & sTempTable)
             cDB.SelectSQL(sSQL.ToString)
 
-
             If cDB.ReadDr Then
                 iCount = cDB.DRData("count")
             End If
 
-            If NowPage > Math.Ceiling(iCount / 10) Then
-                NowPage = Math.Ceiling(iCount / 10)
-                OffSet = 10 * (NowPage - 1)
-                If (NowPage < 1) Then
-                        OffSet = 0
+            TotalPage = Math.Ceiling(iCount / 10)
+
+            SearchPage = context.Request.Item("searchpage")
+
+            If SearchPage <= TotalPage And SearchPage > 0 Then
+                NowPage = SearchPage
+            Else
+                If SearchPage > TotalPage Then
+                    NowPage = TotalPage
+                Else
+                    NowPage = 1
                 End If
-            ElseIf NowPage < 1 Then
-                NowPage = 1
+            End If
+            OffSet = 10 * (NowPage - 1)
+            If TotalPage = 0 Then
                 OffSet = 0
             End If
+
+
+            PageMedian = context.Request.Item("pagemedian")
+            Cki.Set_Cookies("pagemedian", PageMedian, 1)
 
             sSQL.Clear()
             sSQL.Append(" Select")
@@ -407,42 +249,42 @@ Public Class Index : Implements IHttpHandler
             sPNList.Clear()
             sPNList.Append("<div class=""col"">")
             sPNList.Append("<ul class=""pagination"" >")
-            sPNList.Append("<li class=""page-item"" id=""pista"">")
+            sPNList.Append("<li class=""page-item"" id=""pista"" onclick=""MakeLogTable('pista')"">")
             sPNList.Append("<a class=""page-link"" aria-label=""Previous"">")
             sPNList.Append("<span aria-hidden=""True"">&laquo;</span>")
             sPNList.Append("</a>")
             sPNList.Append("</li>")
-            sPNList.Append("<li class=""page-item"" id=""piback""><a class=""page-link"">‹</a></li>")
+            sPNList.Append("<li class=""page-item"" id=""piback"" onclick=""MakeLogTable('piback')""><a class=""page-link"">‹</a></li>")
             If NowPage = 1 Then
-                sPNList.Append("<li class=""page-item pe-none"" id=""pi1""><a class=""page-link disabled"">" & PageMedian - 1 & "</a></li>")
+                sPNList.Append("<li class=""page-item pe-none"" id=""pi1"" onclick=""MakeLogTable('pi1')""><a class=""page-link disabled"">" & PageMedian - 1 & "</a></li>")
             Else
-                sPNList.Append("<li class=""page-item"" id=""pi1""><a class=""page-link"">" & PageMedian - 1 & "</a></li>")
+                sPNList.Append("<li class=""page-item"" id=""pi1"" onclick=""MakeLogTable('pi1')""><a class=""page-link"">" & PageMedian - 1 & "</a></li>")
             End If
 
             If iCount > 10 Then 'データが11件以上であればページ2も表示
-                If NowPage <> 1 And NowPage <> Math.Ceiling(iCount / 10) Then
-                    sPNList.Append("<li class=""page-item pe-none"" id=""pi2""><a class=""page-link disabled"">" & PageMedian & "</a></li>")
+                If NowPage <> 1 And NowPage <> TotalPage Then
+                    sPNList.Append("<li class=""page-item pe-none"" id=""pi2"" onclick=""MakeLogTable('pi2')""><a class=""page-link disabled"">" & PageMedian & "</a></li>")
                 ElseIf NowPage = 2 And iCount < 21 Then
-                    sPNList.Append("<li class=""page-item pe-none"" id=""pi2""><a class=""page-link disabled"">" & PageMedian & "</a></li>")
+                    sPNList.Append("<li class=""page-item pe-none"" id=""pi2"" onclick=""MakeLogTable('pi2')""><a class=""page-link disabled"">" & PageMedian & "</a></li>")
                 Else
-                    sPNList.Append("<li class=""page-item"" id=""pi2""><a class=""page-link"">" & PageMedian & "</a></li>")
+                    sPNList.Append("<li class=""page-item"" id=""pi2"" onclick=""MakeLogTable('pi2')""><a class=""page-link"">" & PageMedian & "</a></li>")
                 End If
             Else
-                sPNList.Append("<li class=""page-item pe-none"" id=""pi2""><a class=""page-link disabled"">" & PageMedian & "</a></li>")
+                sPNList.Append("<li class=""page-item pe-none"" id=""pi2"" onclick=""MakeLogTable('pi2')""><a class=""page-link disabled"">" & PageMedian & "</a></li>")
             End If
 
             If iCount > 20 Then 'データが21件以上であればページ3も表示
-                If NowPage = Math.Ceiling(iCount / 10) Then
-                    sPNList.Append("<li class=""page-item pe-none"" id=""pi3""><a class=""page-link disabled"" >" & PageMedian + 1 & "</a></li>")
+                If NowPage = TotalPage Then
+                    sPNList.Append("<li class=""page-item pe-none"" id=""pi3"" onclick=""MakeLogTable('pi3')""><a class=""page-link disabled"" >" & PageMedian + 1 & "</a></li>")
                 Else
-                    sPNList.Append("<li class=""page-item"" id=""pi3""><a class=""page-link"" >" & PageMedian + 1 & "</a></li>")
+                    sPNList.Append("<li class=""page-item"" id=""pi3"" onclick=""MakeLogTable('pi3')""><a class=""page-link"" >" & PageMedian + 1 & "</a></li>")
                 End If
             Else
-                sPNList.Append("<li class=""page-item pe-none"" id=""pi3""><a class=""page-link disabled"">" & PageMedian + 1 & "</a></li>")
+                sPNList.Append("<li class=""page-item pe-none"" id=""pi3"" onclick=""MakeLogTable('pi3')""><a class=""page-link disabled"">" & PageMedian + 1 & "</a></li>")
             End If
 
-            sPNList.Append("<li class=""page-item"" id=""pinext""><a Class=""page-link"">›</a></li>")
-            sPNList.Append("<li class=""page-item"" id=""piend"">")
+            sPNList.Append("<li class=""page-item"" id=""pinext"" onclick=""MakeLogTable('pinext')""><a Class=""page-link"">›</a></li>")
+            sPNList.Append("<li class=""page-item"" id=""piend""  onclick=""MakeLogTable('piend')"">")
             sPNList.Append("<a class=""page-link"" aria-label=""Next"">")
             sPNList.Append("<span aria-hidden=""true"">&raquo;</span>")
             sPNList.Append("</a>")
@@ -460,7 +302,7 @@ Public Class Index : Implements IHttpHandler
             sPNList.Append("<input type=""text"" inputmode=""numeric"" pattern=""^[1-9][0-9]*$"" maxlength=""8"" oninput=""value = value.replace(/[^0-9]+/i,'');"" id=""PageNumber"" Class=""form-control"" aria-labelledby=""passwordHelpInline"">")
             sPNList.Append("</div>")
             sPNList.Append("<div Class=""col-auto"">")
-            sPNList.Append("<input type=""button"" class=""btn btn-primary"" onclick=""PageNumber_Search()"" value=""検索"" />")
+            sPNList.Append("<input type=""button"" class=""btn btn-primary"" onclick=""MakeLogTable(document.getElementById('PageNumber').value);"" value=""検索"" />")
             sPNList.Append("</div>")
             sPNList.Append("</div>")
             sPNList.Append("</div>")
@@ -479,8 +321,9 @@ Public Class Index : Implements IHttpHandler
             hHash.Add("html", sHTML.ToString)
             hHash.Add("pnlist", sPNList.ToString)
             hHash.Add("count", iCount)
-            hHash.Add("NowPage", NowPage)
-            hHash.Add("test", NowPage)
+            hHash.Add("AshxNowPage", NowPage)
+
+            Cki.Set_Cookies("LogNowPage", NowPage, 1)
 
             sJSON = jJSON.Serialize(hHash)
         End Try
@@ -488,7 +331,6 @@ Public Class Index : Implements IHttpHandler
         Return sJSON
 
     End Function
-
 
     Public ReadOnly Property IsReusable() As Boolean Implements IHttpHandler.IsReusable
         Get
