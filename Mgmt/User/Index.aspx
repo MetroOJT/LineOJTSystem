@@ -39,12 +39,13 @@
                             <input type="text" class="form-control w-25" id="user_Name" runat="server" />
                         </div>
 
-                        <div>
+                        <div class="d-flex">
                             <label class="col-sm-2 col-form-label">管理者</label>
-                            <input type="radio" class="form-check-input" style="margin-top: 10px" name="contact" value="1" id="kanrisya_on" runat="server" />
-                            <label>オン</label>
-                            <input type="radio" class="form-check-input" style="margin-top: 10px" name="contact" value="0" id="kanrisya_off" runat="server" />
-                            <label>オフ</label>
+                            <select aria-label="全て" class="form-select form-select-sm w-25" id="Kanrisya" name="kanrisya" runat="server">
+                                <option value="all" selected="" id="kanrisya_all" runat="server" >全て</option>
+                                <option value="1" id="kanrisya_on" runat="server" >オン</option>
+                                <option value="0" id="kanrisya_off" runat="server" >オフ</option>
+                            </select>
                         </div>
 
                         <div> 

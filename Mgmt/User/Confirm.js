@@ -10,15 +10,13 @@ const Admin_Check = sessionStorage.getItem("iAdmin_Check");
 const Password = sessionStorage.getItem("iPassword");
 const hUser_ID = sessionStorage.getItem("hUserID");
 
-console.log(re_UserID);
-console.log(User_ID);
-console.log(User_Name);
-console.log(Admin_Check);
-console.log(Password);
-// ここに何かをしようとした
-if (hUser_ID) {
+//console.log(re_UserID);
+//console.log(User_ID);
+//console.log(User_Name);
+//console.log(Admin_Check);
+//console.log(Password);
 
-}
+
 document.querySelector("#user_ID").value = User_ID;
 document.querySelector("#user_Name").value = User_Name;
 document.querySelector("#user_password").value = Password;
@@ -31,7 +29,7 @@ if (Admin_Check == 0) {
 };
 
 const dUser_ID = sessionStorage.getItem("dUser_ID");
-console.log(dUser_ID);
+//console.log(dUser_ID);
 if (dUser_ID) {
     const registration_button = document.getElementById("registration_button");
     registration_button.id = "delete_button";
@@ -95,6 +93,24 @@ function btnRegistrationClick() {
 };
 
 function functionSeni_Index() {
+    $.ajax({
+        url: Ajax_File,
+        method: "POST",
+        data: {
+            "mode": "Clear",
+        },
+        dataType: "json",
+        success: function (data) {
+            console.log(data);
+            if (data != "") {
+                if (data.status == "OK") {
+                    window.location.href = "Index.aspx";
+                } else {
+                    alert("エラーが発生しました。");
+                };
+            };
+        }
+    });
     window.location.href = "Index.aspx";
 };
 

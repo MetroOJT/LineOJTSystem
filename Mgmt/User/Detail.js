@@ -9,7 +9,7 @@ $(function () {
     document.getElementById("buttonEye_1").addEventListener("click", btnEyeClick_1, false);
     document.getElementById("buttonEye_2").addEventListener("click", btnEyeClick_2, false);
 });
-console.log(sessionStorage.getItem('hUserID'));
+//console.log(sessionStorage.getItem('hUserID'));
 if (sessionStorage.getItem('hUserID') != null) {
     const hUserID = sessionStorage.getItem('hUserID');
     //console.log(hUserID);

@@ -13,6 +13,8 @@ Public Class Confirm : Implements IHttpHandler
                 context.Response.Write(Save(context))
             Case "Delete"
                 context.Response.Write(Delete(context))
+            Case "Clear"
+                context.Response.Write(clear(context))
         End Select
     End Sub
 
@@ -208,6 +210,49 @@ Public Class Confirm : Implements IHttpHandler
         Return sJSON
     End Function
 
+    '戻る
+    Public Function clear(ByVal context As HttpContext) As String
+        Dim cCom As New Common
+        Dim cDB As New CommonDB
+        Dim Cki As New Cookie
+        Dim sSQL As New StringBuilder
+        Dim sWhere As New StringBuilder
+        Dim sOb As New StringBuilder
+        Dim jJSON As New JavaScriptSerializer
+        Dim sJSON As String = ""
+        Dim hHash As New Hashtable
+        Dim sRet As String = ""
+        Dim sStatus As String = "OK"
+
+        Try
+
+            Cki.Release_Cookies("u_User_ID")
+            Cki.Release_Cookies("User_Name")
+            Cki.Release_Cookies("User_Index_Admin_Check")
+            Cki.Release_Cookies("DateFm")
+            Cki.Release_Cookies("DateTo")
+            Cki.Release_Cookies("PNList")
+            Cki.Release_Cookies("Useritiran")
+            Cki.Release_Cookies("pagemedian")
+            Cki.Release_Cookies("nowpage")
+
+
+        Catch ex As Exception
+            sRet = ex.Message
+        Finally
+            cDB.DrClose()
+            cDB.Dispose()
+            If sRet <> "" Then
+                sStatus = sRet
+                cCom.CmnWriteStepLog(sRet)
+            End If
+
+            hHash.Add("status", sStatus)
+            sJSON = jJSON.Serialize(hHash)
+        End Try
+
+        Return sJSON
+    End Function
 
     Public ReadOnly Property IsReusable() As Boolean Implements IHttpHandler.IsReusable
         Get
