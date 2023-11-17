@@ -212,8 +212,6 @@ function MakeLogTable(PagerID) {
                         if (NowPageTo > Nod) {
                             NowPageTo = Nod;
                         }
-                        console.log("表示中のページ:", NowPage);
-                        console.log("中央値:", PageMedian);
                         document.getElementById("CntArea").innerText = "件数：" + Nod + "件" + " (表示中: " + NowPage + " / " + TotalPage + " ページ , " + NowPageFm + "件 ～ " + NowPageTo + "件)";
 
                         if (data.html != "") {
