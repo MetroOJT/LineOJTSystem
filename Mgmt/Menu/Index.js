@@ -10,6 +10,17 @@ window.onload = function () {
     DspLoginUserName();
     let Admin = u_admin;
     MakeMenu();
+    CommLogDeleteCookie();
+}
+
+function CommLogDeleteCookie() {
+    deleteCookie("LogNowPage");
+    deleteCookie("pagemedian");
+    deleteCookie("LogDateFm");
+    deleteCookie("LogDateTo");
+    deleteCookie("LogSendRecv");
+    deleteCookie("LogStatusNumber");
+    deleteCookie("LogOrder");
 }
 
 function MakeMenu() {
