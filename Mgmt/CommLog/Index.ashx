@@ -197,7 +197,7 @@ Public Class Index : Implements IHttpHandler
 
 
             PageMedian = context.Request.Item("pagemedian")
-            Cki.Set_Cookies("pagemedian", PageMedian, 1)
+            'Cki.Set_Cookies("pagemedian", PageMedian, 1)
 
             sSQL.Clear()
             sSQL.Append(" Select")

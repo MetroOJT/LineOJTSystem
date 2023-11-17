@@ -13,8 +13,9 @@ var NowPage = 0; // 表示ページ
 var page_item = document.querySelectorAll(".page-item");
 var detail_button = document.querySelectorAll(".btnDetail");
 var SearchPage = 1;
+var GetLogNowPage = "";
 if(getCookie("LogNowPage") != ""){
-    var GetLogNowPage = getCookie("LogNowPage");
+    GetLogNowPage = getCookie("LogNowPage");
 }
 
 var PageMedian = 2; // ページャの中央値 [ 1 , ② , 3 ]
@@ -46,6 +47,8 @@ function btnClearClick() {
 
 // 戻る
 function btnBackClick() {
+    deleteCookie("LogNowPage");
+    deleteCookie("pagemedian");
     window.location = "../Menu/Index.aspx";
 }
 
@@ -124,11 +127,14 @@ function Search() {
 function MakeLogTable(PagerID) {
     if (PagerID == "") {
         document.getElementById("error_modal").click();
+        console.log("a")
         return false;
     } else if (GetLogNowPage != "") {
         PagerID = GetLogNowPage;
         GetLogNowPage = "";
+        console.log("b")
     }
+    console.log(PagerID)
     // ページャのボタンが押されていれば[真] 
     if (PagerID != "") {
         switch (PagerID) {
