@@ -20,7 +20,7 @@
 
         <div class="accordion" style="width: 90%; margin: 0 auto;">
             <div class="accordion-item">
-                <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse">
+                <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
                     <div id="btnOption" class="row accordion-body">
                         <input type="button" value="検索" name="Search" id="btnSearch" class="col-sm btn btn-outline-primary" />
                         <input type="button" value="クリア" name="Clear" id="btnClear" class="col-sm btn btn-outline-danger" />
