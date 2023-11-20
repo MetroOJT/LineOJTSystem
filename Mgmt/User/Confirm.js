@@ -10,11 +10,11 @@ const Admin_Check = sessionStorage.getItem("iAdmin_Check");
 const Password = sessionStorage.getItem("iPassword");
 const hUser_ID = sessionStorage.getItem("hUserID");
 
-//console.log(re_UserID);
-//console.log(User_ID);
-//console.log(User_Name);
-//console.log(Admin_Check);
-//console.log(Password);
+console.log(re_UserID);
+console.log(User_ID);
+console.log(User_Name);
+console.log(Admin_Check);
+console.log(Password);
 
 
 document.querySelector("#user_ID").value = User_ID;
