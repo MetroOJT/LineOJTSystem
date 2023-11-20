@@ -8,14 +8,74 @@ Public Class Index : Implements IHttpHandler
 
     Public Sub ProcessRequest(ByVal context As HttpContext) Implements IHttpHandler.ProcessRequest
         Select Case context.Request.Item("mode")
+            Case "Load"
+                context.Response.Write(load(context))
             Case "Search"
                 context.Response.Write(sea(context))
             Case "MakeResult"
                 context.Response.Write(mr(context))
             Case "PagiNation"
                 context.Response.Write(pn(context))
+            Case "Clear"
+                context.Response.Write(clear(context))
         End Select
     End Sub
+
+    Public Function load(ByVal context As HttpContext) As String
+        Dim cCom As New Common
+        Dim cDB As New CommonDB
+        Dim Cki As New Cookie
+        Dim sSQL As New StringBuilder
+        Dim sWhere As New StringBuilder
+        Dim sOb As New StringBuilder
+        Dim jJSON As New JavaScriptSerializer
+        Dim sJSON As String = ""
+        Dim hHash As New Hashtable
+        Dim sRet As String = ""
+        Dim sStatus As String = "OK"
+        Dim sTempTable As String = ""
+
+        Dim iCount As Integer = 0
+        Dim NowPage As Integer
+        Dim User_ID As String = ""
+        Dim User_Name As String = ""
+        Dim User_Index_Admin_Check As String = ""
+        Dim DateFm As String = ""
+        Dim DateTo As String = ""
+
+        Try
+
+            NowPage = Cki.Get_Cookies("nowpage")
+            User_ID = Cki.Get_Cookies("u_User_ID")
+            User_Name = Cki.Get_Cookies("User_Name")
+            User_Index_Admin_Check = Cki.Get_Cookies("User_Index_Admin_Check")
+            DateFm = Cki.Get_Cookies("DateFm")
+            DateTo = Cki.Get_Cookies("DateTo")
+            iCount = Cki.Get_Cookies("count")
+
+        Catch ex As Exception
+            sRet = ex.Message
+        Finally
+            cDB.DrClose()
+            cDB.Dispose()
+            If sRet <> "" Then
+                sStatus = sRet
+                cCom.CmnWriteStepLog(sRet)
+            End If
+
+            hHash.Add("status", sStatus)
+            hHash.Add("nowpage", NowPage)
+            hHash.Add("User_ID", User_ID)
+            hHash.Add("User_Name", User_Name)
+            hHash.Add("Admin_Check", User_Index_Admin_Check)
+            hHash.Add("DateFm", DateFm)
+            hHash.Add("DateTo", DateTo)
+            hHash.Add("count", iCount)
+            sJSON = jJSON.Serialize(hHash)
+        End Try
+
+        Return sJSON
+    End Function
 
     '検索
     Public Function sea(ByVal context As HttpContext) As String
@@ -55,7 +115,7 @@ Public Class Index : Implements IHttpHandler
 
             Cki.Set_Cookies("u_User_ID", sUser_ID, 1)
             Cki.Set_Cookies("User_Name", sUser_Name, 1)
-            Cki.Set_Cookies("Admin_Check", sAdmin_Check, 1)
+            Cki.Set_Cookies("User_Index_Admin_Check", sAdmin_Check, 1)
             Cki.Set_Cookies("DateFm", sDateFm, 1)
             Cki.Set_Cookies("DateTo", sDateTo, 1)
             Cki.Set_Cookies("Useritiran", sTempTable, 1)
@@ -85,7 +145,7 @@ Public Class Index : Implements IHttpHandler
                 cDB.AddWithValue("@UserName", sUser_Name)
             End If
 
-            If sAdmin_Check <> "" Then
+            If sAdmin_Check <> "all" Then
                 sWhere.Append(" AND Admin = @Admin_Check")
                 cDB.AddWithValue("@Admin_Check", sAdmin_Check)
             End If
@@ -128,6 +188,7 @@ Public Class Index : Implements IHttpHandler
                 cCom.CmnWriteStepLog(sRet)
             End If
 
+            Cki.Set_Cookies("count", iCount, 1)
             hHash.Add("status", sStatus)
             hHash.Add("count", iCount)
             sJSON = jJSON.Serialize(hHash)
@@ -283,6 +344,8 @@ Public Class Index : Implements IHttpHandler
                 sStatus = "NG"
                 cCom.CmnWriteStepLog(sRet)
             End If
+
+            Cki.Set_Cookies("nowpage", 1, 1)
 
             hHash.Add("status", sStatus)
             hHash.Add("html", sHTML.ToString)
@@ -459,6 +522,8 @@ Public Class Index : Implements IHttpHandler
                 cCom.CmnWriteStepLog(sRet)
             End If
 
+
+
             hHash.Add("status", sStatus)
             hHash.Add("html", sHTML.ToString)
             hHash.Add("pnlist", sPNList.ToString)
@@ -470,6 +535,51 @@ Public Class Index : Implements IHttpHandler
 
         Return sJSON
 
+    End Function
+
+    '戻る
+    Public Function clear(ByVal context As HttpContext) As String
+        Dim cCom As New Common
+        Dim cDB As New CommonDB
+        Dim Cki As New Cookie
+        Dim sSQL As New StringBuilder
+        Dim sWhere As New StringBuilder
+        Dim sOb As New StringBuilder
+        Dim jJSON As New JavaScriptSerializer
+        Dim sJSON As String = ""
+        Dim hHash As New Hashtable
+        Dim sRet As String = ""
+        Dim sStatus As String = "OK"
+
+        Try
+
+            Cki.Release_Cookies("u_User_ID")
+            Cki.Release_Cookies("User_Name")
+            Cki.Release_Cookies("User_Index_Admin_Check")
+            Cki.Release_Cookies("DateFm")
+            Cki.Release_Cookies("DateTo")
+            Cki.Release_Cookies("PNList")
+            Cki.Release_Cookies("Useritiran")
+            Cki.Release_Cookies("pagemedian")
+            Cki.Release_Cookies("nowpage")
+            Cki.Release_Cookies("count")
+
+
+        Catch ex As Exception
+            sRet = ex.Message
+        Finally
+            cDB.DrClose()
+            cDB.Dispose()
+            If sRet <> "" Then
+                sStatus = sRet
+                cCom.CmnWriteStepLog(sRet)
+            End If
+
+            hHash.Add("status", sStatus)
+            sJSON = jJSON.Serialize(hHash)
+        End Try
+
+        Return sJSON
     End Function
 
     Public ReadOnly Property IsReusable() As Boolean Implements IHttpHandler.IsReusable

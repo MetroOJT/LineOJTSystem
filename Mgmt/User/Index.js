@@ -14,6 +14,131 @@ var StyleBold = 1; // 現在表示しているページの強調
 
 var oac = 1; // アコーディオン[開:1,閉:0]
 
+window.onload = function () {
+    $.ajax({
+        url: Ajax_File,
+        method: "POST",
+        data: {
+            "mode": "Load",
+        },
+        dataType: "json",
+        success: function (data) {
+            if (data != "") {
+                if (data.status == "OK") {
+                    Nod = data.count;
+                    if (data.nowpage == 1) {
+                        const User_ID = data.User_ID;
+                        const User_Name = data.User_Name;
+                        const Admin_Check = data.Admin_Check;
+                        const Date_Fm = data.Date_Fm;
+                        const Date_To = data.DateTo;
+                        $.ajax({
+                            url: Ajax_File,
+                            method: "POST",
+                            data: {
+                                "mode": "Search",
+                                "User_ID": User_ID,
+                                "User_Name": User_Name,
+                                "Admin_Check": Admin_Check,
+                                "DateFm": Date_Fm,
+                                "DateTo": Date_To,
+                            },
+                            dataType: "json",
+                            success: function (data) {
+                                if (data != "") {
+                                    if (data.status == "OK") {
+                                        Nod = data.count;
+                                        MakeResult();
+                                    } else {
+                                        alert("エラーが発生しました。");
+                                    };
+                                };
+                            }
+                        });
+
+                    }else if (data.nowpage > 1){
+                        Npage = data.nowpage;
+                        PageMedian = Npage;
+                        if (Npage <= 1 || Nod < 31) {
+                            PageMedian = 2;
+                        } else if (Npage >= Math.ceil(Nod / 10)) {
+                            PageMedian = Math.ceil(Nod / 10) - 1;
+                        }                        
+                        $.ajax({
+                            url: Ajax_File,
+                            method: "POST",
+                            data: {
+                                "mode": "PagiNation",
+                                "nowpage": Npage,
+                                "pagemedian": PageMedian
+                            },
+                            dataType: "json",
+                            success: function (data) {
+                                if (data != "") {
+                                    if (data.status == "OK") {
+                                        if (Number(data.count) > 0) {
+                                            if (Npage > data.count / 10) {
+                                                Npage = Math.ceil(data.count / 10);
+                                            } else if (Npage < 1) {
+                                                Npage = 1;
+                                            }
+                                            const NpageFm = (parseInt(Npage) - 1) * 10 + 1; // 件数表示(前)
+                                            var NpageTo = 0; // 件数表示(後)
+                                            if (Npage == Math.ceil(data.count / 10)) {
+                                                NpageTo = data.count;
+                                            } else {
+                                                NpageTo = parseInt(Npage) * 10;
+                                            }
+                                            document.getElementById("CntArea").innerText = "件数：" + data.count + "件" + " (表示中: " + Npage + " / " + Math.ceil(data.count / 10) + " ページ , " + NpageFm + "件 ～ " + NpageTo + "件)";
+                                            if (data.html != "") {
+                                                document.getElementById("PNArea").innerHTML = data.pnlist;
+                                                document.getElementById("ResultArea").innerHTML = data.html;
+                                                document.getElementById("PageNumber").value = Npage;
+                                                page_item = document.querySelectorAll(".page-item");
+                                                page_item.forEach(pi => {
+                                                    pi.addEventListener('click', function () {
+                                                        PagiNation(pi.id);
+                                                    });
+                                                });
+                                                if (Npage == 1 || data.count < 31) {
+                                                    document.querySelector("#pista a").style.color = "black";
+                                                    document.querySelector("#pista a").style.backgroundColor = "silver";
+                                                    document.getElementById("pista").style.pointerEvents = "none";
+                                                    document.querySelector("#piback a").style.color = "black";
+                                                    document.querySelector("#piback a").style.backgroundColor = "silver";
+                                                    document.getElementById("piback").style.pointerEvents = "none";
+                                                }
+                                                if (Npage == Math.ceil(data.count / 10) || data.count < 31) {
+                                                    document.querySelector("#pinext a").style.color = "black";
+                                                    document.querySelector("#pinext a").style.backgroundColor = "silver";
+                                                    document.getElementById("pinext").style.pointerEvents = "none";
+                                                    document.querySelector("#piend a").style.color = "black";
+                                                    document.querySelector("#piend a").style.backgroundColor = "silver";
+                                                    document.getElementById("piend").style.pointerEvents = "none";
+                                                }
+                                                //console.log(data.pm, PageMedian)
+                                                transition();
+                                            }
+                                        } else {
+                                            document.getElementById("PNArea").innerHTML = "";
+                                            document.getElementById("ResultArea").innerText = "該当するデータが存在しませんでした。";
+                                        }
+                                    } else {
+                                        alert("エラーが発生しました。");
+                                    }
+                                }
+                            }
+                        });
+
+                    };
+                } else {
+                    alert("エラーが発生しました。");
+                };
+            };
+        }
+    });
+};
+
 // 閉じる
 function btnCloseClick() {
     const cona = document.getElementById("cona");
@@ -46,13 +171,9 @@ $(function () {
 function btnSearchClick() {
     var User_ID = $("#user_ID").val();
     var User_Name = $("#user_Name").val();
-    var Admin_Check = $('input[name="contact"]:checked').val();
+    var Admin_Check = $("#Kanrisya").val();
     var Date_Fm = $("#DateFm").val();
     var Date_To = $("#DateTo").val();
-
-    if (typeof Admin_Check === 'undefined') {
-        Admin_Check = "";
-    };
 
     //console.log(User_ID);
     //console.log(User_Name);
@@ -154,7 +275,25 @@ function btnSignUpClick() {
 
 // 戻るボタンが押された時の処理
 function btnBackClick() {
-    window.location.href = "../Menu/Index.aspx";
+    // クッキーの情報を削除したい
+    $.ajax({
+        url: Ajax_File,
+        method: "POST",
+        data: {
+            "mode": "Clear",
+        },
+        dataType: "json",
+        success: function (data) {
+            console.log(data);
+            if (data != "") {
+                if (data.status == "OK") {
+                    window.location.href = "../Menu/Index.aspx";
+                } else {
+                    alert("エラーが発生しました。");
+                };
+            };
+        }
+    });
 };
 
 // ページネーション

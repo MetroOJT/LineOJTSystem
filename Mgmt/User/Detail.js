@@ -2,6 +2,11 @@
 function_login_check();
 DspLoginUserName();
 
+var iUserID;
+var iUserName;
+var iPassword;
+var iAdmin;
+
 $(function () {
     document.getElementById("registration_button").addEventListener("click", btnRegistrationClick, false);
     document.getElementById("delete_button").addEventListener("click", btnDeleteClick, false);
@@ -9,7 +14,7 @@ $(function () {
     document.getElementById("buttonEye_1").addEventListener("click", btnEyeClick_1, false);
     document.getElementById("buttonEye_2").addEventListener("click", btnEyeClick_2, false);
 });
-console.log(sessionStorage.getItem('hUserID'));
+//console.log(sessionStorage.getItem('hUserID'));
 if (sessionStorage.getItem('hUserID') != null) {
     const hUserID = sessionStorage.getItem('hUserID');
     //console.log(hUserID);
@@ -22,19 +27,19 @@ if (sessionStorage.getItem('hUserID') != null) {
         },
         dataType: "json",
         success: function (data) {
-            //console.log(data);
+            console.log(data);
             if (data != "") {
                 if (data.status == "OK") {
                     if (Number(data.count) > 0) {
                         // 表示するコードを書く
-                        var iUserID = data.UserID;
-                        var iUserName = data.UserName;
-                        var iPassword = data.Password;
+                        iUserID = data.UserID;
+                        iUserName = data.UserName;
+                        iPassword = data.Password;
                         document.querySelector("#user_ID").value = iUserID;
                         document.querySelector("#user_Name").value = iUserName;
                         document.querySelector("#user_password").value = iPassword;
                         document.querySelector("#user_password_confirmation").value = iPassword;
-                        //console.log(data.Admin);
+                        iAdmin = data.Admin;
                         if (data.admin != "") {
                             if (data.Admin == 1) {
                                 $('input[value="0"]').prop('checked', true);
@@ -109,15 +114,6 @@ function btnRegistrationClick() {
             error_message_p.style.color = "#dc3545";
             
             const p_textcontent = document.querySelector(`#label_${c_element}`).textContent;
-            //if (c_element == 1) {
-            //    error_message_p.textContent = "ユーザーIDは半角数字で5文字入力してください。";
-            //} else if (c_element == 4) {
-            //    error_message_p.textContent = "パスワードは半角英数字で8文字以上20文字以下で入力してください。";
-            //} else if (c_element == 5) {
-            //    error_message_p.textContent = "パスワード（確認）は半角英数字で8文字以上20文字以下で入力してください。";
-            //} else {
-            //    error_message_p.textContent = `${p_textcontent}を入力してください。`;
-            //};
             error_message_p.textContent = `${p_textcontent}を入力してください。`;
             error_message_div.appendChild(error_message_p);
 
@@ -207,11 +203,11 @@ if (error_judgement.every(v => v == 0)){
 
 // 削除ボタンを押された時の処理
 function btnDeleteClick() {
-    var User_ID = $("#user_ID").val();
-    var Password = $("#user_password").val();
-    var Password_confirmation = $("#user_password_confirmation").val();
-    var User_Name = $("#user_Name").val();
-    var Admin_Check = $('input[name="contact"]:checked').val();
+    var User_ID = iUserID;
+    var Password = iPassword;
+    var Password_confirmation = iPassword;
+    var User_Name = iUserName;
+    var Admin_Check = iAdmin;
     sessionStorage.setItem("iUser_ID", User_ID);
     sessionStorage.setItem("iPassword", Password);
     sessionStorage.setItem("iUser_Name", User_Name);

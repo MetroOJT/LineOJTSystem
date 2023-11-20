@@ -14,7 +14,7 @@ Partial Class Mgmt_User_Index
         Try
             Cki_UserID = Cki.Get_Cookies("u_User_ID")
             Cki_UserName = Cki.Get_Cookies("User_Name")
-            Cki_Admin_Check = Cki.Get_Cookies("Admin_Check")
+            Cki_Admin_Check = Cki.Get_Cookies("User_Index_Admin_Check")
             Cki_DateFm = Cki.Get_Cookies("DateFm")
             Cki_DateTo = Cki.Get_Cookies("DateTo")
         Catch ex As Exception
@@ -29,11 +29,7 @@ Partial Class Mgmt_User_Index
         Try
             user_ID.Value = Cki_UserID
             user_Name.Value = Cki_UserName
-            If Cki_Admin_Check = 1 Then
-                kanrisya_on.Checked = True
-            ElseIf Cki_Admin_Check = 0 Then
-                kanrisya_off.Checked = True
-            End If
+            Kanrisya.Value = Cki_Admin_Check
             DateFm.Value = Cki_DateFm
             DateTo.Value = Cki_DateTo
 

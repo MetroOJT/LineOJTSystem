@@ -5,8 +5,12 @@
 #Condition div{
     margin-bottom: 12px;
 }
-#DateFm, #DateTo{
+#DateFm, #DateTo {
     width: 25%;
     display: inline-block;
-}body {
+}
+textarea {
+  resize: none; /* 手動リサイズを禁止 */
+  min-height: 100px; /* 高さの最小値を指定（任意） */
+  width: 100%;
 }
