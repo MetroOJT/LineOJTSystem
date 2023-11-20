@@ -164,33 +164,32 @@ Public Class Detail : Implements IHttpHandler
 
             If cDB.ReadDr Then
                 If cDB.DRData("SameEN") <> 0 Then
-                    sEventNameErrMsg = "同じイベント名は登録できません。"
+                    sEventNameErrMsg = "このイベント名は既に登録されています。"
                 End If
             End If
 
             '同一のキーワードがデータベース内にないかチェック
-
-            sWhere.Clear()
-            sWhere.Append(" WHERE Keyword = @Keyword")
-            If sMode = "Upd" Then
-                sWhere.Append(" AND EventID <> @EventID")
-            End If
-            cDB.AddWithValue("@Keyword", sKeyword)
-            cCom.CmnWriteStepLog(sKeyword)
-            sSQL.Clear()
-            sSQL.Append("SELECT COUNT(*) AS SameKW")
-            sSQL.Append(" FROM " & cCom.gctbl_EventMst)
-            sSQL.Append(sWhere)
-            cDB.SelectSQL(sSQL.ToString)
-            cCom.CmnWriteStepLog("a")
-            If cDB.ReadDr Then
-                cCom.CmnWriteStepLog("b")
-                cCom.CmnWriteStepLog(cDB.DRData("SameKW"))
-                If cDB.DRData("SameKW") <> 0 Then
-                    sKeywordErrMsg = "同じキーワードは登録できません。"
+            If sKeyword <> "" Then
+                sWhere.Clear()
+                sWhere.Append(" WHERE Keyword = @Keyword")
+                If sMode = "Upd" Then
+                    sWhere.Append(" AND EventID <> @EventID")
+                End If
+                cDB.AddWithValue("@Keyword", sKeyword)
+                sSQL.Clear()
+                sSQL.Append("SELECT COUNT(*) AS SameKW")
+                sSQL.Append(" FROM " & cCom.gctbl_EventMst)
+                sSQL.Append(sWhere)
+                cDB.SelectSQL(sSQL.ToString)
+                cCom.CmnWriteStepLog("a")
+                If cDB.ReadDr Then
+                    cCom.CmnWriteStepLog("b")
+                    cCom.CmnWriteStepLog(cDB.DRData("SameKW"))
+                    If cDB.DRData("SameKW") <> 0 Then
+                        sKeywordErrMsg = "このキーワードは既に登録されています。"
+                    End If
                 End If
             End If
-
 
         Catch ex As Exception
             sRet = ex.Message
@@ -213,143 +212,6 @@ Public Class Detail : Implements IHttpHandler
         Return sJSON
     End Function
 
-    Public Function EventNameCheck(ByVal context As HttpContext) As String
-        Dim cCom As New Common
-        Dim cDB As New CommonDB
-        Dim sSQL As New StringBuilder
-        Dim sWhere As New StringBuilder
-        Dim jJSON As New JavaScriptSerializer
-        Dim sJSON As String = ""
-        Dim hHash As New Hashtable
-        Dim sRet As String = ""
-        Dim sMode As String = ""
-        Dim sStatus As String = "OK"
-        Dim sEventID As String = ""
-        Dim sEventName As String = ""
-        Dim sErrorMessage As String = ""
-
-        Try
-            '各変数を設定
-            sEventID = context.Request.Item("Update_EventID")
-            sEventName = context.Request.Item("EventName")
-
-            If sEventID = "" Then
-                sMode = "Ins"
-            Else
-                '更新モードの場合のみパラメータクエリ「@EventID」を設定
-                sMode = "Upd"
-                cDB.AddWithValue("@EventID", sEventID)
-            End If
-
-            '同一のイベント名がデータベース内にないかチェック
-            sWhere.Clear()
-            sWhere.Append(" WHERE EventName = @EventName")
-            If sMode = "Upd" Then
-                sWhere.Append(" AND EventID <> @EventID")
-            End If
-            cDB.AddWithValue("@EventName", sEventName)
-
-            sSQL.Clear()
-            sSQL.Append("SELECT COUNT(*) AS SameEN")
-            sSQL.Append(" FROM " & cCom.gctbl_EventMst)
-            sSQL.Append(sWhere)
-            cDB.SelectSQL(sSQL.ToString)
-
-            If cDB.ReadDr Then
-                If cDB.DRData("SameEN") <> 0 Then
-                    sErrorMessage = "同じイベント名は登録できません。"
-                End If
-            End If
-
-
-        Catch ex As Exception
-            sRet = ex.Message
-        Finally
-            cDB.DrClose()
-            cDB.Dispose()
-
-            If sRet <> "" Then
-                sStatus = "NG"
-                cCom.CmnWriteStepLog(sRet)
-            End If
-
-            hHash.Add("ErrorMessage", sErrorMessage)
-            hHash.Add("status", sStatus)
-            sJSON = jJSON.Serialize(hHash)
-
-        End Try
-
-        Return sJSON
-    End Function
-
-    Public Function KeywordCheck(ByVal context As HttpContext) As String
-        Dim cCom As New Common
-        Dim cDB As New CommonDB
-        Dim sSQL As New StringBuilder
-        Dim sWhere As New StringBuilder
-        Dim jJSON As New JavaScriptSerializer
-        Dim sJSON As String = ""
-        Dim hHash As New Hashtable
-        Dim sRet As String = ""
-        Dim sMode As String = ""
-        Dim sStatus As String = "OK"
-        Dim sEventID As String = ""
-        Dim sKeyword As String = ""
-        Dim sErrorMessage As String = ""
-
-        Try
-            '各変数を設定
-            sEventID = context.Request.Item("Update_EventID")
-            sKeyword = context.Request.Item("Keyword")
-
-            If sEventID = "" Then
-                sMode = "Ins"
-            Else
-                '更新モードの場合のみパラメータクエリ「@EventID」を設定
-                sMode = "Upd"
-                cDB.AddWithValue("@EventID", sEventID)
-            End If
-
-            '同一のキーワードがデータベース内にないかチェック
-
-            sWhere.Clear()
-            sWhere.Append(" WHERE Keyword = @Keyword")
-            If sMode = "Upd" Then
-                sWhere.Append(" AND EventID <> @EventID")
-            End If
-            cDB.AddWithValue("@Keyword", sKeyword)
-
-            sSQL.Clear()
-            sSQL.Append("SELECT COUNT(*) AS SameKW")
-            sSQL.Append(" FROM " & cCom.gctbl_EventMst)
-            sSQL.Append(sWhere)
-            cDB.SelectSQL(sSQL.ToString)
-
-            If cDB.ReadDr Then
-                If cDB.DRData("SameKW") <> 0 Then
-                    sErrorMessage = "同じキーワードは登録できません。"
-                End If
-            End If
-
-        Catch ex As Exception
-            sRet = ex.Message
-        Finally
-            cDB.DrClose()
-            cDB.Dispose()
-
-            If sRet <> "" Then
-                sStatus = "NG"
-                cCom.CmnWriteStepLog(sRet)
-            End If
-
-            hHash.Add("ErrorMessage", sErrorMessage)
-            hHash.Add("status", sStatus)
-            sJSON = jJSON.Serialize(hHash)
-
-        End Try
-
-        Return sJSON
-    End Function
 
     Public Function CreateMessageContainer(ByVal iCnt As String, Optional ByVal Data As String = "") As String
         Dim sHTML As New StringBuilder

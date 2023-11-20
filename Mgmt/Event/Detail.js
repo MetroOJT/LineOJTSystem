@@ -218,14 +218,14 @@ function SameCheck(Flg) {
                 if (data.status == "OK") {
                     
                     if (data.EventNameErrMsg != "") {
-                        $("#EventName-invalid-feedback").text("このイベント名は既に登録されています。");
+                        $("#EventName-invalid-feedback").text(data.EventNameErrMsg);
                         $("#txtEventName").addClass("is-invalid");
                         $("#txtEventName").removeClass("is-valid");
                         EventNameFlg = false;
                     }
  
                     if (data.KeywordErrMsg != "") {
-                        $("#Keyword-invalid-feedback").text("このキーワードは既に登録されています。");
+                        $("#Keyword-invalid-feedback").text(data.KeywordErrMsg);
                         $("#txtKeyword").addClass("is-invalid");
                         $("#txtKeyword").removeClass("is-valid");
                         KeywordFlg = false;
@@ -344,36 +344,6 @@ function SavebtnClick() {
     if (EventStatus == "") {
         flag = false;
     };
-
-    //console.log(document.getElementById("txtScheduleFm").validity.valid)
-    //console.log(document.getElementById("txtScheduleFm").value)
-    //console.log(document.getElementById("txtScheduleTo").validity.valid)
-    //if (ScheduleFm == "" && ScheduleTo == "") {
-    //    document.getElementById("txtScheduleFm").classList.add('is-invalid');
-    //    document.getElementById("txtScheduleFm").classList.remove('is-valid');
-    //    document.getElementById("txtScheduleTo").classList.add('is-invalid');
-    //    document.getElementById("txtScheduleTo").classList.remove('is-valid');
-    //    if (document.getElementById("txtScheduleFm").validity.valid && document.getElementById("txtScheduleTo").validity.valid) {
-    //        $("#Schedule-invalid-feedback").text("スケジュールを選択してください。");           
-    //    } else {
-    //        $("#Schedule-invalid-feedback").text("無効な日付です。");
-    //    }
-    //} else {
-        
-    //    if (document.getElementById("txtScheduleFm").validity.valid && document.getElementById("txtScheduleTo").validity.valid) {
-    //        $("#Schedule-invalid-feedback").text("");
-    //        document.getElementById("txtScheduleFm").classList.add('is-valid');
-    //        document.getElementById("txtScheduleFm").classList.remove('is-invalid');
-    //        document.getElementById("txtScheduleTo").classList.add('is-valid');
-    //        document.getElementById("txtScheduleTo").classList.remove('is-invalid');
-    //    } else {
-    //        $("#Schedule-invalid-feedback").text("無効な日付です。");
-    //        document.getElementById("txtScheduleFm").classList.add('is-invalid');
-    //        document.getElementById("txtScheduleFm").classList.remove('is-valid');
-    //        document.getElementById("txtScheduleTo").classList.add('is-invalid');
-    //        document.getElementById("txtScheduleTo").classList.remove('is-valid');
-    //    }
-    //}
 
     if (Keyword == "") {
         $("#Keyword-invalid-feedback").text("キーワードを入力してください。");
