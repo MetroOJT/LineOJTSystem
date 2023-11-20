@@ -20,7 +20,7 @@
 
         <div class="accordion" style="width: 90%; margin: 0 auto;">
             <div class="accordion-item">
-                <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
+                <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse">
                     <div id="btnOption" class="row accordion-body">
                         <input type="button" value="検索" name="Search" id="btnSearch" class="col-sm btn btn-outline-primary" />
                         <input type="button" value="クリア" name="Clear" id="btnClear" class="col-sm btn btn-outline-danger" />
@@ -80,27 +80,27 @@
             <div id="ResultArea"></div>
         </div>
         <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" id="error_modal" style="display:none;">
-  Launch demo modal
-</button>
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Error</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        検索するページを入力してください。
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
-      </div>
-    </div>
-  </div>
-</div>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" id="error_modal" style="display:none;">
+          Launch demo modal
+        </button>
+        
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Error</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        検索するページを入力してください。
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     </form>
     <script src="../../Common/js/Common.js"></script>
