@@ -39,7 +39,7 @@
             <div id="MessageArea" class="w-75 d-flex flex-column">
                 <div id="MessageBox">
                     <div id="MessageHeader" class="d-flex align-items-center">
-                        <img id="MessageHeaderImg" src=""/>
+                        <img id="MessageHeaderImg" class="rounded-circle"/>
                         <p id="MessageHeaderName">氏名</p>
                     </div>
                     <div id="MessageBody"></div>
@@ -47,7 +47,7 @@
                 <div id="PushMessage">
                     <form id="form1" runat="server">
                         <div class="input-group">
-                            <textarea class="form-control" id="txtPushMessage" maxlength="500"></textarea>
+                            <textarea class="form-control" id="txtPushMessage" maxlength="500" rows="1"></textarea>
                             <input type="button" class="btn disabled" id="btnPushMessage" value="送信" />
                         </div>
                     </form>

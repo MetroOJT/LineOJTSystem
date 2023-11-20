@@ -51,6 +51,7 @@ Public Class Index : Implements IHttpHandler
             User_Index_Admin_Check = Cki.Get_Cookies("User_Index_Admin_Check")
             DateFm = Cki.Get_Cookies("DateFm")
             DateTo = Cki.Get_Cookies("DateTo")
+            iCount = Cki.Get_Cookies("count")
 
         Catch ex As Exception
             sRet = ex.Message
@@ -69,6 +70,7 @@ Public Class Index : Implements IHttpHandler
             hHash.Add("Admin_Check", User_Index_Admin_Check)
             hHash.Add("DateFm", DateFm)
             hHash.Add("DateTo", DateTo)
+            hHash.Add("count", iCount)
             sJSON = jJSON.Serialize(hHash)
         End Try
 
@@ -186,6 +188,7 @@ Public Class Index : Implements IHttpHandler
                 cCom.CmnWriteStepLog(sRet)
             End If
 
+            Cki.Set_Cookies("count", iCount, 1)
             hHash.Add("status", sStatus)
             hHash.Add("count", iCount)
             sJSON = jJSON.Serialize(hHash)
@@ -559,6 +562,7 @@ Public Class Index : Implements IHttpHandler
             Cki.Release_Cookies("Useritiran")
             Cki.Release_Cookies("pagemedian")
             Cki.Release_Cookies("nowpage")
+            Cki.Release_Cookies("count")
 
 
         Catch ex As Exception

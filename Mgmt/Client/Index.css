@@ -5,15 +5,16 @@
 img {
     height: 60px;
     width: 60px;
-}
-p {
-    margin: 0 auto;
+    border: 1px solid #EEE;
 }
 #ItiranArea {
     margin: 3px;
 }
+.LineUser p {
+    margin: 0.5rem;
+}
 #MessageBody {
-    height: 500px;
+    height: 450px;
     overflow-x: hidden;
     overflow-y: scroll;
 }
@@ -22,6 +23,20 @@ p {
     margin: 3px;
     padding: 5px;
 }
+#MessageHeaderName {
+    margin: 0 auto;
+}
+.MessageTextArea {
+    display: inline-block;
+    border-radius: 1.0rem;
+}
 .MessageText {
+    display: inline-block;
+    white-space: pre-line;
     padding: 0 0.5rem;
+}
+#txtPushMessage {
+    resize: none; /* 手動リサイズを禁止 */
+    height: 40px;
+    max-height: 108px;
 }

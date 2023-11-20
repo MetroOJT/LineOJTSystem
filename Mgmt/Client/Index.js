@@ -1,4 +1,10 @@
-﻿// global変数
+﻿// 最初にログインチェック
+function_login_check();
+
+// 担当者名表示
+DspLoginUserName();
+
+// global変数
 let Ajax_File = "Index.ashx";
 
 const docBtnPushMessage = document.getElementById("btnPushMessage");
@@ -7,9 +13,13 @@ const docTxtPushMessage = document.getElementById("txtPushMessage");
 let selectUserFlg = false;
 let nowSearchID;
 
+// 初期検索
+btnSearchClick();
+
 // ボタンクリック時の関数
 $(function () {
     document.getElementById("btnSearch").addEventListener("mouseup", btnSearchClick, false);
+    document.getElementById("btnBack").addEventListener("mouseup", btnBackClick, false);
     document.getElementById("btnPushMessage").addEventListener("mouseup", btnPushMessageClick, false);
 });
 
@@ -61,7 +71,7 @@ function MakeItiran() {
                     const LineUsers = document.querySelectorAll(".LineUser");
                     LineUsers.forEach(LineUser => {
                         LineUser.addEventListener("click", function () {
-                            MakeMessageBody(LineUser.id);
+                            MakeMessageBody(LineUser.id.slice(6));
                         })
                     });
                 } else {
@@ -80,13 +90,15 @@ function MakeMessageBody(SearchID) {
         method: "POST",
         data: {
             "mode": "MessageBox",
-            "SearchID": SearchID.slice(6)
+            "SearchID": SearchID
         },
         dataType: "json",
         success: function (data) {
             if (data != "") {
                 if (data.status == "OK") {
                     document.getElementById("MessageBox").innerHTML = data.html;
+                    const MessageBody = document.getElementById("MessageBody");
+                    MessageBody.scrollTo(0, MessageBody.scrollHeight);
                     selectUserFlg = true;
                 } else {
                     alert("エラーが発生しました。");
@@ -109,7 +121,10 @@ function btnPushMessageClick() {
         success: function (data) {
             if (data != "") {
                 if (data.status == "OK") {
-
+                    MakeMessageBody(nowSearchID);
+                }
+                else {
+                    alert("エラーが発生しました。");
                 }
             }
         }
@@ -117,14 +132,28 @@ function btnPushMessageClick() {
 }
 
 docTxtPushMessage.addEventListener("keyup", function () {
-    if (docTxtPushMessage.value != "" && selectUserFlg) {
-        docBtnPushMessage.disabled = false;
-        docBtnPushMessage.classList.remove("disabled");
-        docBtnPushMessage.classList.add("btn-outline-primary");
-    }
-    else {
+    if (docTxtPushMessage.value == "" || docTxtPushMessage.value.match(/^[\n| ]+$/) !== null || !selectUserFlg) {
         docBtnPushMessage.disabled = true;
         docBtnPushMessage.classList.add("disabled");
         docBtnPushMessage.classList.remove("btn-outline-primary");
     }
+    else {
+        docBtnPushMessage.disabled = false;
+        docBtnPushMessage.classList.remove("disabled");
+        docBtnPushMessage.classList.add("btn-outline-primary");
+    }
 })
+
+// 戻るボタンの処理
+function btnBackClick() {
+    location.href = "../Menu/Index.aspx";
+};
+
+// inputイベントが発生するたびに関数呼び出し
+docTxtPushMessage.addEventListener("input", setTextareaHeight);
+
+// textareaの高さを計算して指定する関数
+function setTextareaHeight() {
+    this.style.height = "auto";
+    this.style.height = `${this.scrollHeight}px`;
+}
