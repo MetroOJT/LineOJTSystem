@@ -282,7 +282,7 @@ Public Class Index : Implements IHttpHandler
                     If sMessage.ToString.Substring(sMessage.Length - 1) = vbLf Then
                         sMessage.Append("&thinsp;")
                     End If
-                    sHTML.Append("<span class=""MessageText"">" & sMessage.ToString & "</span>")
+                    sHTML.Append("<span class=""MessageText text-start"">" & sMessage.ToString & "</span>")
                     sHTML.Append("</div>")
                     sHTML.Append("</div>")
                     sHTML.Append("</div>")
