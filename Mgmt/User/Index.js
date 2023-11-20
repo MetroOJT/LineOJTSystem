@@ -25,6 +25,7 @@ window.onload = function () {
         success: function (data) {
             if (data != "") {
                 if (data.status == "OK") {
+                    Nod = data.count;
                     if (data.nowpage == 1) {
                         const User_ID = data.User_ID;
                         const User_Name = data.User_Name;
@@ -44,7 +45,6 @@ window.onload = function () {
                             },
                             dataType: "json",
                             success: function (data) {
-                                //console.log(data);
                                 if (data != "") {
                                     if (data.status == "OK") {
                                         Nod = data.count;
@@ -63,9 +63,7 @@ window.onload = function () {
                             PageMedian = 2;
                         } else if (Npage >= Math.ceil(Nod / 10)) {
                             PageMedian = Math.ceil(Nod / 10) - 1;
-                        }
-                        console.log(PageMedian);
-                        
+                        }                        
                         $.ajax({
                             url: Ajax_File,
                             method: "POST",
