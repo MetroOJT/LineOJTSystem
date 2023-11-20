@@ -19,6 +19,7 @@ btnSearchClick();
 // ボタンクリック時の関数
 $(function () {
     document.getElementById("btnSearch").addEventListener("mouseup", btnSearchClick, false);
+    document.getElementById("btnBack").addEventListener("mouseup", btnBackClick, false);
     document.getElementById("btnPushMessage").addEventListener("mouseup", btnPushMessageClick, false);
 });
 
@@ -142,9 +143,12 @@ docTxtPushMessage.addEventListener("keyup", function () {
         docBtnPushMessage.classList.add("btn-outline-primary");
     }
 })
-//-----------------------------
-// 戻るボタン実装しよう!!!!
-//----------------------------
+
+// 戻るボタンの処理
+function btnBackClick() {
+    location.href = "../Menu/Index.aspx";
+};
+
 // inputイベントが発生するたびに関数呼び出し
 docTxtPushMessage.addEventListener("input", setTextareaHeight);
 

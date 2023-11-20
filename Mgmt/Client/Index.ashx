@@ -82,7 +82,7 @@ Public Class Index : Implements IHttpHandler
             sSQL.Append(" SELECT")
             sSQL.Append(" Line_UserID")
             sSQL.Append(" FROM " & cCom.gctbl_LineUserMst)
-            sSQL.Append(" ORDER BY Last_Log_Datetime DESC")
+            sSQL.Append(" ORDER BY Last_LogID DESC")
             cDB.SelectSQL(sSQL.ToString)
             sValues.Clear()
 
