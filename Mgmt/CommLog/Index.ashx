@@ -161,7 +161,7 @@ Public Class Index : Implements IHttpHandler
         Dim OffSet As Integer = 0 '表示するデータの開始地点
         Dim PageMedian As Integer 'ページャの中央値
         Dim SearchPage As Integer '表示したいページ
-        Dim TotalPage As Integer
+        Dim TotalPage As Integer '全ページ数
 
         Try
 
@@ -181,6 +181,7 @@ Public Class Index : Implements IHttpHandler
 
             SearchPage = context.Request.Item("searchpage")
 
+            '検索したいページが存在しないページであれば1/最後に変更する
             If SearchPage <= TotalPage And SearchPage > 0 Then
                 NowPage = SearchPage
             Else
@@ -195,9 +196,7 @@ Public Class Index : Implements IHttpHandler
                 OffSet = 0
             End If
 
-
             PageMedian = context.Request.Item("pagemedian")
-            'Cki.Set_Cookies("pagemedian", PageMedian, 1)
 
             sSQL.Clear()
             sSQL.Append(" Select")
@@ -261,6 +260,7 @@ Public Class Index : Implements IHttpHandler
                 sPNList.Append("<li class=""page-item"" id=""pi1"" onclick=""MakeLogTable('pi1')""><a class=""page-link"">" & PageMedian - 1 & "</a></li>")
             End If
 
+            '表示しているページは押下できなくする
             If iCount > 10 Then 'データが11件以上であればページ2も表示
                 If NowPage <> 1 And NowPage <> TotalPage Then
                     sPNList.Append("<li class=""page-item pe-none"" id=""pi2"" onclick=""MakeLogTable('pi2')""><a class=""page-link disabled"">" & PageMedian & "</a></li>")

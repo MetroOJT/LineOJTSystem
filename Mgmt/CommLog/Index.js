@@ -92,14 +92,11 @@ function Search() {
         };
     };
 
-    let DateTime = $("#txtDateTime").val();
-
     $.ajax({
         url: Ajax_File,
         method: "POST",
         data: {
             "mode": "Search",
-            "DateTime": DateTime,
             "DateFm": DateFm,
             "DateTo": DateTo,
             "Sere": Sere,
@@ -111,8 +108,8 @@ function Search() {
             if (data != "") {
                 if (data.status == "OK") {
                     Nod = data.count; // 検索ヒット数
-                    TotalPage = Math.ceil(Nod / 10);
-                    MakeLogTable(1);
+                    TotalPage = Math.ceil(Nod / 10); // ページの最大値
+                    MakeLogTable(1); // 初期検索・検索(1ページ目を強制表示)
                 } else {
                     alert(data.status);
                 };
@@ -123,14 +120,14 @@ function Search() {
 
 // 検索結果表示 v.2
 function MakeLogTable(PagerID) {
+    // ━━━━━━━ ページャ処理開始
+    // PagerIDが[null: エラー, ある: クッキーの有無で代入]
     if (PagerID == "") {
         document.getElementById("error_modal").click();
-        console.log("a")
         return false;
     } else if (GetLogNowPage != "") {
         PagerID = GetLogNowPage;
         GetLogNowPage = "";
-        console.log("b")
     }
     // ページャのボタンが押されていれば[真] 
     if (PagerID != "") {
@@ -182,6 +179,7 @@ function MakeLogTable(PagerID) {
                 }
                 break;
         }
+        // 検索するページが1 または、ヒット数が30件以下の場合は中央値を2固定
         if (SearchPage == 1 || Nod < 31) {
             PageMedian = 2;
         }
@@ -189,6 +187,7 @@ function MakeLogTable(PagerID) {
     } else {
         SearchPage = 1;
     }
+    // ━━━━━━━ ページャ処理終了
 
     // 検索結果表示
     $.ajax({
@@ -218,19 +217,19 @@ function MakeLogTable(PagerID) {
                             document.getElementById("PNArea").innerHTML = data.pnlist;
                             document.getElementById("ResultArea").innerHTML = data.html;
 
-                            if (NowPage == 1 || Nod < 31) {
+                            if (NowPage == 1 || Nod < 31) { // 表示ページが1またはヒット数が30件以下でボタンを押下できなくする
                                 document.querySelector("#pista a").classList.add("disabled");
                                 document.getElementById("pista").style.pointerEvents = "none";
                                 document.querySelector("#piback a").classList.add("disabled");
                                 document.getElementById("piback").style.pointerEvents = "none";
                             }
-                            if (NowPage == TotalPage || Nod < 31) {
+                            if (NowPage == TotalPage || Nod < 31) { // 表示ページが最後またはヒット数が30件以下でボタンを押下できなくする
                                 document.querySelector("#pinext a").classList.add("disabled");
                                 document.getElementById("pinext").style.pointerEvents = "none";
                                 document.querySelector("#piend a").classList.add("disabled");
                                 document.getElementById("piend").style.pointerEvents = "none";
                             }
-                            detail_btn();
+                            detail_btn(); // 詳細ボタンのid振り分け
                         }
                     } else {
                         document.getElementById("CntArea").innerText = "";
