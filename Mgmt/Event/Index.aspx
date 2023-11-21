@@ -25,8 +25,7 @@
                     <form id="form1" runat="server">
                         <div id="btnOption" class="row accordion-body">
                             <input type="button" value="検索" name="Search" id="btnSearch" class="col-sm btn btn-outline-primary"/>
-                            <%--クリアボタン(要件にない追加項目)--%>
-                            <%--<input type="button" value="クリア" name="Clear" id="btnClear" class="col-sm btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop"/>--%>
+                            <input type="button" value="クリア" name="Clear" id="btnClear" class="col-sm btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop"/>
                             <div class="col-sm"></div>
                             <input type="button" value="戻る" name="Back" id="btnBack" class="col-sm btn btn-outline-secondary"/>
                         </div>
@@ -39,8 +38,8 @@
                                 <label class="col-sm-2 col-form-label">ステータス</label>
                                 <select aria-label="全て" class="form-select form-select-sm" id="EventStatus" runat="server">
                                     <option value="" selected="">全て</option>
-                                    <option value="1">オン</option>
-                                    <option value="0">オフ</option>
+                                    <option value="1">ON</option>
+                                    <option value="0">OFF</option>
                                 </select>
                             </div>
                             <div>

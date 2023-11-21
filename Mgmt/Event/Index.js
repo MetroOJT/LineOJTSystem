@@ -18,8 +18,7 @@ $(function () {
     document.getElementById("btnSearch").addEventListener("mouseup", btnSearchClick, false);
     document.getElementById("btnBack").addEventListener("mouseup", btnBackClick, false);
     document.getElementById("btnClose").addEventListener("mouseup", btnCloseClick, false);
-    // クリアボタン(未使用)
-    //document.getElementById("btnClear").addEventListener("click", btnClearClick, false);
+    document.getElementById("btnClear").addEventListener("click", btnClearClick, false);
 });
 
 // 検索ボタンクリック
@@ -110,6 +109,7 @@ function btnClearClick() {
     document.getElementById("txtScheduleTo").value = "";
     document.getElementById("txtKeyword").value = "";
     document.getElementById("CntArea").innerText = "";
+    document.getElementById("PageNationArea").innerText = "";
     document.getElementById("ItiranArea").innerText = "";
     $.ajax({
         url: Ajax_File,
