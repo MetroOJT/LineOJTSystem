@@ -72,7 +72,7 @@
 
             <%-- データベースから取得したデータを表示 --%>
             <div id="DB_Result" style="margin: 0 auto;">
-                <div id="CntArea" style="margin-bottom: 20px;"></div>
+                <div id="CntArea" style="margin-top: 20px;"></div>
                 <nav aria-label="Page navigation example" id="PNArea" class="row row-cols-auto"></nav>
                 <div id="ResultArea"></div>
             </div>

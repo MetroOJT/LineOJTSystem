@@ -248,47 +248,53 @@ Public Class Index : Implements IHttpHandler
             sPNList.Clear()
             sPNList.Append("<div class=""col"">")
             sPNList.Append("<ul class=""pagination"" >")
-            sPNList.Append("<li class=""page-item"" id=""pista"" onclick=""MakeLogTable('pista')"">")
-            sPNList.Append("<a class=""page-link"" aria-label=""Previous"">")
-            sPNList.Append("<span aria-hidden=""True"">&laquo;</span>")
-            sPNList.Append("</a>")
-            sPNList.Append("</li>")
-            sPNList.Append("<li class=""page-item"" id=""piback"" onclick=""MakeLogTable('piback')""><a class=""page-link"">‹</a></li>")
-            If NowPage = 1 Then
-                sPNList.Append("<li class=""page-item pe-none"" id=""pi1"" onclick=""MakeLogTable('pi1')""><a class=""page-link disabled"">" & PageMedian - 1 & "</a></li>")
-            Else
-                sPNList.Append("<li class=""page-item"" id=""pi1"" onclick=""MakeLogTable('pi1')""><a class=""page-link"">" & PageMedian - 1 & "</a></li>")
-            End If
+            If iCount > 10 Then '1ページのみの表示であれば1以外を表示しない
 
-            '表示しているページは押下できなくする
-            If iCount > 10 Then 'データが11件以上であればページ2も表示
-                If NowPage <> 1 And NowPage <> TotalPage Then
-                    sPNList.Append("<li class=""page-item pe-none"" id=""pi2"" onclick=""MakeLogTable('pi2')""><a class=""page-link disabled"">" & PageMedian & "</a></li>")
-                ElseIf NowPage = 2 And iCount < 21 Then
-                    sPNList.Append("<li class=""page-item pe-none"" id=""pi2"" onclick=""MakeLogTable('pi2')""><a class=""page-link disabled"">" & PageMedian & "</a></li>")
+
+                sPNList.Append("<li class=""page-item"" id=""pista"" onclick=""MakeLogTable('pista')"">")
+                sPNList.Append("<a class=""page-link"" aria-label=""Previous"">")
+                sPNList.Append("<span aria-hidden=""True"">&laquo;</span>")
+                sPNList.Append("</a>")
+                sPNList.Append("</li>")
+                sPNList.Append("<li class=""page-item"" id=""piback"" onclick=""MakeLogTable('piback')""><a class=""page-link"">‹</a></li>")
+                If NowPage = 1 Then
+                    sPNList.Append("<li class=""page-item pe-none"" id=""pi1"" onclick=""MakeLogTable('pi1')""><a class=""page-link bg-primary text-white"">" & PageMedian - 1 & "</a></li>")
                 Else
-                    sPNList.Append("<li class=""page-item"" id=""pi2"" onclick=""MakeLogTable('pi2')""><a class=""page-link"">" & PageMedian & "</a></li>")
+                    sPNList.Append("<li class=""page-item"" id=""pi1"" onclick=""MakeLogTable('pi1')""><a class=""page-link"">" & PageMedian - 1 & "</a></li>")
                 End If
-            Else
-                sPNList.Append("<li class=""page-item pe-none"" id=""pi2"" onclick=""MakeLogTable('pi2')""><a class=""page-link disabled"">" & PageMedian & "</a></li>")
-            End If
 
-            If iCount > 20 Then 'データが21件以上であればページ3も表示
-                If NowPage = TotalPage Then
-                    sPNList.Append("<li class=""page-item pe-none"" id=""pi3"" onclick=""MakeLogTable('pi3')""><a class=""page-link disabled"" >" & PageMedian + 1 & "</a></li>")
+                '表示しているページは押下できなくする
+                If iCount > 10 Then 'データが11件以上であればページ2も表示
+                    If NowPage <> 1 And NowPage <> TotalPage Then
+                        sPNList.Append("<li class=""page-item pe-none"" id=""pi2"" onclick=""MakeLogTable('pi2')""><a class=""page-link bg-primary text-white"">" & PageMedian & "</a></li>")
+                    ElseIf NowPage = 2 And iCount < 21 Then
+                        sPNList.Append("<li class=""page-item pe-none"" id=""pi2"" onclick=""MakeLogTable('pi2')""><a class=""page-link bg-primary text-white"">" & PageMedian & "</a></li>")
+                    Else
+                        sPNList.Append("<li class=""page-item"" id=""pi2"" onclick=""MakeLogTable('pi2')""><a class=""page-link"">" & PageMedian & "</a></li>")
+                    End If
                 Else
-                    sPNList.Append("<li class=""page-item"" id=""pi3"" onclick=""MakeLogTable('pi3')""><a class=""page-link"" >" & PageMedian + 1 & "</a></li>")
+                    sPNList.Append("<li class=""page-item pe-none"" id=""pi2"" onclick=""MakeLogTable('pi2')""><a class=""page-link disabled"">" & PageMedian & "</a></li>")
                 End If
-            Else
-                sPNList.Append("<li class=""page-item pe-none"" id=""pi3"" onclick=""MakeLogTable('pi3')""><a class=""page-link disabled"">" & PageMedian + 1 & "</a></li>")
-            End If
 
-            sPNList.Append("<li class=""page-item"" id=""pinext"" onclick=""MakeLogTable('pinext')""><a Class=""page-link"">›</a></li>")
-            sPNList.Append("<li class=""page-item"" id=""piend""  onclick=""MakeLogTable('piend')"">")
-            sPNList.Append("<a class=""page-link"" aria-label=""Next"">")
-            sPNList.Append("<span aria-hidden=""true"">&raquo;</span>")
-            sPNList.Append("</a>")
-            sPNList.Append("</li>")
+                If iCount > 20 Then 'データが21件以上であればページ3も表示
+                    If NowPage = TotalPage Then
+                        sPNList.Append("<li class=""page-item pe-none"" id=""pi3"" onclick=""MakeLogTable('pi3')""><a class=""page-link bg-primary text-white"" >" & PageMedian + 1 & "</a></li>")
+                    Else
+                        sPNList.Append("<li class=""page-item"" id=""pi3"" onclick=""MakeLogTable('pi3')""><a class=""page-link"" >" & PageMedian + 1 & "</a></li>")
+                    End If
+                Else
+                    'sPNList.Append("<li class=""page-item pe-none"" id=""pi3"" onclick=""MakeLogTable('pi3')""><a class=""page-link disabled"">" & PageMedian + 1 & "</a></li>")
+                End If
+
+                sPNList.Append("<li class=""page-item"" id=""pinext"" onclick=""MakeLogTable('pinext')""><a Class=""page-link"">›</a></li>")
+                sPNList.Append("<li class=""page-item"" id=""piend""  onclick=""MakeLogTable('piend')"">")
+                sPNList.Append("<a class=""page-link"" aria-label=""Next"">")
+                sPNList.Append("<span aria-hidden=""true"">&raquo;</span>")
+                sPNList.Append("</a>")
+                sPNList.Append("</li>")
+            Else
+                sPNList.Append("<li class=""page-item pe-none"" id=""pi1"" onclick=""MakeLogTable('pi1')""><a class=""page-link bg-primary text-white"">" & PageMedian - 1 & "</a></li>")
+            End If
             sPNList.AppendLine("</ul>")
             sPNList.Append("</div>")
 

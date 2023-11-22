@@ -217,13 +217,13 @@ function MakeLogTable(PagerID) {
                             document.getElementById("PNArea").innerHTML = data.pnlist;
                             document.getElementById("ResultArea").innerHTML = data.html;
 
-                            if (NowPage == 1 || Nod < 31) { // 表示ページが1またはヒット数が30件以下でボタンを押下できなくする
+                            if (NowPage == 1) { // 表示ページが1またはヒット数が30件以下でボタンを押下できなくする
                                 document.querySelector("#pista a").classList.add("disabled");
                                 document.getElementById("pista").style.pointerEvents = "none";
                                 document.querySelector("#piback a").classList.add("disabled");
                                 document.getElementById("piback").style.pointerEvents = "none";
                             }
-                            if (NowPage == TotalPage || Nod < 31) { // 表示ページが最後またはヒット数が30件以下でボタンを押下できなくする
+                            if (NowPage == TotalPage) { // 表示ページが最後またはヒット数が30件以下でボタンを押下できなくする
                                 document.querySelector("#pinext a").classList.add("disabled");
                                 document.getElementById("pinext").style.pointerEvents = "none";
                                 document.querySelector("#piend a").classList.add("disabled");
