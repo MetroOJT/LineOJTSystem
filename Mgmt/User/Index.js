@@ -4,140 +4,53 @@ DspLoginUserName();
 
 var Ajax_File = "Index.ashx";
 
-var Nod = 0; // 検索に引っかかった件数
-var Npage = 1; // ページ設定
-var page_item = document.querySelectorAll(".page-item");
-var detail_button = document.querySelectorAll(".btnDetail");
-
-var PageMedian = 2; // ページャの中央値 [ 1 , ② , 3 ]
 var StyleBold = 1; // 現在表示しているページの強調
 
 var oac = 1; // アコーディオン[開:1,閉:0]
+var Nod = 0; // 検索に引っかかった件数
+var TotalPage = 0; // 全体ページ
+var NowPage = 0; // 表示ページ
+var page_item = document.querySelectorAll(".page-item");
+var detail_button = document.querySelectorAll(".btnDetail");
+var SearchPage = 1;
+var GetLogNowPage = "";
+if (getCookie("LogNowPage") != "") {
+    GetLogNowPage = getCookie("LogNowPage");
+}
+
+var PageMedian = 2; // ページャの中央値 [ 1 , ② , 3 ]
 
 window.onload = function () {
-    $.ajax({
-        url: Ajax_File,
-        method: "POST",
-        data: {
-            "mode": "Load",
-        },
-        dataType: "json",
-        success: function (data) {
-            if (data != "") {
-                if (data.status == "OK") {
-                    Nod = data.count;
-                    if (data.nowpage == 1) {
-                        const User_ID = data.User_ID;
-                        const User_Name = data.User_Name;
-                        const Admin_Check = data.Admin_Check;
-                        const Date_Fm = data.Date_Fm;
-                        const Date_To = data.DateTo;
-                        $.ajax({
-                            url: Ajax_File,
-                            method: "POST",
-                            data: {
-                                "mode": "Search",
-                                "User_ID": User_ID,
-                                "User_Name": User_Name,
-                                "Admin_Check": Admin_Check,
-                                "DateFm": Date_Fm,
-                                "DateTo": Date_To,
-                            },
-                            dataType: "json",
-                            success: function (data) {
-                                if (data != "") {
-                                    if (data.status == "OK") {
-                                        Nod = data.count;
-                                        MakeResult();
-                                    } else {
-                                        alert("エラーが発生しました。");
-                                    };
-                                };
-                            }
-                        });
+    $.datepicker.setDefaults({
+        showButtonPanel: "true",
+        changeMonth: "true",
+        changeYear: "true",
+        minDate: new Date(),
+        maxDate: new Date(2099, 12 - 1, 31),
+    });
 
-                    }else if (data.nowpage > 1){
-                        Npage = data.nowpage;
-                        PageMedian = Npage;
-                        if (Npage <= 1 || Nod < 31) {
-                            PageMedian = 2;
-                        } else if (Npage >= Math.ceil(Nod / 10)) {
-                            PageMedian = Math.ceil(Nod / 10) - 1;
-                        }                        
-                        $.ajax({
-                            url: Ajax_File,
-                            method: "POST",
-                            data: {
-                                "mode": "PagiNation",
-                                "nowpage": Npage,
-                                "pagemedian": PageMedian
-                            },
-                            dataType: "json",
-                            success: function (data) {
-                                if (data != "") {
-                                    if (data.status == "OK") {
-                                        if (Number(data.count) > 0) {
-                                            if (Npage > data.count / 10) {
-                                                Npage = Math.ceil(data.count / 10);
-                                            } else if (Npage < 1) {
-                                                Npage = 1;
-                                            }
-                                            const NpageFm = (parseInt(Npage) - 1) * 10 + 1; // 件数表示(前)
-                                            var NpageTo = 0; // 件数表示(後)
-                                            if (Npage == Math.ceil(data.count / 10)) {
-                                                NpageTo = data.count;
-                                            } else {
-                                                NpageTo = parseInt(Npage) * 10;
-                                            }
-                                            document.getElementById("CntArea").innerText = "件数：" + data.count + "件" + " (表示中: " + Npage + " / " + Math.ceil(data.count / 10) + " ページ , " + NpageFm + "件 ～ " + NpageTo + "件)";
-                                            if (data.html != "") {
-                                                document.getElementById("PNArea").innerHTML = data.pnlist;
-                                                document.getElementById("ResultArea").innerHTML = data.html;
-                                                document.getElementById("PageNumber").value = Npage;
-                                                page_item = document.querySelectorAll(".page-item");
-                                                page_item.forEach(pi => {
-                                                    pi.addEventListener('click', function () {
-                                                        PagiNation(pi.id);
-                                                    });
-                                                });
-                                                if (Npage == 1 || data.count < 31) {
-                                                    document.querySelector("#pista a").style.color = "black";
-                                                    document.querySelector("#pista a").style.backgroundColor = "silver";
-                                                    document.getElementById("pista").style.pointerEvents = "none";
-                                                    document.querySelector("#piback a").style.color = "black";
-                                                    document.querySelector("#piback a").style.backgroundColor = "silver";
-                                                    document.getElementById("piback").style.pointerEvents = "none";
-                                                }
-                                                if (Npage == Math.ceil(data.count / 10) || data.count < 31) {
-                                                    document.querySelector("#pinext a").style.color = "black";
-                                                    document.querySelector("#pinext a").style.backgroundColor = "silver";
-                                                    document.getElementById("pinext").style.pointerEvents = "none";
-                                                    document.querySelector("#piend a").style.color = "black";
-                                                    document.querySelector("#piend a").style.backgroundColor = "silver";
-                                                    document.getElementById("piend").style.pointerEvents = "none";
-                                                }
-                                                //console.log(data.pm, PageMedian)
-                                                transition();
-                                            }
-                                        } else {
-                                            document.getElementById("PNArea").innerHTML = "";
-                                            document.getElementById("ResultArea").innerText = "該当するデータが存在しませんでした。";
-                                        }
-                                    } else {
-                                        alert("エラーが発生しました。");
-                                    }
-                                }
-                            }
-                        });
-
-                    };
-                } else {
-                    alert("エラーが発生しました。");
-                };
-            };
+    let fm = $("#DateFm").datepicker({
+        onSelect: function (selectedDate) {
+            $("#txtScheduleTo").datepicker("option", "minDate", selectedDate);
         }
     });
-};
+
+    let to = $("#DateTo").datepicker({
+        onSelect: function (selectedDate) {
+            $("#txtScheduleFm").datepicker("option", "maxDate", selectedDate);
+        }
+    });
+
+    // 初期検索
+    Search("Yes");
+}
+
+
+function btnSearchClick() {
+    SearchPage = 1;
+    document.cookie = document.cookie = "LogNowPage=" + 0 + "; max-age=86400; path=/";
+    Search();
+}
 
 // 閉じる
 function btnCloseClick() {
@@ -165,21 +78,26 @@ $(function () {
     document.getElementById("btnSign_up").addEventListener("click", btnSignUpClick, false);
     document.getElementById("btnBack").addEventListener("click", btnBackClick, false);
     document.getElementById("btnClose").addEventListener("click", btnCloseClick, false);
+    document.getElementById("btnClear").addEventListener("click", btnClearClick, false);
 });
 
 // 検索ボタンが押された時の処理
-function btnSearchClick() {
+function Search(first_flag) {
     var User_ID = $("#user_ID").val();
     var User_Name = $("#user_Name").val();
     var Admin_Check = $("#Kanrisya").val();
     var Date_Fm = $("#DateFm").val();
     var Date_To = $("#DateTo").val();
+    var w;
 
-    //console.log(User_ID);
-    //console.log(User_Name);
-    //console.log(Admin_Check);
-    //console.log(Date_Fm);
-    //console.log(Date_To);
+    if (Date_Fm > Date_To) {
+        w = Date_Fm;
+        Date_Fm = Date_To;
+        Date_To = w;
+
+        document.querySelector("#DateFm").value = Date_Fm;
+        document.querySelector("#DateTo").value = Date_To;
+    }
 
     $.ajax({
         url: Ajax_File,
@@ -191,66 +109,206 @@ function btnSearchClick() {
             "Admin_Check": Admin_Check,
             "DateFm": Date_Fm,
             "DateTo": Date_To,
+            "First_Flag": first_flag
         },
         dataType: "json",
         success: function (data) {
-            //console.log(data);
             if (data != "") {
+                console.log(data);
                 if (data.status == "OK") {
-                    Nod = data.count;
-                    MakeResult();
+                    Nod = data.count; // 検索ヒット数
+                    TotalPage = Math.ceil(Nod / 10); // ページの最大値
+                    if (first_flag == "Yes") {
+                        let PagerID = 1;
+                        if (data.SearchPage != null) {
+                            PagerID = data.SearchPage
+                            console.log("PagerID", PagerID);
+                        }
+                        MakeUserTable(PagerID);
+                    } else {
+                        MakeUserTable(1); // 初期検索・検索(1ページ目を強制表示)
+                    }
                 } else {
-                    alert("エラーが発生しました。");
+                    alert(data.status);
                 };
             };
         }
     });
-};
-// 検索結果表示
-function MakeResult() {
-    Npage = 1;
+}
+function MakeUserTable(PagerID){
+    if (PagerID != "") {
+        console.log("SearchPage", SearchPage);
+        console.log("PageMedian", PageMedian);
+        switch (PagerID) {
+            case "pista":
+                SearchPage = 1;
+                break;
+            case "piback":
+                SearchPage = Number(NowPage) - 1;
+                PageMedian = SearchPage;
+                break;
+            case "pi1": // 現在表示しているページの１つ前
+                SearchPage = Number(PageMedian) - 1;
+                PageMedian = SearchPage;
+                break;
+            case "pi2":
+                SearchPage = PageMedian;
+                PageMedian = SearchPage;
+                break;
+            case "pi3": // 現在表示しているページの１つ後
+                SearchPage = Number(PageMedian) + 1;
+                if (SearchPage == TotalPage) {
+                    PageMedian = Number(SearchPage) - 1;
+                } else {
+                    PageMedian = SearchPage;
+                }
+                break;
+            case "pinext":
+                if (NowPage < TotalPage) {
+                    SearchPage = Number(NowPage) + 1;
+                }
+                if (SearchPage == TotalPage) {
+                    PageMedian = Number(SearchPage) - 1;
+                } else {
+                    PageMedian = SearchPage;
+                }
+                break;
+            case "piend":
+                SearchPage = TotalPage;
+                PageMedian = Number(SearchPage) - 1;
+                break;
+            default:
+                SearchPage = PagerID;
+                PageMedian = SearchPage;
+                if (SearchPage <= 1 || Nod < 31) {
+                    PageMedian = 2;
+                } else if (SearchPage >= TotalPage) {
+                    PageMedian = Number(TotalPage) - 1;
+                }
+                break;
+        }
+        if (SearchPage == 1 || Nod < 31) {
+            PageMedian = 2;
+        }
+        PageID = "";
+    } else {
+        SearchPage = 1;
+    }
+    console.log("SearchPage", SearchPage);
+    console.log("PageMedian", PageMedian);
+    if (PagerID == 0) {
+        $.ajax({
+            url: Ajax_File,
+            method: "POST",
+            data: { // モード, 表示したいページ, ページャの中央値
+                "mode": "MakeUserTable",
+                "searchpage": SearchPage,
+                "pagemedian": PageMedian,
+                "Cookie_hantei": 1
+            },
+            dataType: "json",
+            success: function (data) {
+                if (data != "") {
+                    console.log(data);
+                    if (data.status == "OK") { // エラーの有無
+                        if (Nod > 0) { // 検索ヒット数が1以上であれば検索結果表示
+                            NowPage = data.AshxNowPage;
+                            document.cookie = "LogNowPage=" + NowPage + "; max-age=86400; path=/";
+                            const NowPageFm = (NowPage - 1) * 10 + 1;
+                            var NowPageTo = NowPage * 10;
 
-    $.ajax({
-        url: Ajax_File,
-        method: "POST",
-        data: {
-            "mode": "MakeResult"
-        },
-        dataType: "json",
-        success: function (data) {
-            if (data != "") {
-                if (data.status == "OK") {
-                    if (Number(data.count) > 0) {
-                        const NpageFm = (parseInt(Npage) - 1) * 10 + 1;
-                        var NpageTo = 0;
-                        if (Npage == Math.ceil(data.count / 10)) {
-                            NpageTo = data.count;
+                            if (NowPageTo > Nod) {
+                                NowPageTo = Nod;
+                            }
+                            document.getElementById("CntArea").innerText = "件数：" + Nod + "件" + " (表示中: " + NowPage + " / " + TotalPage + " ページ , " + NowPageFm + "件 ～ " + NowPageTo + "件)";
+
+                            if (data.html != "") {
+                                document.getElementById("PNArea").innerHTML = data.pnlist;
+                                document.getElementById("ResultArea").innerHTML = data.html;
+
+                                if (NowPage == 1 || Nod < 31) { // 表示ページが1またはヒット数が30件以下でボタンを押下できなくする
+                                    document.querySelector("#pista a").classList.add("disabled");
+                                    document.getElementById("pista").style.pointerEvents = "none";
+                                    document.querySelector("#piback a").classList.add("disabled");
+                                    document.getElementById("piback").style.pointerEvents = "none";
+                                }
+                                if (NowPage == TotalPage || Nod < 31) { // 表示ページが最後またはヒット数が30件以下でボタンを押下できなくする
+                                    document.querySelector("#pinext a").classList.add("disabled");
+                                    document.getElementById("pinext").style.pointerEvents = "none";
+                                    document.querySelector("#piend a").classList.add("disabled");
+                                    document.getElementById("piend").style.pointerEvents = "none";
+                                }
+                                transition(); // 詳細ボタンのid振り分け
+                            }
                         } else {
-                            NpageTo = parseInt(Npage) * 10;
-                        }
-                        document.getElementById("CntArea").innerText = "件数：" + data.count + "件" + " (表示中: " + Npage + " / " + Math.ceil(data.count / 10) + " ページ , " + NpageFm + "件 ～ " + NpageTo + "件)";
-                        if (data.html != "") {
-                            document.getElementById("PNArea").innerHTML = data.pnlist;
-                            document.getElementById("ResultArea").innerHTML = data.html;
-                            page_item = document.querySelectorAll(".page-item");
-                            page_item.forEach(pi => {
-                                pi.addEventListener('click', function () {
-                                    PagiNation(pi.id);
-                                });
-                            });
-                            transition();
+                            document.getElementById("CntArea").innerText = "";
+                            document.getElementById("PNArea").innerHTML = "";
+                            document.getElementById("ResultArea").innerText = "該当するデータが存在しませんでした。";
                         }
                     } else {
-                        document.getElementById("CntArea").innerText = "";
-                        document.getElementById("PNArea").innerHTML = "";
-                        document.getElementById("ResultArea").innerText = "該当するデータが存在しませんでした。";
+                        alert(data.status);
                     }
-                } else {
-                    alert("エラーが発生しました。");
                 }
             }
-        }
-    });
+        });
+    } else {
+        // 検索結果表示
+        console.log(SearchPage);
+        console.log(PageMedian);
+        $.ajax({
+            url: Ajax_File,
+            method: "POST",
+            data: { // モード, 表示したいページ, ページャの中央値
+                "mode": "MakeUserTable",
+                "searchpage": SearchPage,
+                "pagemedian": PageMedian
+            },
+            dataType: "json",
+            success: function (data) {
+                if (data != "") {
+                    console.log(data);
+                    if (data.status == "OK") { // エラーの有無
+                        if (Nod > 0) { // 検索ヒット数が1以上であれば検索結果表示
+                            NowPage = data.AshxNowPage;
+                            document.cookie = "LogNowPage=" + NowPage + "; max-age=86400; path=/";
+                            const NowPageFm = (NowPage - 1) * 10 + 1;
+                            var NowPageTo = NowPage * 10;
+
+                            if (NowPageTo > Nod) {
+                                NowPageTo = Nod;
+                            }
+                            document.getElementById("CntArea").innerText = "件数：" + Nod + "件" + " (表示中: " + NowPage + " / " + TotalPage + " ページ , " + NowPageFm + "件 ～ " + NowPageTo + "件)";
+
+                            if (data.html != "") {
+                                document.getElementById("PNArea").innerHTML = data.pnlist;
+                                document.getElementById("ResultArea").innerHTML = data.html;
+
+                                if (NowPage == 1 || Nod < 31) { // 表示ページが1またはヒット数が30件以下でボタンを押下できなくする
+                                    document.querySelector("#pista a").classList.add("disabled");
+                                    document.getElementById("pista").style.pointerEvents = "none";
+                                    document.querySelector("#piback a").classList.add("disabled");
+                                    document.getElementById("piback").style.pointerEvents = "none";
+                                }
+                                if (NowPage == TotalPage || Nod < 31) { // 表示ページが最後またはヒット数が30件以下でボタンを押下できなくする
+                                    document.querySelector("#pinext a").classList.add("disabled");
+                                    document.getElementById("pinext").style.pointerEvents = "none";
+                                    document.querySelector("#piend a").classList.add("disabled");
+                                    document.getElementById("piend").style.pointerEvents = "none";
+                                }
+                                transition(); // 詳細ボタンのid振り分け
+                            }
+                        } else {
+                            document.getElementById("CntArea").innerText = "";
+                            document.getElementById("PNArea").innerHTML = "";
+                            document.getElementById("ResultArea").innerText = "該当するデータが存在しませんでした。";
+                        }
+                    } else {
+                        alert(data.status);
+                    }
+                }
+            }
+        });
+    }
 };
 
 // ユーザー登録画面遷移
@@ -284,8 +342,8 @@ function btnBackClick() {
         },
         dataType: "json",
         success: function (data) {
-            console.log(data);
             if (data != "") {
+                console.log(data);
                 if (data.status == "OK") {
                     window.location.href = "../Menu/Index.aspx";
                 } else {
@@ -296,140 +354,30 @@ function btnBackClick() {
     });
 };
 
-// ページネーション
-function PagiNation(pid) {
-    switch (pid) {
-        case "pista":
-            Npage = 1;
-            PageMedian = 2;
-            break;
-        case "piback":
-            if (Npage > 1) {
-                Npage -= 1;
-            }
-            if (Npage == 1) {
-                PageMedian = 2;
-            } else {
-                PageMedian = Npage;
-            }
-            break;
-        case "pi1": // 現在表示しているページの１つ前
-            Npage = PageMedian - 1;
-            if (Nod < 31 || Npage == 1) {
-                PageMedian = 2;
-            } else {
-                PageMedian = Npage;
-            }
-            break;
-        case "pi2":
-            Npage = PageMedian;
-            if (Nod < 31) {
-                PageMedian = 2;
-            } else {
-                PageMedian = Npage;
-            }
-            break;
-        case "pi3": // 現在表示しているページの１つ後
-            Npage = PageMedian + 1;
-            if (Nod < 31) {
-                PageMedian = 2;
-            } else if (Npage == Math.ceil(Nod / 10)) {
-                PageMedian = Npage - 1;
-            } else {
-                PageMedian = Npage;
-            }
-            break;
-        case "pinext":
-            if (Npage < Math.ceil(Nod / 10)) {
-                Npage += 1;
-            }
-            if (Npage == Math.ceil(Nod / 10)) {
-                PageMedian = Npage - 1;
-            } else {
-                PageMedian = Npage;
-            }
-            break;
-        case "piend":
-            Npage = Math.ceil(Nod / 10);
-            PageMedian = Npage - 1;
-            break;
-        default:
-            Npage = pid;
-            PageMedian = Npage;
-            if (Npage <= 1 || Nod < 31) {
-                PageMedian = 2;
-            } else if (Npage >= Math.ceil(Nod / 10)) {
-                PageMedian = Math.ceil(Nod / 10) - 1;
-            }
-            break;
-    }
-
+// クリアボタンが押された時の処理
+function btnClearClick() {
+    document.querySelector("#user_ID").value = "";
+    document.querySelector("#user_Name").value = "";
+    document.querySelector("#DateFm").value = "";
+    document.querySelector("#DateTo").value = "";
+    document.querySelector("#kanrisya_all").selected = true;
     $.ajax({
         url: Ajax_File,
         method: "POST",
         data: {
-            "mode": "PagiNation",
-            "nowpage": Npage,
-            "pagemedian": PageMedian
+            "mode": "Clear",
         },
         dataType: "json",
         success: function (data) {
             if (data != "") {
                 if (data.status == "OK") {
-                    if (Number(data.count) > 0) {
-                        if (Npage > data.count / 10) {
-                            Npage = Math.ceil(data.count / 10);
-                        } else if (Npage < 1) {
-                            Npage = 1;
-                        }
-                        const NpageFm = (parseInt(Npage) - 1) * 10 + 1; // 件数表示(前)
-                        var NpageTo = 0; // 件数表示(後)
-                        if (Npage == Math.ceil(data.count / 10)) {
-                            NpageTo = data.count;
-                        } else {
-                            NpageTo = parseInt(Npage) * 10;
-                        }
-                        document.getElementById("CntArea").innerText = "件数：" + data.count + "件" + " (表示中: " + Npage + " / " + Math.ceil(data.count / 10) + " ページ , " + NpageFm + "件 ～ " + NpageTo + "件)";
-                        if (data.html != "") {
-                            document.getElementById("PNArea").innerHTML = data.pnlist;
-                            document.getElementById("ResultArea").innerHTML = data.html;
-                            document.getElementById("PageNumber").value = Npage;
-                            page_item = document.querySelectorAll(".page-item");
-                            page_item.forEach(pi => {
-                                pi.addEventListener('click', function () {
-                                    PagiNation(pi.id);
-                                });
-                            });
-                            if (Npage == 1 || data.count < 31) {
-                                document.querySelector("#pista a").style.color = "black";
-                                document.querySelector("#pista a").style.backgroundColor = "silver";
-                                document.getElementById("pista").style.pointerEvents = "none";
-                                document.querySelector("#piback a").style.color = "black";
-                                document.querySelector("#piback a").style.backgroundColor = "silver";
-                                document.getElementById("piback").style.pointerEvents = "none";
-                            }
-                            if (Npage == Math.ceil(data.count / 10) || data.count < 31) {
-                                document.querySelector("#pinext a").style.color = "black";
-                                document.querySelector("#pinext a").style.backgroundColor = "silver";
-                                document.getElementById("pinext").style.pointerEvents = "none";
-                                document.querySelector("#piend a").style.color = "black";
-                                document.querySelector("#piend a").style.backgroundColor = "silver";
-                                document.getElementById("piend").style.pointerEvents = "none";
-                            }
-                            //console.log(data.pm, PageMedian)
-                            transition();
-                        }
-                    } else {
-                        document.getElementById("PNArea").innerHTML = "";
-                        document.getElementById("ResultArea").innerText = "該当するデータが存在しませんでした。";
-                    }
                 } else {
                     alert("エラーが発生しました。");
-                }
-            }
+                };
+            };
         }
     });
-};
+}
 
 // エンターキー無効
 function NoEnter() {

@@ -10,22 +10,15 @@ const Admin_Check = sessionStorage.getItem("iAdmin_Check");
 const Password = sessionStorage.getItem("iPassword");
 const hUser_ID = sessionStorage.getItem("hUserID");
 
-console.log(re_UserID);
-console.log(User_ID);
-console.log(User_Name);
-console.log(Admin_Check);
-console.log(Password);
-
-
 document.querySelector("#user_ID").value = User_ID;
 document.querySelector("#user_Name").value = User_Name;
 document.querySelector("#user_password").value = Password;
 document.querySelector("#user_password_confirmation").value = Password;
 
 if (Admin_Check == 0) {
-    document.querySelector("#Admin_input").value = "オフ";
+    document.querySelector("#Admin_input").value = "OFF";
 } else if (Admin_Check == 1) {
-    document.querySelector("#Admin_input").value = "オン";
+    document.querySelector("#Admin_input").value = "ON";
 };
 
 const dUser_ID = sessionStorage.getItem("dUser_ID");
