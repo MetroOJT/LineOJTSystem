@@ -11,7 +11,9 @@ const docBtnPushMessage = document.getElementById("btnPushMessage");
 docBtnPushMessage.disabled = true;
 const docTxtPushMessage = document.getElementById("txtPushMessage");
 let selectUserFlg = false;
-let nowSearchID;
+let nowSearchID = "0";
+let beforeSearchID = "0";
+let beforeLogID = "0";
 
 // 初期検索
 btnSearchClick();
@@ -96,9 +98,33 @@ function MakeMessageBody(SearchID) {
         success: function (data) {
             if (data != "") {
                 if (data.status == "OK") {
-                    document.getElementById("MessageBox").innerHTML = data.html;
+                    const scrollPosition = document.getElementById("MessageBody").scrollTop;
+                    const MessageBox = document.getElementById("MessageBox");
+                    MessageBox.innerHTML = data.html;
                     const MessageBody = document.getElementById("MessageBody");
-                    MessageBody.scrollTo(0, MessageBody.scrollHeight);
+                    if (beforeSearchID == nowSearchID) {
+                        MessageBody.scrollTop = scrollPosition;
+                        if (data.lastlogid != beforeLogID) {
+                            const name = document.getElementById("MessageHeaderName").innerText;
+                            document.getElementById("MessageFooter").innerText = name + ":" + data.lastmessage;
+                            document.getElementById("MessageFooter").style.buttom = document.getElementById("MessageFooter").offsetHeight / 2 + "px";
+                            document.querySelector("#MessageBody").addEventListener("scroll", function () {
+                                const LastUserMessage = $(".UserMessage:last");
+                                target_position = LastUserMessage.position().top;
+                                if (MessageBody.offsetHeight >= target_position) {
+                                    document.getElementById("MessageFooter").innerText = "";
+                                }
+                            }, true);
+                            document.querySelector("#MessageFooter").addEventListener("click", function () {
+                                MessageBody.scrollTo(0, MessageBody.scrollHeight);
+                            })
+                        }
+                    }
+                    else {
+                        MessageBody.scrollTo(0, MessageBody.scrollHeight);
+                    }
+                    beforeSearchID = nowSearchID;
+                    beforeLogID = data.lastlogid;
                     selectUserFlg = true;
                 } else {
                     alert("エラーが発生しました。");
@@ -157,3 +183,10 @@ function setTextareaHeight() {
     this.style.height = "auto";
     this.style.height = `${this.scrollHeight}px`;
 }
+
+// Setinterbalでメッセージボックス更新(30s)
+const timer = setInterval(function () {
+    if (nowSearchID != "0") {
+        MakeMessageBody(nowSearchID)
+    }
+}, 5000);
