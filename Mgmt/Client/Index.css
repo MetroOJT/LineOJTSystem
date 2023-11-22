@@ -14,6 +14,7 @@ img {
     margin: 0.5rem;
 }
 #MessageBody {
+    position: relative;
     height: 450px;
     overflow-x: hidden;
     overflow-y: scroll;
@@ -39,4 +40,10 @@ img {
     resize: none; /* 手動リサイズを禁止 */
     height: 40px;
     max-height: 108px;
+}
+#MessageFooter {
+    position: sticky;
+    padding: 0 1rem;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
 }

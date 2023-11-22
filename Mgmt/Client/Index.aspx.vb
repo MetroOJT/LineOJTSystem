@@ -9,7 +9,7 @@ Partial Class Mgmt_Client_Index
     Public Sub Pre_Load(sender As Object, e As EventArgs) Handles Me.PreLoad
         ServicePointManager.SecurityProtocol = ServicePointManager.SecurityProtocol Or SecurityProtocolType.Tls12
     End Sub
-    
+
     Public Sub Page_Load(sender As Object, e As EventArgs) Handles Me.Load
 
     End Sub
