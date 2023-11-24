@@ -141,12 +141,28 @@ function btnRegistrationClick() {
                     i_div.append.appendChild(error_message_p);
                 }
                 error_message_div.style.marginLeft = null;
-            }else {
+            } else {
                 error_message_p.textContent = `${p_textcontent}を入力してください。`;
             }
         
             error_message_div.appendChild(error_message_p);
 
+        } else if (c_element == 2) {
+            if (elm.value.match(/^[ 　]{1,}/)) {
+                elm.classList.add('is-invalid');
+                elm.classList.remove('is-valid');
+                error_judgement.push(1);
+                elm.parentNode.style.borderColor = "#dc3545";
+                const error_message_div = document.querySelector(`#error_message_div_${c_element}`);
+                const error_message_p = document.createElement("p");
+                error_message_p.className = "h6";
+                error_message_p.id = `p_${c_element}`;
+                error_message_p.style.color = "#dc3545";
+                console.log("a");
+
+                error_message_p.textContent = "ユーザー名は半角数字5桁で入力してください";
+                error_message_div.appendChild(error_message_p);
+            }
         } else {
             // 緑にする
             elm.classList.add('is-valid');

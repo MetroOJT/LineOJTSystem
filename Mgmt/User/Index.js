@@ -202,6 +202,7 @@ function MakeUserTable(PagerID){
             },
             dataType: "json",
             success: function (data) {
+                console.log(data);
                 if (data != "") {
                     if (data.status == "OK") { // エラーの有無
                         if (Nod > 0) { // 検索ヒット数が1以上であれば検索結果表示
@@ -256,6 +257,7 @@ function MakeUserTable(PagerID){
             },
             dataType: "json",
             success: function (data) {
+                console.log(data);
                 if (data != "") {
                     if (data.status == "OK") { // エラーの有無
                         if (Nod > 0) { // 検索ヒット数が1以上であれば検索結果表示
@@ -273,17 +275,33 @@ function MakeUserTable(PagerID){
                                 document.getElementById("PNArea").innerHTML = data.pnlist;
                                 document.getElementById("ResultArea").innerHTML = data.html;
 
-                                if (NowPage == 1 || Nod < 31) { // 表示ページが1またはヒット数が30件以下でボタンを押下できなくする
-                                    document.querySelector("#pista a").classList.add("disabled");
-                                    document.getElementById("pista").style.pointerEvents = "none";
-                                    document.querySelector("#piback a").classList.add("disabled");
-                                    document.getElementById("piback").style.pointerEvents = "none";
+                                if (NowPage == 1 || Nod < 11) { // 表示ページが1またはヒット数が30件以下でボタンを押下できなくする
+                                    if (document.querySelector("#pista a")) {
+                                        document.querySelector("#pista a").classList.add("disabled");
+                                    }
+                                    if (document.getElementById("pista")) {
+                                        document.getElementById("pista").style.pointerEvents = "none";
+                                    }
+                                    if (document.querySelector("#piback a")) {
+                                        document.querySelector("#piback a").classList.add("disabled");
+                                    }
+                                    if (document.getElementById("piback")) {
+                                        document.getElementById("piback").style.pointerEvents = "none";
+                                    }
                                 }
-                                if (NowPage == TotalPage || Nod < 31) { // 表示ページが最後またはヒット数が30件以下でボタンを押下できなくする
-                                    document.querySelector("#pinext a").classList.add("disabled");
-                                    document.getElementById("pinext").style.pointerEvents = "none";
-                                    document.querySelector("#piend a").classList.add("disabled");
-                                    document.getElementById("piend").style.pointerEvents = "none";
+                                if (NowPage == TotalPage || Nod < 11) { // 表示ページが最後またはヒット数が30件以下でボタンを押下できなくする
+                                    if (document.querySelector("#pinext a")) {
+                                        document.querySelector("#pinext a").classList.add("disabled");
+                                    }
+                                    if (document.getElementById("pinext")) {
+                                        document.getElementById("pinext").style.pointerEvents = "none";
+                                    }
+                                    if (document.querySelector("#piend a")) {
+                                        document.querySelector("#piend a").classList.add("disabled");
+                                    }
+                                    if (document.getElementById("piend")) {
+                                        document.getElementById("piend").style.pointerEvents = "none";
+                                    }
                                 }
                                 transition(); // 詳細ボタンのid振り分け
                             }
