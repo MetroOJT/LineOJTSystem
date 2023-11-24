@@ -14,10 +14,8 @@ $(function () {
     document.getElementById("buttonEye_1").addEventListener("click", btnEyeClick_1, false);
     document.getElementById("buttonEye_2").addEventListener("click", btnEyeClick_2, false);
 });
-//console.log(sessionStorage.getItem('hUserID'));
 if (sessionStorage.getItem('hUserID') != null) {
     const hUserID = sessionStorage.getItem('hUserID');
-    //console.log(hUserID);
     $.ajax({
         url: Ajax_File,
         method: "POST",
@@ -27,7 +25,6 @@ if (sessionStorage.getItem('hUserID') != null) {
         },
         dataType: "json",
         success: function (data) {
-            console.log(data);
             if (data != "") {
                 if (data.status == "OK") {
                     if (Number(data.count) > 0) {
@@ -169,7 +166,6 @@ function btnRegistrationClick() {
                     dataType: "json",
                     success: function (data) {
                         if (data != "") {
-                            console.log(data);
                             if (data.status == "OK") {
                                 if (data.ErrorMessage != "") {
                                     // 赤にする
@@ -177,7 +173,6 @@ function btnRegistrationClick() {
                                     elm.classList.remove('is-valid');
                                     error_judgement.push(1);
                                     elm.parentNode.style.borderColor = "#dc3545";
-                                    console.log(c_element);
                                     const error_message_div = document.querySelector(`#error_message_div_1`);
                                     const error_message_p = document.createElement("p");
                                     error_message_p.className = "h6";

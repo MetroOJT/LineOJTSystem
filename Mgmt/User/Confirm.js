@@ -22,7 +22,6 @@ if (Admin_Check == 0) {
 };
 
 const dUser_ID = sessionStorage.getItem("dUser_ID");
-//console.log(dUser_ID);
 if (dUser_ID) {
     const registration_button = document.getElementById("registration_button");
     registration_button.id = "delete_button";
@@ -55,7 +54,6 @@ function btnRegistrationClick() {
         },
         dataType: "json",
         success: function (data) {
-            //console.log(data);
             if (data != "") {
                 if (data.status == "OK") {
                     if (data.ErrorMessage == "") {
@@ -94,7 +92,6 @@ function functionSeni_Index() {
         },
         dataType: "json",
         success: function (data) {
-            console.log(data);
             if (data != "") {
                 if (data.status == "OK") {
                     window.location.href = "Index.aspx";
@@ -129,7 +126,6 @@ function fnc_Yes() {
         },
         dataType: "json",
         success: function (data) {
-            //console.log(data);
             if (data != "") {
                 if (data.status == "OK") {
                     // 表示するコードを書く
