@@ -276,7 +276,7 @@ function SavebtnClick() {
     //各データの入力チェック
     form.querySelectorAll('.form-control').forEach(function (elm) {
         let required = elm.required;
-        if (required && (elm.value.length == 0)) {
+        if (required && (elm.value.trim().length == 0)) {
             elm.classList.add('is-invalid');
             elm.classList.remove('is-valid');
             event.preventDefault();

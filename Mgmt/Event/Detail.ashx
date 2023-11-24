@@ -169,7 +169,7 @@ Public Class Detail : Implements IHttpHandler
             End If
 
             '同一のキーワードがデータベース内にないかチェック
-            If sKeyword <> "" Then
+            If sKeyword.Trim() <> "" Then
                 sWhere.Clear()
                 sWhere.Append(" WHERE Keyword = @Keyword")
                 If sMode = "Upd" Then
@@ -181,9 +181,7 @@ Public Class Detail : Implements IHttpHandler
                 sSQL.Append(" FROM " & cCom.gctbl_EventMst)
                 sSQL.Append(sWhere)
                 cDB.SelectSQL(sSQL.ToString)
-                cCom.CmnWriteStepLog("a")
                 If cDB.ReadDr Then
-                    cCom.CmnWriteStepLog("b")
                     cCom.CmnWriteStepLog(cDB.DRData("SameKW"))
                     If cDB.DRData("SameKW") <> 0 Then
                         sKeywordErrMsg = "このキーワードは既に登録されています。"
