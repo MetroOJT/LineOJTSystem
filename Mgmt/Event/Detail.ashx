@@ -242,7 +242,7 @@ Public Class Detail : Implements IHttpHandler
         sHTML.Append("<div class=""row mt-2 mb-2"">")
         sHTML.Append("<div class=""col-1""></div>")
         sHTML.Append("<div class=""col-2"">")
-        sHTML.Append("<input type=""button"" class=""btn btn-success CouponCodeAddbtn"" id =""CouponCodeAddbtn" & iCnt & """value=""クーポンコード追加"" onclick=""CouponCodeAddbtnClick()""/>")
+        sHTML.Append("<input type=""button"" class=""col-sm btn btn-success CouponCodeAddbtn"" id =""CouponCodeAddbtn" & iCnt & """value=""クーポンコード追加"" onclick=""CouponCodeAddbtnClick()""/>")
         sHTML.Append("</div>")
         sHTML.Append("<div class=""col-7""></div>")
         sHTML.Append("<div class=""col-1"">")

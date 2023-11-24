@@ -31,6 +31,7 @@ $(function () {
         //更新モード
         EventLoad();
         $("#Deletebtn").css("display", "grid");
+        
 
     } else {
         //登録モード
@@ -149,16 +150,14 @@ function EventLoad() {
                         $('input[value="0"]').prop('checked', true);
                     }
 
-                    let ScheduleFm = data.ScheduleFm.replaceAll("/", "-");
-                    if (ScheduleFm != "1900-01-01") {
-                        $("#txtScheduleFm").val(ScheduleFm);
+                    if (data.ScheduleFm != "1900/01/01") {
+                        $("#txtScheduleFm").val(data.ScheduleFm);
                     } else {
                         $("#txtScheduleFm").val("");
                     }
 
-                    let ScheduleTo = data.ScheduleTo.replaceAll("/", "-");
-                    if (ScheduleTo != "2099-12-31") {
-                        $("#txtScheduleTo").val(ScheduleTo);
+                    if (data.ScheduleTo != "2099/12/31") {
+                        $("#txtScheduleTo").val(data.ScheduleTo);
                     } else {
                         $("#txtScheduleTo").val("");
                     }
@@ -170,6 +169,13 @@ function EventLoad() {
                     for (let i = 0; i < $(".MessageContainer").length; i++) {
                         let txtMessagelength = $("#txtMessage" + i).val().length;
                         $("#txtCount" + i).text(txtMessagelength + "/500");
+                    }
+
+                    //メッセージが５つある場合はメッセージ追加ボタンを押下できなくする
+                    if (document.getElementsByClassName("MessageContainer").length == 5) {
+                        $("#MessageAddbtn").prop("disabled", true);
+                        $("#MessageAddbtn").addClass("btn-secondary");
+                        $("#MessageAddbtn").removeClass("btn-outline-primary");
                     }
 
                     //ページロード時のフォーム内容を保存
@@ -193,15 +199,6 @@ function SameCheck(Flg) {
     let KeywordFlg = true;
     let BrunkFlg = Flg;
     let SameFlg = false;
-
-    
-    //if (BrunkFlg) {
-    //    if ($("#Savebtn").val() == "登録") {
-    //        ModalSet("ModalArea", "イベント登録", "登録しますか？", "登録", "btn-outline-primary", "戻る", "Modalsavebtnclick()");
-    //    } else {
-    //        ModalSet("ModalArea", "イベント更新", "更新しますか？", "更新", "btn-outline-primary", "戻る", "Modalsavebtnclick()");
-    //    }
-    //}
 
     $.ajax({
         url: Ajax_File,
@@ -344,6 +341,10 @@ function SavebtnClick() {
     if (EventStatus == "") {
         flag = false;
     };
+
+    if (ScheduleFm == "" && ScheduleTo == "") {
+        flag = false;
+    }
 
     if (Keyword == "") {
         $("#Keyword-invalid-feedback").text("キーワードを入力してください。");

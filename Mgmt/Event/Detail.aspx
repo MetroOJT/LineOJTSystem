@@ -22,14 +22,14 @@
             <div id="FormArea" class="">
                 <div id="ButtonArea" class="row mb-3">
                     <div class="col-2 d-grid">
-                        <input type="button" id="Savebtn" class="btn btn-outline-primary btn-lg" data-bs-toggle="modal" data-bs-target="#ConfirmModal" value="登録" />
+                        <input type="button" id="Savebtn" class="col-sm btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#ConfirmModal" value="登録" />
                     </div>
                     <div class="col-2 d-grid">
-                        <input type="button" id="Deletebtn" class="btn btn-outline-danger btn-lg" data-bs-toggle="modal" data-bs-target="#ConfirmModal"  value="削除" />
+                        <input type="button" id="Deletebtn" class="col-sm btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#ConfirmModal"  value="削除" />
                     </div>
                     <div class="col-6"></div>
                     <div class="col-2 d-grid">
-                        <input type="button" id="Backbtn" class="btn btn-outline-secondary btn-lg" data-bs-toggle="modal" data-bs-target="#ConfirmModal"  value="戻る" />
+                        <input type="button" id="Backbtn" class="col-sm btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#ConfirmModal"  value="戻る" />
                     </div>
                 </div>
                 <div class="row mb-3">
@@ -51,13 +51,13 @@
                     <div class="col-1">
                         <div class="form-check">
                             <input type="radio" id="EventStatusOn" class="Radio form-check-input" name="EventStatus" value="1" />
-                            <label for="EventStatusOn" class="h6 form-check-label">オン</label>
+                            <label for="EventStatusOn" class="h6 form-check-label">ON</label>
                         </div>
                     </div>
                     <div class="col-1">
                         <div class="form-check">
                             <input type="radio" id="EventStatusOff" class="Radio form-check-input" name="EventStatus" value="0" />
-                            <label for="EventStatusOff" class="h6 form-check-label">オフ</label>
+                            <label for="EventStatusOff" class="h6 form-check-label">OFF</label>
                         </div>
                     </div>
                     <div class="col-7"></div>
@@ -107,7 +107,7 @@
             </div>
             <div id="MessagebtnArea" class="row mt-2 mb-2">
                 <div class="col-3">
-                    <input type="button" id="MessageAddbtn" class="btn btn-primary btn-lg w-100"　data-bs-toggle="modal" data-bs-target="#ConfirmMessageModal" value="メッセージ追加" />
+                    <input type="button" id="MessageAddbtn" class="btn btn-primary col-sm w-100"　data-bs-toggle="modal" data-bs-target="#ConfirmMessageModal" value="メッセージ追加" />
                 </div>
                 <div class="col-9"></div>
             </div>

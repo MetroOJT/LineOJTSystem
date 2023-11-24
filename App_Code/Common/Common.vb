@@ -423,7 +423,7 @@ Public Class Common
             sRet.Append("<div Class='col-3 text-end '>")
             sRet.Append("<div Class='h-50 d-flex'>")
             sRet.Append("<div Class='d-grid align-items-center w-100'>")
-            sRet.Append("<Input  type = 'button' value='ログアウト' id='LogOutbtn' Class='btn btn-warning btn-lg' style='height:64%;' onclick='LogOut()'/>")
+            sRet.Append("<Input  type = 'button' value='ログアウト' id='LogOutbtn' Class='btn btn-warning col-sm'  onclick='LogOut()'/>")
             sRet.Append("</div>")
             sRet.Append("</div>")
             sRet.Append("<div Class='h-25 d-flex justify-content-start align-items-center'>")
