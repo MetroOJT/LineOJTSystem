@@ -49,8 +49,8 @@
 
                             <div class="d-flex"> 
                                 <label class="col-sm-2 col-form-label">登録日</label>
-                                <input type="text" id="DateFm" class="form-control initial-time" style="margin-right: 20px;" runat="server"  maxlength="10"/><span class="mt-auto mb-auto">～</span>
-                                <input type="text" id="DateTo" class="form-control initial-time" style="margin-left: 20px;" runat="server"  maxlength="10" />
+                                <input type="text" id="DateFm" class="form-control initial-time" style="margin-right: 20px;" runat="server"  maxlength="10" readonly /><span class="mt-auto mb-auto">～</span>
+                                <input type="text" id="DateTo" class="form-control initial-time" style="margin-left: 20px;" runat="server"  maxlength="10" readonly />
                             </div>
                         </div>
                     </div>
