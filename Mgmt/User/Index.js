@@ -31,7 +31,6 @@ window.onload = function () {
 
     let fm = $("#DateFm").datepicker({
         onSelect: function (selectedDate) {
-            console.log(selectedDate);
             $("#DateTo").datepicker("option", "minDate", selectedDate);
         }
     });
@@ -115,7 +114,6 @@ function Search(first_flag) {
         dataType: "json",
         success: function (data) {
             if (data != "") {
-                console.log(data);
                 if (data.status == "OK") {
                     Nod = data.count; // 検索ヒット数
                     TotalPage = Math.ceil(Nod / 10); // ページの最大値
@@ -123,7 +121,6 @@ function Search(first_flag) {
                         let PagerID = 1;
                         if (data.SearchPage != null) {
                             PagerID = data.SearchPage
-                            console.log("PagerID", PagerID);
                         }
                         MakeUserTable(PagerID);
                     } else {
@@ -138,8 +135,6 @@ function Search(first_flag) {
 }
 function MakeUserTable(PagerID){
     if (PagerID != "") {
-        console.log("SearchPage", SearchPage);
-        console.log("PageMedian", PageMedian);
         switch (PagerID) {
             case "pista":
                 SearchPage = 1;
@@ -195,8 +190,6 @@ function MakeUserTable(PagerID){
     } else {
         SearchPage = 1;
     }
-    console.log("SearchPage", SearchPage);
-    console.log("PageMedian", PageMedian);
     if (PagerID == 0) {
         $.ajax({
             url: Ajax_File,
@@ -210,7 +203,6 @@ function MakeUserTable(PagerID){
             dataType: "json",
             success: function (data) {
                 if (data != "") {
-                    console.log(data);
                     if (data.status == "OK") { // エラーの有無
                         if (Nod > 0) { // 検索ヒット数が1以上であれば検索結果表示
                             NowPage = data.AshxNowPage;
@@ -254,8 +246,6 @@ function MakeUserTable(PagerID){
         });
     } else {
         // 検索結果表示
-        console.log(SearchPage);
-        console.log(PageMedian);
         $.ajax({
             url: Ajax_File,
             method: "POST",
@@ -267,7 +257,6 @@ function MakeUserTable(PagerID){
             dataType: "json",
             success: function (data) {
                 if (data != "") {
-                    console.log(data);
                     if (data.status == "OK") { // エラーの有無
                         if (Nod > 0) { // 検索ヒット数が1以上であれば検索結果表示
                             NowPage = data.AshxNowPage;
@@ -344,7 +333,6 @@ function btnBackClick() {
         dataType: "json",
         success: function (data) {
             if (data != "") {
-                console.log(data);
                 if (data.status == "OK") {
                     window.location.href = "../Menu/Index.aspx";
                 } else {
