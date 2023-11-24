@@ -333,7 +333,7 @@ function SavebtnClick() {
         document.getElementById("Schedule-invalid-feedback").textContent = "";
     }
 
-    if (EventName == "") {
+    if (EventName.trim() == "") {
         $("#EventName-invalid-feedback").text("イベント名を入力してください。");
         flag = false;
     }
@@ -346,7 +346,7 @@ function SavebtnClick() {
         flag = false;
     }
 
-    if (Keyword == "") {
+    if (Keyword.trim() == "") {
         $("#Keyword-invalid-feedback").text("キーワードを入力してください。");
         flag = false;
     } 
@@ -354,7 +354,7 @@ function SavebtnClick() {
     //空白のメッセージコンテナがないか、メッセージが一つ以上入力されているかを判別
     if (document.getElementsByClassName("txtMessage").length > 0) {
         for(ele of document.getElementsByClassName("txtMessage")) {
-            if (ele.value === "") {
+            if (ele.value.trim() === "") {
                 flag = false;
             }
         }
@@ -398,9 +398,9 @@ function Modalsavebtnclick() {
         if (data != "") {
             if (data.status == "OK") {
                 if (data.ErrorMessage != "") {
-                    document.getElementById("ModalSavebtn").style.display = "none";
-                    document.getElementById("ModalBackbtn").textContent = "閉じる";
-                    document.getElementById("ModalBody").textContent = data.ErrorMessage;
+                    //document.getElementById("ModalSavebtn").style.display = "none";
+                    //document.getElementById("ModalBackbtn").textContent = "閉じる";
+                    //document.getElementById("ModalBody").textContent = data.ErrorMessage;
                     if (data.ErrorMessage == "同じイベント名は登録できません。") {
                         $("#EventName-invalid-feedback").text("このイベント名は既に登録されています。");
                         $("#txtEventName").addClass("is-invalid");
