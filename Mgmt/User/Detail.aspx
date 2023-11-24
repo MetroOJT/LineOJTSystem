@@ -44,11 +44,11 @@
                     <div style="display: flex; margin-left: 55px; width: 300px;" >
                         <div class="form-check">
                             <input type="radio" id="contactChoice_1" name="contact" value="0" class="form-check-input" />
-                            <label for="contactChoice1" style="width: auto;" class="form-check-label h6" >オン</label>
+                            <label for="contactChoice1" style="width: auto;" class="form-check-label h6" >ON</label>
                         </div>
                         <div class="form-check">
                             <input type="radio" id="contactChoice_2" name="contact" value="1" style=" margin-left: 10px;" class="form-check-input" />
-                            <label for="contactChoice2" style="width: auto;" class="form-check-label h6" >オフ</label>
+                            <label for="contactChoice2" style="width: auto; margin-left: 10px;" class="form-check-label h6" >OFF</label>
                         </div>
                     </div>
                 </div>

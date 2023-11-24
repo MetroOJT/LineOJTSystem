@@ -8,10 +8,12 @@ Public Class Index : Implements IHttpHandler
 
     Public Sub ProcessRequest(ByVal context As HttpContext) Implements IHttpHandler.ProcessRequest
         Select Case context.Request.Item("mode")
-            Case "Registration"
-                context.Response.Write(Registration(context))
+            'Case "Registration"
+            '    context.Response.Write(Registration(context))
             Case "Load"
                 context.Response.Write(Load(context))
+            Case "Search"
+                context.Response.Write(sea(context))
         End Select
     End Sub
 
@@ -85,12 +87,14 @@ Public Class Index : Implements IHttpHandler
         Return sJSON
     End Function
 
-    Public Function Registration(ByVal context As HttpContext) As String
+    '検索
+    Public Function sea(ByVal context As HttpContext) As String
         Dim cCom As New Common
         Dim cDB As New CommonDB
         Dim Cki As New Cookie
         Dim sSQL As New StringBuilder
         Dim sWhere As New StringBuilder
+        Dim sOb As New StringBuilder
         Dim jJSON As New JavaScriptSerializer
         Dim sJSON As String = ""
         Dim hHash As New Hashtable
@@ -98,73 +102,49 @@ Public Class Index : Implements IHttpHandler
         Dim sStatus As String = "OK"
         Dim sTempTable As String = ""
 
-        Dim rUserID As New StringBuilder
-        Dim rUserName As New StringBuilder
-        Dim rAdmin As New StringBuilder
-
         Dim sUser_ID As String = ""
-        Dim sPassword As String = ""
-        Dim sUser_Name As String = ""
-        Dim sAdmin_Check As String = ""
-        Dim sRe_UserID As String = ""
+        Dim sSere As String = ""
+        Dim sCond_Status As String = ""
+        Dim sOrder As String = ""
 
         Dim iCount As Integer = 0
+        Dim sErrorMessage As String = ""
 
         Try
             sUser_ID = context.Request.Item("User_ID")
-            sPassword = context.Request.Item("Password")
-            sUser_Name = context.Request.Item("User_Name")
-            sAdmin_Check = context.Request.Item("Admin_Check")
-            sRe_UserID = context.Request.Item("Re_UserID")
-
             cDB.AddWithValue("@UserID", sUser_ID)
-            cDB.AddWithValue("@Password", sPassword)
-            cDB.AddWithValue("@User_Name", sUser_Name)
-            cDB.AddWithValue("@Admin_Check", sAdmin_Check)
-            cDB.AddWithValue("@Re_UserID", sRe_UserID)
 
-            'ユーザーマスタに新規登録する
+            sWhere.Clear()
+            sWhere.Append(" WHERE UserID = @UserID")
+
             sSQL.Clear()
-            sSQL.Append("INSERT INTO " & cCom.gctbl_UserMst)
-            sSQL.Append(" (")
-            sSQL.Append(" UserID")
-            sSQL.Append(" ,Password")
-            sSQL.Append(" ,UserName")
-            sSQL.Append(" ,Admin")
-            sSQL.Append(" ,Update_Date")
-            sSQL.Append(" ,Update_ID")
-            sSQL.Append(" )")
-            sSQL.Append(" VALUES")
-            sSQL.Append(" (")
-            sSQL.Append(" @UserID")
-            sSQL.Append(" ,@Password")
-            sSQL.Append(" ,@User_Name")
-            sSQL.Append(" ,b" & "'" & sAdmin_Check & "'")
-            sSQL.Append(", Now()")
-            sSQL.Append(" ,@Re_UserID")
-            sSQL.Append(" )")
-            cDB.ExecuteSQL(sSQL.ToString)
+            sSQL.Append("SELECT COUNT(*) AS SameUserID")
+            sSQL.Append(" FROM " & cCom.gctbl_UserMst)
+            sSQL.Append(sWhere)
+            cDB.SelectSQL(sSQL.ToString)
 
             If cDB.ReadDr Then
-                iCount = 1
+                If cDB.DRData("SameUserID") <> 0 Then
+                    sErrorMessage = "そのユーザーIDはすでに登録されています。"
+                End If
             End If
-
-
         Catch ex As Exception
             sRet = ex.Message
         Finally
             cDB.DrClose()
             cDB.Dispose()
             If sRet <> "" Then
-                sStatus = "NG"
+                sStatus = sRet
                 cCom.CmnWriteStepLog(sRet)
+
             End If
 
             hHash.Add("status", sStatus)
             hHash.Add("count", iCount)
-
+            hHash.Add("ErrorMessage", sErrorMessage)
             sJSON = jJSON.Serialize(hHash)
         End Try
+
         Return sJSON
     End Function
 

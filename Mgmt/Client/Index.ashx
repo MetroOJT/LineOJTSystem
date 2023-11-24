@@ -220,6 +220,8 @@ Public Class Index : Implements IHttpHandler
         Dim sJson As String = ""
         Dim sSQL As New StringBuilder
         Dim dLogDate As Date = Nothing
+        Dim sLastLogID As String = ""
+        Dim sLastMessage As String = ""
 
         Try
             Dim sTempTable As String = cCom.CmnGet_TableName("LineUserItiran")
@@ -250,7 +252,8 @@ Public Class Index : Implements IHttpHandler
             'ログの読み込み
             sSQL.Clear()
             sSQL.Append(" SELECT")
-            sSQL.Append(" SendRecv")
+            sSQL.Append(" LogID")
+            sSQL.Append(" ,SendRecv")
             sSQL.Append(" ,Log")
             sSQL.Append(" ,Datetime")
             sSQL.Append(" FROM " & cCom.gctbl_LogMst)
@@ -294,14 +297,16 @@ Public Class Index : Implements IHttpHandler
                     Dim eventsObj As Object = jLog("events")(0)
                     Dim messageObj As Object = eventsObj("message")
                     sMessage.Clear()
-                    sMessage.Append(messageObj("text").ToString())
+                    sMessage.Append(messageObj("text").ToString)
+                    sLastLogID = cDB.DRData("LogID").ToString
+                    sLastMessage = sMessage.ToString
                     sHTML.Append("<div class=""row"">")
                     sHTML.Append("<div class=""col-6 text-start"">")
                     sHTML.Append("<div class=""border MessageTextArea"">")
                     If sMessage.ToString.Substring(sMessage.Length - 1) = vbLf Then
                         sMessage.Append("&thinsp;")
                     End If
-                    sHTML.Append("<span class=""MessageText"">" & sMessage.ToString & "</span>")
+                    sHTML.Append("<span class=""MessageText UserMessage"">" & sMessage.ToString & "</span>")
                     sHTML.Append("</div>")
                     sHTML.Append("</div>")
                     sHTML.Append("<div class=""col-6""></div>")
@@ -312,6 +317,7 @@ Public Class Index : Implements IHttpHandler
                     sHTML.Append("</div>")
                 End If
             Loop
+            sHTML.Append("<div id=""MessageFooter"" class=""row""></div>")
             sHTML.Append("</div>")
 
         Catch ex As Exception
@@ -326,6 +332,8 @@ Public Class Index : Implements IHttpHandler
 
             hHash.Add("status", sStatus)
             hHash.Add("html", sHTML.ToString)
+            hHash.Add("lastlogid", sLastLogID)
+            hHash.Add("lastmessage", sLastMessage)
 
             sJson = jJson.Serialize(hHash)
         End Try

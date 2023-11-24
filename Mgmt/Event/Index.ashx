@@ -14,7 +14,6 @@ Public Class Index : Implements IHttpHandler
                 context.Response.Write(Itiran(context))
             Case "PagiNation"
                 context.Response.Write(PagiNation(context))
-            '未実装
             Case "Clear"
                 context.Response.Write(Clear(context))
         End Select
@@ -219,12 +218,12 @@ Public Class Index : Implements IHttpHandler
                     sRow = " evenRow"
                 End If
 
-                'ステータスの表記を"オン","オフ"に
+                'ステータスの表記を"ON","OFF"に
                 Dim Status As String = ""
                 If cDB.DRData("wStatus") = 1 Then
-                    Status = "オン"
+                    Status = "ON"
                 Else
-                    Status = "オフ"
+                    Status = "OFF"
                 End If
 
                 'スケジュールがDefaultやEndの場合ブランクにする
@@ -385,9 +384,9 @@ Public Class Index : Implements IHttpHandler
                 End If
                 Dim Status As String = ""
                 If cDB.DRData("wStatus") = 1 Then
-                    Status = "オン"
+                    Status = "ON"
                 Else
-                    Status = "オフ"
+                    Status = "OFF"
                 End If
 
                 'スケジュールがDefaultやEndの場合ブランクにする
@@ -455,7 +454,7 @@ Public Class Index : Implements IHttpHandler
                 Next
             End If
             If iCount > 10 Then
-                If iCount Mod (NowPage * 10) >= 1 And iCount \ (NowPage * 10) >= 1 Then
+                If (iCount - 1) \ (NowPage * 10) >= 1 Then
                     sPageNationHTML.Append("<li class=""page-item"" id=""pinext""><a Class=""page-link"">›</a></li>")
                     sPageNationHTML.Append("<li class=""page-item"" id=""piend"">")
                     sPageNationHTML.Append("<a class=""page-link"" aria-label=""Next"">")
@@ -496,7 +495,7 @@ Public Class Index : Implements IHttpHandler
 
     End Function
 
-    'クリア処理(未実装)
+    'クリア処理
     Public Function Clear(ByVal context As HttpContext) As String
         Dim cCom As New Common
         Dim cDB As New CommonDB
