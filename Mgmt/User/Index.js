@@ -202,7 +202,6 @@ function MakeUserTable(PagerID){
             },
             dataType: "json",
             success: function (data) {
-                console.log(data);
                 if (data != "") {
                     if (data.status == "OK") { // エラーの有無
                         if (Nod > 0) { // 検索ヒット数が1以上であれば検索結果表示
@@ -257,7 +256,6 @@ function MakeUserTable(PagerID){
             },
             dataType: "json",
             success: function (data) {
-                console.log(data);
                 if (data != "") {
                     if (data.status == "OK") { // エラーの有無
                         if (Nod > 0) { // 検索ヒット数が1以上であれば検索結果表示

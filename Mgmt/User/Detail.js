@@ -158,7 +158,6 @@ function btnRegistrationClick() {
                 error_message_p.className = "h6";
                 error_message_p.id = `p_${c_element}`;
                 error_message_p.style.color = "#dc3545";
-                console.log("a");
 
                 error_message_p.textContent = "ユーザー名は半角数字5桁で入力してください";
                 error_message_div.appendChild(error_message_p);
