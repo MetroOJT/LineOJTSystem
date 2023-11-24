@@ -25,19 +25,20 @@ window.onload = function () {
         showButtonPanel: "true",
         changeMonth: "true",
         changeYear: "true",
-        minDate: new Date(),
-        maxDate: new Date(2099, 12 - 1, 31),
+        minDate: new Date(1900, 1, 1),
+        maxDate: new Date(),
     });
 
     let fm = $("#DateFm").datepicker({
         onSelect: function (selectedDate) {
-            $("#txtScheduleTo").datepicker("option", "minDate", selectedDate);
+            console.log(selectedDate);
+            $("#DateTo").datepicker("option", "minDate", selectedDate);
         }
     });
 
     let to = $("#DateTo").datepicker({
         onSelect: function (selectedDate) {
-            $("#txtScheduleFm").datepicker("option", "maxDate", selectedDate);
+            $("#DateFm").datepicker("option", "maxDate", selectedDate);
         }
     });
 
