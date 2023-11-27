@@ -39,8 +39,12 @@ $(function () {
         $("#Deletebtn").css("display", "none");
         iniForm = CompareForm();
     }
+
+    //ロード時イベント名にフォーカスを当てる
     $("#txtEventName").focus();
 
+
+    //datepicker設定
     $.datepicker.setDefaults({
         showButtonPanel: "true",
         changeMonth: "true",
@@ -638,6 +642,7 @@ function CouponCodeAddbtnClick() {
         document.getElementById("txtMessage" + ID).value += CouponCode;
     }
     $("#txtCount" + ID).text($("#txtMessage" + ID).val().length + "/500");
+    $("#txtMessage" + ID).focus();
 }
 
 //テキストエリア内の文字数をリアルタイムに反映する関数
