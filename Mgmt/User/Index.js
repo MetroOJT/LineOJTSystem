@@ -376,6 +376,11 @@ function btnClearClick() {
         success: function (data) {
             if (data != "") {
                 if (data.status == "OK") {
+                    console.log($('#DateFm').datepicker.minDate);
+                    $("#DateFm").datepicker("option", "minDate", new Date(1900, 1, 1));
+                    $("#DateFm").datepicker("option", "maxDate", new Date());
+                    $("#DateTo").datepicker("option", "minDate", new Date(1900, 1, 1));
+                    $("#DateTo").datepicker("option", "maxDate", new Date());
                 } else {
                     alert("エラーが発生しました。");
                 };

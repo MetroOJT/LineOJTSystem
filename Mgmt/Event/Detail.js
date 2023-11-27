@@ -13,6 +13,37 @@ let ScheduleTo;
 let Keyword;
 let Messages;
 let iniForm;
+let setCalsClearButton = function (year, month, elem) {
+
+    let afterShow = function () {
+        let d = new $.Deferred();
+        let cnt = 0;
+        setTimeout(function () {
+            if (elem.dpDiv[0].style.display === "block") {
+                d.resolve();
+            }
+            if (cnt >= 500) {
+                d.reject("datepicker show timeout");
+            }
+            cnt++;
+        }, 10);
+        return d.promise();
+    }();
+
+    afterShow.done(function () {
+
+        // datepickerのz-indexを指定  
+        $('.ui-datepicker').css('z-index', 2000);
+
+        let buttonPane = $(elem).datepicker("widget").find(".ui-datepicker-buttonpane");
+
+        let btn = $('<button class="ui-datepicker-current ui-state-default ui-priority-primary ui-corner-all" type="button">クリア</button>');
+        btn.off("click").on("click", function () {
+            $.datepicker._clearDate(elem.input[0]);
+        });
+        btn.appendTo(buttonPane);
+    });
+}
 
 $(function () {
     //ヘッダーの担当者名を入れる関数
@@ -39,14 +70,22 @@ $(function () {
         $("#Deletebtn").css("display", "none");
         iniForm = CompareForm();
     }
+
+    //ロード時イベント名にフォーカスを当てる
     $("#txtEventName").focus();
 
+
+    //datepicker設定
     $.datepicker.setDefaults({
         showButtonPanel: "true",
         changeMonth: "true",
         changeYear: "true",
         minDate: new Date(),
         maxDate: new Date(2099, 12 - 1, 31),
+        beforeShow: function (inst, elem) {
+            setCalsClearButton(null, null, elem);
+        },
+        onChangeMonthYear: setCalsClearButton
     });
 
     let fm = $("#txtScheduleFm").datepicker({
@@ -638,6 +677,7 @@ function CouponCodeAddbtnClick() {
         document.getElementById("txtMessage" + ID).value += CouponCode;
     }
     $("#txtCount" + ID).text($("#txtMessage" + ID).val().length + "/500");
+    $("#txtMessage" + ID).focus();
 }
 
 //テキストエリア内の文字数をリアルタイムに反映する関数

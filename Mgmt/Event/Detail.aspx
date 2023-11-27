@@ -73,13 +73,13 @@
                         <label style="font-weight: bold;">スケジュール</label>
                     </div>
                     <div class="col-2">
-                        <input type="text" class="form-control" id="txtScheduleFm" min="<%=DefaultDate %>" max="<%=EndDate %>" required="required" readonly="readonly"/>
+                        <input type="text" class="form-control" id="txtScheduleFm" required="required" readonly="readonly"/>
                     </div>
                     <div class="col-1 text-center">
                         <p class="h6">～</p>
                     </div>
                     <div class="col-2">
-                        <input type="text" class="form-control" id="txtScheduleTo" min="<%=DefaultDate %>" max="<%=EndDate %>" required="required" readonly="readonly"/>
+                        <input type="text" class="form-control" id="txtScheduleTo" required="required" readonly="readonly"/>
                     </div>
                 </div>
                 <div class="row" style="margin-top: 4px; margin-bottom: 21px;">
