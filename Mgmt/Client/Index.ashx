@@ -187,7 +187,7 @@ Public Class Index : Implements IHttpHandler
                     Dim messageObj As Object = eventsObj("message")
                     sLastMessage = messageObj("text").ToString()
                 End If
-                sHTML.Append("<div id=Seatch" & cDB.DRData("SearchID") & " class=""LineUser d-flex align-items-center""><img src=""" & cDB.DRData("wPictureUrl") & """ class=""rounded-circle""/><p>" & cDB.DRData("wDisplayName") & "<br>" & sLastMessage & "</p></div>")
+                sHTML.Append("<div id=Seatch" & cDB.DRData("SearchID") & " class=""LineUser d-flex align-items-center""><img src=""" & cDB.DRData("wPictureUrl") & """ class=""rounded-circle""/><div class=""d-flex flex-column""><div id=Search" & cDB.DRData("SearchID") & "_name>" & cDB.DRData("wDisplayName") & "</div><div id=Search" & cDB.DRData("SearchID") & "_message class=""text-black-50"">" & sLastMessage.Replace(vbLf, " ") & "</div></div></div>")
             Loop
         Catch ex As Exception
             sRet = ex.Message
@@ -221,6 +221,7 @@ Public Class Index : Implements IHttpHandler
         Dim sSQL As New StringBuilder
         Dim dLogDate As Date = Nothing
         Dim sLastLogID As String = ""
+        Dim sLastUserMessage As String = ""
         Dim sLastMessage As String = ""
 
         Try
@@ -278,6 +279,7 @@ Public Class Index : Implements IHttpHandler
                     jMessage = jMessages.Last()
                     sMessage.Clear()
                     sMessage.Append(jMessage("text").ToString)
+                    sLastMessage = sMessage.ToString
                     sHTML.Append("<div class=""row"">")
                     sHTML.Append("<div class=""col-6""></div>")
                     sHTML.Append("<div class=""col-6 text-end"">")
@@ -299,7 +301,8 @@ Public Class Index : Implements IHttpHandler
                     sMessage.Clear()
                     sMessage.Append(messageObj("text").ToString)
                     sLastLogID = cDB.DRData("LogID").ToString
-                    sLastMessage = sMessage.ToString
+                    sLastUserMessage = sMessage.ToString
+                    sLastMessage = sLastUserMessage
                     sHTML.Append("<div class=""row"">")
                     sHTML.Append("<div class=""col-6 text-start"">")
                     sHTML.Append("<div class=""border MessageTextArea"">")
@@ -333,6 +336,7 @@ Public Class Index : Implements IHttpHandler
             hHash.Add("status", sStatus)
             hHash.Add("html", sHTML.ToString)
             hHash.Add("lastlogid", sLastLogID)
+            hHash.Add("lastusermessage", sLastUserMessage)
             hHash.Add("lastmessage", sLastMessage)
 
             sJson = jJson.Serialize(hHash)
@@ -345,7 +349,7 @@ Public Class Index : Implements IHttpHandler
         Dim cCom As New Common
         Dim cDB As New CommonDB
         Dim sRet As String = ""
-        Dim sStatus = "OK"
+        Dim sStatus As String = "OK"
         Dim hHash As New Hashtable
         Dim jJson As New JavaScriptSerializer
         Dim sJson As String = ""

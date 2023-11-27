@@ -18,9 +18,9 @@
     <div class="container">
         <%--ヘッダー読み込み--%>
         <%=cCom.CmnDspHeader() %>
-        <div id="btnOption" class="row accordion-body">
-            <div class="col-sm"></div>
-            <input type="button" value="戻る" name="Back" id="btnBack" class="col-sm btn btn-outline-secondary"/>
+        <div id="btnOption" class="row w-100">
+            <div class="col-10"></div>
+            <input type="button" value="戻る" name="Back" id="btnBack" class="col-2 btn btn-outline-secondary"/>
         </div>
         <div class="d-flex">
             <div id="ItiranBox" class="w-25">
