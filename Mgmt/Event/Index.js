@@ -108,9 +108,9 @@ function btnClearClick() {
     document.getElementById("txtScheduleFm").value = "";
     document.getElementById("txtScheduleTo").value = "";
     document.getElementById("txtKeyword").value = "";
-    document.getElementById("CntArea").innerText = "";
-    document.getElementById("PageNationArea").innerText = "";
-    document.getElementById("ItiranArea").innerText = "";
+    //document.getElementById("CntArea").innerText = "";
+    //document.getElementById("PageNationArea").innerText = "";
+    //document.getElementById("ItiranArea").innerText = "";
     //$.ajax({
     //    url: Ajax_File,
     //    method: "POST",
