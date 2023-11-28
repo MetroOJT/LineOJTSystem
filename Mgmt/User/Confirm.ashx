@@ -171,8 +171,10 @@ Public Class Confirm : Implements IHttpHandler
         Dim sRet As String = ""
         Dim sStatus As String = "OK"
         Dim sTempTable As String = ""
+        Dim Cookie_UserID As String = ""
 
         Dim sUser_ID As String = ""
+        Dim sErrorMessage As String = ""
 
         Dim iCount As Integer = 0
 
@@ -180,13 +182,18 @@ Public Class Confirm : Implements IHttpHandler
             sUser_ID = context.Request.Item("User_ID")
 
             cDB.AddWithValue("@UserID", sUser_ID)
-
-            'ユーザーマスタに新規登録する
-            sSQL.Clear()
-            sSQL.Append("DELETE")
-            sSQL.Append(" FROM " & cCom.gctbl_UserMst)
-            sSQL.Append(" WHERE UserID = @UserID")
-            cDB.ExecuteSQL(sSQL.ToString)
+            Cookie_UserID = Cki.Get_Cookies("User_ID")
+            If sUser_ID = Cookie_UserID Then
+                sErrorMessage = "現在ログインしているユーザーのため、削除することが出来ません。"
+            End If
+            If sErrorMessage = "" Then
+                'ユーザーマスタに新規登録する
+                sSQL.Clear()
+                sSQL.Append("DELETE")
+                sSQL.Append(" FROM " & cCom.gctbl_UserMst)
+                sSQL.Append(" WHERE UserID = @UserID")
+                cDB.ExecuteSQL(sSQL.ToString)
+            End If
 
             If cDB.ReadDr Then
                 iCount = 1
@@ -202,6 +209,7 @@ Public Class Confirm : Implements IHttpHandler
                 cCom.CmnWriteStepLog(sRet)
             End If
 
+            hHash.Add("ErrorMessage", sErrorMessage)
             hHash.Add("status", sStatus)
             hHash.Add("count", iCount)
 

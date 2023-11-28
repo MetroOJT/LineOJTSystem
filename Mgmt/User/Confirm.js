@@ -9,6 +9,7 @@ const User_Name = sessionStorage.getItem("iUser_Name");
 const Admin_Check = sessionStorage.getItem("iAdmin_Check");
 const Password = sessionStorage.getItem("iPassword");
 const hUser_ID = sessionStorage.getItem("hUserID");
+var location_flag = 0;
 
 document.querySelector("#user_ID").value = User_ID;
 document.querySelector("#user_Name").value = User_Name;
@@ -59,6 +60,10 @@ function btnRegistrationClick() {
                     if (data.ErrorMessage == "") {
                         if (data.Mode == "Ins") {
                             // 新規登録が完了した
+                            sessionStorage.removeItem('Detail_UserID');
+                            sessionStorage.removeItem('Detail_UserName');
+                            sessionStorage.removeItem('Detail_AdminCheck');
+                            sessionStorage.removeItem('Detail_Password');
                             $('#staticBackdrop1').modal('show');
                         } else {
                             // 更新が完了した
@@ -105,7 +110,11 @@ function functionSeni_Index() {
 };
 
 function functionSeni_Detail() {
-    window.location.href = "Detail.aspx";
+    if (location_flag == 1) {
+        functionSeni_Index();
+    } else {
+        window.location.href = "Detail.aspx";
+    }
 };
 
 // 該当するデータを削除する
@@ -127,15 +136,28 @@ function fnc_Yes() {
         dataType: "json",
         success: function (data) {
             if (data != "") {
+                console.log(data);
                 if (data.status == "OK") {
                     // 表示するコードを書く
+                        
                     sessionStorage.removeItem("hUserID");
                     if (sessionStorage.getItem("dUser_ID")) {
                         sessionStorage.removeItem("dUser_ID");
                     };
-                    const modal_sentence2 = document.querySelector('#modal_sentence1');
-                    modal_sentence2.textContent = "削除が完了しました";
-                    $('#staticBackdrop1').modal('show');
+                    if (data.ErrorMessage == "") {
+                        // 削除が完了した場合
+                        const modal_sentence2 = document.querySelector('#modal_sentence1');
+                        modal_sentence2.textContent = "削除が完了しました";
+                        $('#staticBackdrop1').modal('show');
+                    } else {
+                        // ログインしているユーザーを削除しようとした場合
+                        location_flag = 1;
+                        const modal_sentence4 = document.querySelector('#modal_sentence3');
+                        modal_sentence4.textContent = "現在ログインしているユーザーのため、削除することが出来ません。";
+                        $('#staticBackdrop3').modal('show');
+                        document.querySelector('#modal_close3').addEventListener('click', functionSeni_Index);
+                    }
+                    
                     document.querySelector('#modal_close1').addEventListener('click', functionSeni_Index);
                 } else {
                     alert("エラーが発生しました。");
@@ -157,5 +179,11 @@ function btnBackClick() {
     if (sessionStorage.getItem('dUser_ID')) {
         sessionStorage.removeItem('dUser_ID');
     }
+    // 新規登録画面から確認画面に来て戻るボタンを押下した場合
+    sessionStorage.setItem("Detail_UserID", User_ID);
+    sessionStorage.setItem("Detail_UserName", User_Name);
+    sessionStorage.setItem("Detail_AdminCheck", Admin_Check);
+    sessionStorage.setItem("Detail_Password", Password);
+
     window.location.href = "Detail.aspx";
 };
