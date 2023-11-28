@@ -27,6 +27,10 @@ window.onload = function () {
         changeYear: "true",
         minDate: new Date(1900, 1, 1),
         maxDate: new Date(),
+        beforeShow: function (inst, elem) {
+            setCalsClearButton(null, null, elem);
+        },
+        onChangeMonthYear: setCalsClearButton
     });
 
     let fm = $("#DateFm").datepicker({
@@ -45,6 +49,38 @@ window.onload = function () {
     Search("Yes");
 }
 
+var setCalsClearButton = function (year, month, elem) {
+
+    var afterShow = function () {
+        var d = new $.Deferred();
+        var cnt = 0;
+        setTimeout(function () {
+            if (elem.dpDiv[0].style.display === "block") {
+                d.resolve();
+            }
+            if (cnt >= 500) {
+                d.reject("datepicker show timeout");
+            }
+            cnt++;
+        }, 10);
+        return d.promise();
+    }();
+
+    afterShow.done(function () {
+
+        // datepickerのz-indexを指定  
+        $('.ui-datepicker').css('z-index', 2000);
+
+        var buttonPane = $(elem).datepicker("widget").find(".ui-datepicker-buttonpane");
+
+        var btn = $('<button class="ui-datepicker-current ui-state-default ui-priority-primary ui-corner-all" type="button">クリア</button>');
+        btn.off("click").on("click", function () {
+            $.datepicker._clearDate(elem.input[0]);
+            $("#DateFm").datepicker("option", "maxDate", new Date());
+        });
+        btn.appendTo(buttonPane);
+    });
+}
 
 function btnSearchClick() {
     SearchPage = 1;

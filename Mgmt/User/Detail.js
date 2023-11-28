@@ -53,6 +53,7 @@ if (sessionStorage.getItem('hUserID') != null) {
         }
     });
 } else {
+    document.querySelector("#user_ID").focus();
     document.getElementById("delete_button").style.display = "none";
     document.getElementById("delete_button").classList.remove("btn-outline-danger");
     document.getElementById("delete_button").classList.add("btn-secondary");
