@@ -21,6 +21,8 @@ if (getCookie("LogNowPage") != "") {
 var PageMedian = 2; // ページャの中央値 [ 1 , ② , 3 ]
 
 window.onload = function () {
+    // 登録日の入力欄でdatepickerを使う
+    // 初期設定
     $.datepicker.setDefaults({
         showButtonPanel: "true",
         changeMonth: "true",
@@ -32,13 +34,13 @@ window.onload = function () {
         },
         onChangeMonthYear: setCalsClearButton
     });
-
+    // fromを選択すると、toで選択できる日付を制限する
     let fm = $("#DateFm").datepicker({
         onSelect: function (selectedDate) {
             $("#DateTo").datepicker("option", "minDate", selectedDate);
         }
     });
-
+    // toを選択すると、fromで選択できる日付を制限する
     let to = $("#DateTo").datepicker({
         onSelect: function (selectedDate) {
             $("#DateFm").datepicker("option", "maxDate", selectedDate);
@@ -49,6 +51,7 @@ window.onload = function () {
     Search("Yes");
 }
 
+// 登録日の入力欄のクリアボタン
 var setCalsClearButton = function (year, month, elem) {
 
     var afterShow = function () {
@@ -82,13 +85,22 @@ var setCalsClearButton = function (year, month, elem) {
     });
 }
 
+$(function () {
+    document.getElementById("btnSearch").addEventListener("click", btnSearchClick, false);
+    document.getElementById("btnSign_up").addEventListener("click", btnSignUpClick, false);
+    document.getElementById("btnBack").addEventListener("click", btnBackClick, false);
+    document.getElementById("btnClose").addEventListener("click", btnCloseClick, false);
+    document.getElementById("btnClear").addEventListener("click", btnClearClick, false);
+});
+
+// 検索ボタンクリック
 function btnSearchClick() {
     SearchPage = 1;
     document.cookie = document.cookie = "LogNowPage=" + 0 + "; max-age=86400; path=/";
     Search();
 }
 
-// 閉じる
+// 閉じるボタンクリック
 function btnCloseClick() {
     const cona = document.getElementById("cona");
     const conb = document.getElementById("conb");
@@ -109,16 +121,9 @@ function btnCloseClick() {
     }
 };
 
-$(function () {
-    document.getElementById("btnSearch").addEventListener("click", btnSearchClick, false);
-    document.getElementById("btnSign_up").addEventListener("click", btnSignUpClick, false);
-    document.getElementById("btnBack").addEventListener("click", btnBackClick, false);
-    document.getElementById("btnClose").addEventListener("click", btnCloseClick, false);
-    document.getElementById("btnClear").addEventListener("click", btnClearClick, false);
-});
-
 // 検索ボタンが押された時の処理
 function Search(first_flag) {
+    // 入力値を取得する
     var User_ID = $("#user_ID").val();
     var User_Name = $("#user_Name").val();
     var Admin_Check = $("#Kanrisya").val();
@@ -160,6 +165,7 @@ function Search(first_flag) {
                         }
                         MakeUserTable(PagerID);
                     } else {
+                        // 検索結果を表示する
                         MakeUserTable(1); // 初期検索・検索(1ページ目を強制表示)
                     }
                 } else {
@@ -169,6 +175,8 @@ function Search(first_flag) {
         }
     });
 }
+
+// 検索結果を表示する
 function MakeUserTable(PagerID){
     if (PagerID != "") {
         switch (PagerID) {

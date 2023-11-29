@@ -1,8 +1,8 @@
-﻿//ログインなされているかをチェックする関数
+﻿//ログインされているかをチェックする関数
 function_login_check();
 DspLoginUserName();
-var Ajax_File = "Confirm.ashx";
 
+var Ajax_File = "Confirm.ashx";
 const re_UserID = sessionStorage.getItem('UserID');
 const User_ID = sessionStorage.getItem("iUser_ID");
 const User_Name = sessionStorage.getItem("iUser_Name");
@@ -24,6 +24,7 @@ if (Admin_Check == 0) {
 
 const dUser_ID = sessionStorage.getItem("dUser_ID");
 if (dUser_ID) {
+    // ユーザー登録画面で削除ボタンを押下してきた場合
     const registration_button = document.getElementById("registration_button");
     registration_button.id = "delete_button";
     registration_button.value = "削除";
@@ -31,6 +32,7 @@ if (dUser_ID) {
     registration_button.classList.add("btn-outline-danger");
     document.getElementById("delete_button").addEventListener("click", btnDeleteClick, false);
 } else {
+    // ユーザー検索画面で登録ボタンを押下してきた場合
     document.getElementById("registration_button").addEventListener("click", btnRegistrationClick, false);
 };
 
@@ -68,7 +70,7 @@ function btnRegistrationClick() {
                         } else {
                             // 更新が完了した
                             const modal_sentence1 = document.querySelector('#modal_sentence1');
-                            modal_sentence1.textContent = "更新が完了しました";
+                            modal_sentence1.textContent = "更新が完了しました。";
                             $('#staticBackdrop1').modal('show');
                         };
                         sessionStorage.removeItem('hUserID');
@@ -77,6 +79,7 @@ function btnRegistrationClick() {
                         }
                         document.querySelector('#modal_close1').addEventListener('click', functionSeni_Index);
                     } else {
+                        // 追加しようとしたユーザーが既に登録されていた場合
                         $('#staticBackdrop3').modal('show');
                         document.querySelector('#modal_close3').addEventListener('click', functionSeni_Detail);
                     };                    
@@ -88,6 +91,7 @@ function btnRegistrationClick() {
     });
 };
 
+// クッキーの情報を削除して、ユーザー検索画面に遷移する
 function functionSeni_Index() {
     $.ajax({
         url: Ajax_File,
@@ -109,6 +113,7 @@ function functionSeni_Index() {
     window.location.href = "Index.aspx";
 };
 
+// ユーザー登録画面に遷移する
 function functionSeni_Detail() {
     if (location_flag == 1) {
         functionSeni_Index();
@@ -124,6 +129,7 @@ function btnDeleteClick() {
     document.querySelector('#modal_No').addEventListener('click', fnc_No);
 }
 
+// 本当に削除してよいかのモーダルで削除ボタンを押下した場合
 function fnc_Yes() {
     const hUserID = sessionStorage.getItem('hUserID');
     $.ajax({
@@ -147,7 +153,7 @@ function fnc_Yes() {
                     if (data.ErrorMessage == "") {
                         // 削除が完了した場合
                         const modal_sentence2 = document.querySelector('#modal_sentence1');
-                        modal_sentence2.textContent = "削除が完了しました";
+                        modal_sentence2.textContent = "削除が完了しました。";
                         $('#staticBackdrop1').modal('show');
                     } else {
                         // ログインしているユーザーを削除しようとした場合
@@ -167,10 +173,12 @@ function fnc_Yes() {
     })
 };
 
+// 本当に削除してよいかのモーダルでキャンセルボタンを押下した場合
 function fnc_No() {
     $('#staticBackdrop5').modal('hide');
 };
 
+// 戻るボタンを押下した場合
 function btnBackClick() {
     sessionStorage.removeItem('iUser_ID');
     sessionStorage.removeItem('iPassword');

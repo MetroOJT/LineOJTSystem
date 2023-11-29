@@ -8,8 +8,6 @@ Public Class Index : Implements IHttpHandler
 
     Public Sub ProcessRequest(ByVal context As HttpContext) Implements IHttpHandler.ProcessRequest
         Select Case context.Request.Item("mode")
-            'Case "Registration"
-            '    context.Response.Write(Registration(context))
             Case "Load"
                 context.Response.Write(Load(context))
             Case "Search"

@@ -68,7 +68,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="functionSeni_Index()"></button>
                     </div>
                     <div class="modal-body" id="modal_sentence1">
-                        新規登録が完了しました
+                        新規登録が完了しました。
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="modal_close1">Close</button>
@@ -86,7 +86,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="functionSeni_Detail()"></button>
                     </div>
                     <div class="modal-body" id="modal_sentence3">
-                        そのユーザーIDはすでに登録されています
+                        そのユーザーIDはすでに登録されています。
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="modal_close3">Close</button>
