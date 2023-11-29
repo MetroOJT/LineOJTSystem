@@ -21,31 +21,10 @@ if (getCookie("LogNowPage") != "") {
 var PageMedian = 2; // ページャの中央値 [ 1 , ② , 3 ]
 
 window.onload = function () {
-    // 登録日の入力欄でdatepickerを使う
-    // 初期設定
-    $.datepicker.setDefaults({
-        showButtonPanel: "true",
-        changeMonth: "true",
-        changeYear: "true",
-        minDate: new Date(1900, 1, 1),
-        maxDate: new Date(),
-        beforeShow: function (inst, elem) {
-            setCalsClearButton(null, null, elem);
-        },
-        onChangeMonthYear: setCalsClearButton
-    });
-    // fromを選択すると、toで選択できる日付を制限する
-    let fm = $("#DateFm").datepicker({
-        onSelect: function (selectedDate) {
-            $("#DateTo").datepicker("option", "minDate", selectedDate);
-        }
-    });
-    // toを選択すると、fromで選択できる日付を制限する
-    let to = $("#DateTo").datepicker({
-        onSelect: function (selectedDate) {
-            $("#DateFm").datepicker("option", "maxDate", selectedDate);
-        }
-    });
+    var dMinDate = LowerLimitDate;
+    var dMaxDate = UpperLimitDate;
+
+    CmnFlatpickr("DateFm", "DateTo", dMinDate, dMaxDate, false);
 
     // 初期検索
     Search("Yes");
@@ -130,15 +109,6 @@ function Search(first_flag) {
     var Date_Fm = $("#DateFm").val();
     var Date_To = $("#DateTo").val();
     var w;
-
-    if (Date_Fm > Date_To) {
-        w = Date_Fm;
-        Date_Fm = Date_To;
-        Date_To = w;
-
-        document.querySelector("#DateFm").value = Date_Fm;
-        document.querySelector("#DateTo").value = Date_To;
-    }
 
     $.ajax({
         url: Ajax_File,
