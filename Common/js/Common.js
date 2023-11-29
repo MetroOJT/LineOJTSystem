@@ -11,7 +11,7 @@ function getCookie(name) {
     let cookieName = name + "=";
     let decodedCookie = decodeURIComponent(document.cookie);
     let cookies = decodedCookie.split(';');
-  
+
     for (let i = 0; i < cookies.length; i++) {
         let cookie = cookies[i].trim();
         if (cookie.indexOf(cookieName) === 0) {
@@ -35,7 +35,7 @@ function updateCookie(name, newValue, newDays) {
     }
 }
 
-    // クッキーの有効期限（日数）を取得する補助関数
+// クッキーの有効期限（日数）を取得する補助関数
 function getCookieDays(name) {
     // この関数は、クッキーの作成時に有効期限を取得するために使用されます。
     // 必要に応じて実装を追加してください。
@@ -49,7 +49,7 @@ function createElementFromHTML(html) {
 }
 
 // ログインして画面を開いたかを確認する関数
-function function_login_check(){
+function function_login_check() {
     const login_check = sessionStorage.getItem("login_check");
     if (login_check != 1) {
         const unauthorized_access = 1;
@@ -60,7 +60,7 @@ function function_login_check(){
 
 function DspLoginUserName() {
     const LoginUserName = sessionStorage.getItem("UserName");
-    document.getElementById("LoginUserName").textContent =　LoginUserName;
+    document.getElementById("LoginUserName").textContent = LoginUserName;
 }
 
 function LogOut() {
@@ -68,3 +68,74 @@ function LogOut() {
     document.cookie.split(";").forEach(function (c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });
     window.location.href = "../../Mgmt/Login/Index.aspx";
 }
+
+function CmnFlatpickr(sFmObj, sToObj, dMinDate, dMaxDate, bTimeFlg) {
+    let lang = "ja";
+    let sFormat = "";
+    let SetMinDate = dMinDate;
+    let SetMaxDate = dMaxDate;
+
+    if (bTimeFlg) {
+        sFormat = "Y/m/d H:i";
+    } else {
+        sFormat = "Y/m/d";
+    }
+
+    flatpickr("#" + sFmObj, {
+        locale: lang,
+        minuteIncrement: 10,
+        showMonths:3,
+        dateFormat: sFormat,
+        enableTime: bTimeFlg,
+        minDate: dMinDate,
+        maxDate: dMaxDate
+    })
+
+    flatpickr("#" + sToObj, {
+        locale: lang,
+        minuteIncrement: 10,
+        showMonths: 3,
+        dateFormat: sFormat,
+        enableTime: bTimeFlg,
+        minDate: dMinDate,
+        maxDate: dMaxDate
+    })
+
+    $('#' + sFmObj).change(function () {
+        console.log("test")
+        if ($('#' + sFmObj).val() != "") {
+            SetMinDate = $('#' + sFmObj).val();
+        } else {
+            SetMinDate = dMinDate;
+        }
+
+        flatpickr("#" + sToObj, {
+            locale: lang,
+            minuteIncrement: 10,
+            showMonths: 3,
+            dateFormat: sFormat,
+            enableTime: bTimeFlg,
+            minDate: SetMinDate,
+            maxDate: dMaxDate
+        })
+    });
+
+    $("#" + sToObj).change(function () {
+        if ($("#" + sToObj).val() != "") {
+            SetMaxDate = $("#" + sToObj).val();
+        } else {
+            SetMaxDate = dMaxDate;
+        }
+
+        flatpickr("#" + sFmObj, {
+            locale:lang,
+            minuteIncrement: 10,
+            showMonths: 3,
+            dateFormat: sFormat,
+            enableTime: bTimeFlg,
+            minDate: dMinDate,
+            maxDate: SetMaxDate
+        })
+    });
+}
+

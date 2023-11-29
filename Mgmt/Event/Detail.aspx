@@ -8,8 +8,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/ui-lightness/jquery-ui.css"/>
-    
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/ui-lightness/jquery-ui.css"/>  
+　　<%--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-datetimepicker@2.5.20/jquery.datetimepicker.css">--%>
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />  
+    <link rel="stylesheet" href="../../Common/css/Common.css" />
     <link rel="stylesheet" href="Detail.css" />
 
     <title>イベント登録画面</title>
@@ -73,13 +75,13 @@
                         <label style="font-weight: bold;">スケジュール</label>
                     </div>
                     <div class="col-2">
-                        <input type="text" class="form-control" id="txtScheduleFm" required="required" readonly="readonly"/>
+                        <input type="text" class="form-control" id="txtScheduleFm" name="" required="required"  autocomplete="off" />
                     </div>
                     <div class="col-1 text-center">
                         <p class="h6">～</p>
                     </div>
                     <div class="col-2">
-                        <input type="text" class="form-control" id="txtScheduleTo" required="required" readonly="readonly"/>
+                        <input type="text" class="form-control" id="txtScheduleTo" required="required" autocomplete="off"/>
                     </div>
                 </div>
                 <div class="row" style="margin-top: 4px; margin-bottom: 21px;">
@@ -119,6 +121,11 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1/i18n/jquery.ui.datepicker-ja.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <%--<script src="https://cdn.jsdelivr.net/npm/jquery-datetimepicker@2.5.20/build/jquery.datetimepicker.full.min.js"></script>--%>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <!-- 日本語化する場合は下記を追記 -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
     <%="<script src='../../Common/js/Common.js?ts=" & cCom.CmnTimeStamp & "'></script>" %>
     <%="<script src='Detail.js?ts=" & cCom.CmnTimeStamp & "'></script>" %>
 </body>

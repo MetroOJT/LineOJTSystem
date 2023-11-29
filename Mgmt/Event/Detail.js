@@ -13,37 +13,6 @@ let ScheduleTo;
 let Keyword;
 let Messages;
 let iniForm;
-let setCalsClearButton = function (year, month, elem) {
-
-    let afterShow = function () {
-        let d = new $.Deferred();
-        let cnt = 0;
-        setTimeout(function () {
-            if (elem.dpDiv[0].style.display === "block") {
-                d.resolve();
-            }
-            if (cnt >= 500) {
-                d.reject("datepicker show timeout");
-            }
-            cnt++;
-        }, 10);
-        return d.promise();
-    }();
-
-    afterShow.done(function () {
-
-        // datepickerのz-indexを指定  
-        $('.ui-datepicker').css('z-index', 2000);
-
-        let buttonPane = $(elem).datepicker("widget").find(".ui-datepicker-buttonpane");
-
-        let btn = $('<button class="ui-datepicker-current ui-state-default ui-priority-primary ui-corner-all" type="button">クリア</button>');
-        btn.off("click").on("click", function () {
-            $.datepicker._clearDate(elem.input[0]);
-        });
-        btn.appendTo(buttonPane);
-    });
-}
 
 $(function () {
     //ヘッダーの担当者名を入れる関数
@@ -57,12 +26,17 @@ $(function () {
     document.getElementById("Backbtn").addEventListener("mouseup", BackbtnClick, false);
     document.getElementById("MessageAddbtn").addEventListener("mouseup", MessageAddbtnClick, false);
 
+    let dMinDate = new Date();
+    let dMaxDate = new Date(2099, 12 - 1, 31);
+    CmnFlatpickr("txtScheduleFm", "txtScheduleTo", dMinDate, dMaxDate, false);
+
     //登録モードか更新モードかを判別する
     if (sessionStorage.getItem("EventID") != null) {
         //更新モード
         EventLoad();
+
         $("#Deletebtn").css("display", "grid");
-        
+
 
     } else {
         //登録モード
@@ -74,33 +48,9 @@ $(function () {
     //ロード時イベント名にフォーカスを当てる
     $("#txtEventName").focus();
 
-
-    //datepicker設定
-    $.datepicker.setDefaults({
-        showButtonPanel: "true",
-        changeMonth: "true",
-        changeYear: "true",
-        minDate: new Date(),
-        maxDate: new Date(2099, 12 - 1, 31),
-        beforeShow: function (inst, elem) {
-            setCalsClearButton(null, null, elem);
-        },
-        onChangeMonthYear: setCalsClearButton
-    });
-
-    let fm = $("#txtScheduleFm").datepicker({
-        onSelect: function (selectedDate) {
-            $("#txtScheduleTo").datepicker("option", "minDate", selectedDate);
-        }
-    });
-
-    let to = $("#txtScheduleTo").datepicker({
-        onSelect: function (selectedDate) {
-            $("#txtScheduleFm").datepicker("option", "maxDate", selectedDate);
-        }
-    });
     
 })
+
 
 //フォームが変更されたかされていないか検出するために使用する関数
 function CompareForm() {
@@ -131,7 +81,7 @@ function CompareForm() {
         form += ele.value;
 
     }
-    
+
     return form;
 
 }
@@ -142,21 +92,21 @@ function ModalSet(Area, title, body, savebtn, savebtnstyle, cancelbtn, onclick) 
     let id = "";
     if (Area == "MessageModalArea") {
         id = "ConfirmMessageModal";
-    } else if(Area == "ModalArea") {
+    } else if (Area == "ModalArea") {
         id = "ConfirmModal";
     }
-    Modal += '<div class="modal fade" id="'+ id +'" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">'
+    Modal += '<div class="modal fade" id="' + id + '" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">'
     Modal += '    <div class="modal-dialog">'
     Modal += '        <div class="modal-content">'
     Modal += '            <div class="modal-header">'
-    Modal += '                <h1 class="modal-title fs-5" id="ConfirmModalTitle">'+ title +'</h1>'
+    Modal += '                <h1 class="modal-title fs-5" id="ConfirmModalTitle">' + title + '</h1>'
     Modal += '            </div>'
-    Modal += '            <div class="modal-body" id="ModalBody">'+ body +'</div>'
+    Modal += '            <div class="modal-body" id="ModalBody">' + body + '</div>'
     Modal += '            <div class="modal-footer">'
-    if(savebtn != ""){
-        Modal += '                <button type="button" id="ModalSavebtn" class="btn '+savebtnstyle +'">'+ savebtn +'</button>'
+    if (savebtn != "") {
+        Modal += '                <button type="button" id="ModalSavebtn" class="btn ' + savebtnstyle + '">' + savebtn + '</button>'
     }
-    Modal += '                <button type="button" id="ModalBackbtn" class="btn btn-outline-secondary" data-bs-dismiss="modal" onclick="ModalbtnCancelClick">'+ cancelbtn +'</button>'
+    Modal += '                <button type="button" id="ModalBackbtn" class="btn btn-outline-secondary" data-bs-dismiss="modal" onclick="ModalbtnCancelClick">' + cancelbtn + '</button>'
     Modal += '            </div>'
     Modal += '        </div>'
     Modal += '    </div>'
@@ -164,7 +114,7 @@ function ModalSet(Area, title, body, savebtn, savebtnstyle, cancelbtn, onclick) 
     document.getElementById(Area).innerHTML = Modal;
     if (savebtn != "") {
         document.getElementById("ModalSavebtn").setAttribute("onclick", onclick)
-    }  
+    }
 }
 
 //更新するデータをロードする関数
@@ -201,6 +151,10 @@ function EventLoad() {
                         $("#txtScheduleTo").val("");
                     }
 
+                    //onchange強制発火
+                    $('#txtScheduleFm').trigger('change');
+                    $('#txtScheduleTo').trigger('change');
+
                     $("#txtKeyword").val(data.Keyword);
                     document.getElementById("MessageArea").innerHTML = data.Html;
 
@@ -216,6 +170,8 @@ function EventLoad() {
                         $("#MessageAddbtn").addClass("btn-secondary");
                         $("#MessageAddbtn").removeClass("btn-outline-primary");
                     }
+
+
 
                     //ページロード時のフォーム内容を保存
                     iniForm = CompareForm()
@@ -245,21 +201,21 @@ function SameCheck(Flg) {
         data: {
             "mode": "FinalCheck",
             "EventName": EventName,
-            "Keyword":Keyword,
+            "Keyword": Keyword,
             "Update_EventID": sessionStorage.getItem("EventID")
         },
         dataType: "json",
         success: function (data) {
             if (data != "") {
                 if (data.status == "OK") {
-                    
+
                     if (data.EventNameErrMsg != "") {
                         $("#EventName-invalid-feedback").text(data.EventNameErrMsg);
                         $("#txtEventName").addClass("is-invalid");
                         $("#txtEventName").removeClass("is-valid");
                         EventNameFlg = false;
                     }
- 
+
                     if (data.KeywordErrMsg != "") {
                         $("#Keyword-invalid-feedback").text(data.KeywordErrMsg);
                         $("#txtKeyword").addClass("is-invalid");
@@ -267,7 +223,7 @@ function SameCheck(Flg) {
                         KeywordFlg = false;
                     }
 
-                    if(EventNameFlg && KeywordFlg){
+                    if (EventNameFlg && KeywordFlg) {
                         SameFlg = true;
                     }
 
@@ -388,7 +344,7 @@ function SavebtnClick() {
     if (Keyword.trim() == "") {
         $("#Keyword-invalid-feedback").text("キーワードを入力してください。");
         flag = false;
-    } 
+    }
 
     //空白のメッセージコンテナがないか、メッセージが一つ以上入力されているかを判別
     if (document.getElementsByClassName("txtMessage").length > 0) {
@@ -419,77 +375,77 @@ function SavebtnClick() {
 function Modalsavebtnclick() {
 
     $.ajax({
-    url: Ajax_File,
-    method: "POST",
-    data: {
-        "mode": "Save",
-        "EventName": EventName,
-        "EventStatus": EventStatus,
-        "ScheduleFm": ScheduleFm,
-        "ScheduleTo": ScheduleTo,
-        "Keyword": Keyword,
-        "Messages": Messages,
-        "Update_UserID": sessionStorage.getItem("UserID"),
-        "Update_EventID": sessionStorage.getItem("EventID")
-    },
-    dataType: "json",
-    success: function (data) {
-        if (data != "") {
-            if (data.status == "OK") {
-                if (data.ErrorMessage != "") {
-                    //document.getElementById("ModalSavebtn").style.display = "none";
-                    //document.getElementById("ModalBackbtn").textContent = "閉じる";
-                    //document.getElementById("ModalBody").textContent = data.ErrorMessage;
-                    if (data.ErrorMessage == "同じイベント名は登録できません。") {
-                        $("#EventName-invalid-feedback").text("このイベント名は既に登録されています。");
-                        $("#txtEventName").addClass("is-invalid");
-                        $("#txtEventName").removeClass("is-valid");
-                    } else if (data.ErrorMessage == "同じキーワードは登録できません。") {
-                        $("#Keyword-invalid-feedback").text("このキーワードは既に登録されています。");
-                        $("#txtKeyword").addClass("is-invalid");
-                        $("#txtKeyword").removeClass("is-valid");
+        url: Ajax_File,
+        method: "POST",
+        data: {
+            "mode": "Save",
+            "EventName": EventName,
+            "EventStatus": EventStatus,
+            "ScheduleFm": ScheduleFm,
+            "ScheduleTo": ScheduleTo,
+            "Keyword": Keyword,
+            "Messages": Messages,
+            "Update_UserID": sessionStorage.getItem("UserID"),
+            "Update_EventID": sessionStorage.getItem("EventID")
+        },
+        dataType: "json",
+        success: function (data) {
+            if (data != "") {
+                if (data.status == "OK") {
+                    if (data.ErrorMessage != "") {
+                        //document.getElementById("ModalSavebtn").style.display = "none";
+                        //document.getElementById("ModalBackbtn").textContent = "閉じる";
+                        //document.getElementById("ModalBody").textContent = data.ErrorMessage;
+                        if (data.ErrorMessage == "同じイベント名は登録できません。") {
+                            $("#EventName-invalid-feedback").text("このイベント名は既に登録されています。");
+                            $("#txtEventName").addClass("is-invalid");
+                            $("#txtEventName").removeClass("is-valid");
+                        } else if (data.ErrorMessage == "同じキーワードは登録できません。") {
+                            $("#Keyword-invalid-feedback").text("このキーワードは既に登録されています。");
+                            $("#txtKeyword").addClass("is-invalid");
+                            $("#txtKeyword").removeClass("is-valid");
+                        }
+                    } else {
+
+                        //登録・更新完了後チェックを外す
+
+                        let form = document.querySelector('#main');
+                        let elm = form.querySelectorAll('.form-control');
+
+                        form.querySelectorAll('.form-control').forEach(function (elm) {
+                            elm.classList.remove("is-valid");
+                        })
+                        form.querySelectorAll('.form-check-input').forEach(function (elm) {
+                            elm.classList.remove("is-valid");
+                        })
+
+                        //完了モーダル表示
+                        document.getElementById("ModalSavebtn").style.display = "none";
+                        document.getElementById("ModalBackbtn").textContent = "閉じる";
+                        if (data.Mode == "Ins") {
+                            document.getElementById("ModalBody").textContent = "登録が完了しました。";
+                            document.getElementById("Savebtn").value = "更新";
+                            $("#Deletebtn").css("display", "grid");
+
+                        } else {
+                            document.getElementById("ModalBody").textContent = "更新が完了しました。";
+                        }
+
+                        //更新・登録したEventIDをセッション変数としてセットする
+                        sessionStorage.setItem("EventID", data.EventID)
+                        iniForm = CompareForm();
+
                     }
+
                 } else {
-
-                    //登録・更新完了後チェックを外す
-
-                    let form = document.querySelector('#main');
-                    let elm = form.querySelectorAll('.form-control');
-
-                    form.querySelectorAll('.form-control').forEach(function (elm) {
-                        elm.classList.remove("is-valid");
-                    })
-                    form.querySelectorAll('.form-check-input').forEach(function (elm) {
-                        elm.classList.remove("is-valid");
-                    })
-
-                    //完了モーダル表示
+                    //モーダルの内容をエラーに書き換える
                     document.getElementById("ModalSavebtn").style.display = "none";
                     document.getElementById("ModalBackbtn").textContent = "閉じる";
-                    if (data.Mode == "Ins") {
-                        document.getElementById("ModalBody").textContent = "登録が完了しました。";
-                        document.getElementById("Savebtn").value = "更新";
-                        $("#Deletebtn").css("display", "grid");
-                        
-                    } else {
-                        document.getElementById("ModalBody").textContent = "更新が完了しました。";
-                    }
-
-                    //更新・登録したEventIDをセッション変数としてセットする
-                    sessionStorage.setItem("EventID", data.EventID)
-                    iniForm = CompareForm();
-
-                }
-
-            } else {
-                //モーダルの内容をエラーに書き換える
-                document.getElementById("ModalSavebtn").style.display = "none";
-                document.getElementById("ModalBackbtn").textContent = "閉じる";
-                document.getElementById("ModalBody").textContent = "エラーが発生しました。";
+                    document.getElementById("ModalBody").textContent = "エラーが発生しました。";
+                };
             };
-        };
-    }
-});
+        }
+    });
 
 }
 
@@ -498,7 +454,7 @@ function DeletebtnClick() {
     ModalSet("ModalArea", "イベント削除", "削除しますか？", "削除", "btn-outline-danger", "戻る", "ModalDeletebtnClick()");
 };
 
-function ModalDeletebtnClick(){
+function ModalDeletebtnClick() {
     $.ajax({
         url: Ajax_File,
         method: "POST",
@@ -519,7 +475,7 @@ function ModalDeletebtnClick(){
                     //セッション変数「EventID」を削除する
                     sessionStorage.removeItem("EventID");
 
-                    
+
                 } else {
                     //モーダルの内容をエラーに書き換える
                     document.getElementById("ModalSavebtn").style.display = "none";
@@ -551,8 +507,8 @@ function BackbtnClick() {
         sessionStorage.removeItem("EventID");
         window.location.href = Referrer;
     }
-    
-    
+
+
 };
 
 //メッセージコンテナを一つ追加する関数
@@ -564,7 +520,7 @@ function MessageAddbtnClick() {
 
     //メッセージが5つ以下かそうではないかを判定する
     if (document.getElementsByClassName("MessageContainer").length < 5) {
-        
+
         $.ajax({
             url: Ajax_File,
             method: "POST",
@@ -583,7 +539,7 @@ function MessageAddbtnClick() {
 
                         if ($(".MessageContainer").length > 1) {
                             $("#txtMessage" + ($(".MessageContainer").length - 1)).focus();
-                        }     
+                        }
 
                         if (document.getElementsByClassName("MessageContainer").length == 5) {
                             $("#MessageAddbtn").prop("disabled", true);
@@ -595,7 +551,7 @@ function MessageAddbtnClick() {
                     };
                 };
             }
-        });     
+        });
     }
 };
 
