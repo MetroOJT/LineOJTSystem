@@ -110,15 +110,6 @@ function Search(first_flag) {
     var Date_To = $("#DateTo").val();
     var w;
 
-    if (Date_Fm > Date_To) {
-        w = Date_Fm;
-        Date_Fm = Date_To;
-        Date_To = w;
-
-        document.querySelector("#DateFm").value = Date_Fm;
-        document.querySelector("#DateTo").value = Date_To;
-    }
-
     $.ajax({
         url: Ajax_File,
         method: "POST",
