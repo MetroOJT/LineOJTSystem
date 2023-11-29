@@ -8,10 +8,19 @@ img {
     border: 1px solid #EEE;
 }
 #ItiranArea {
+    height: 545px;
     margin: 3px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+.LineUser {
+    cursor: pointer;
 }
 .LineUser p {
     margin: 0.5rem;
+}
+.SelectUser {
+    background-color: #edeff0;
 }
 #MessageBody {
     position: relative;
@@ -44,6 +53,7 @@ img {
 #MessageFooter {
     position: sticky;
     padding: 0 1rem;
-    bottom: 0;
+    bottom: -5px;
+    color: white;
     background-color: rgba(0, 0, 0, 0.5);
 }

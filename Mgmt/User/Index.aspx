@@ -17,7 +17,7 @@
     <div>
         <div class="container">
             <%=cCom.CmnDspHeader() %>
-            <div class="accordion" style="width: 90%; margin: 0 auto;">
+            <div class="accordion" margin: 0 auto;">
                 <div class="accordion-item">
                     <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
                         <div id="btnOption" class="row accordion-body">

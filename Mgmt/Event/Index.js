@@ -108,26 +108,26 @@ function btnClearClick() {
     document.getElementById("txtScheduleFm").value = "";
     document.getElementById("txtScheduleTo").value = "";
     document.getElementById("txtKeyword").value = "";
-    document.getElementById("CntArea").innerText = "";
-    document.getElementById("PageNationArea").innerText = "";
-    document.getElementById("ItiranArea").innerText = "";
-    $.ajax({
-        url: Ajax_File,
-        method: "POST",
-        data: {
-            "mode": "Clear",
-        },
-        dataType: "json",
-        success: function (data) {
-            if (data != "") {
-                if (data.status == "OK") {
-                    modalChange("クリア結果通知", "クリア完了しました。", "none", "none");
-                } else {
-                    modalChange("クリア結果通知", "エラーが発生しました。", "none", "none");
-                };
-            };
-        }
-    });
+    //document.getElementById("CntArea").innerText = "";
+    //document.getElementById("PageNationArea").innerText = "";
+    //document.getElementById("ItiranArea").innerText = "";
+    //$.ajax({
+    //    url: Ajax_File,
+    //    method: "POST",
+    //    data: {
+    //        "mode": "Clear",
+    //    },
+    //    dataType: "json",
+    //    success: function (data) {
+    //        if (data != "") {
+    //            if (data.status == "OK") {
+    //                modalChange("クリア結果通知", "クリア完了しました。", "none", "none");
+    //            } else {
+    //                modalChange("クリア結果通知", "エラーが発生しました。", "none", "none");
+    //            };
+    //        };
+    //    }
+    //});
 };
 
 // 一覧を生成
@@ -149,7 +149,9 @@ function MakeItiran() {
         success: function (data) {
             if (data != "") {
                 if (data.status == "OK") {
-
+                    if (data.NowPage) {
+                        NowPage = data.NowPage;
+                    }
                     // CookieにNowPageが存在し、そのページが表示できる場合
                     if (data.NowPage && CountOfHit > (data.NowPage - 1) * 10) {
                         PagiNation("pi" + data.NowPage);
@@ -190,6 +192,7 @@ function MakeItiran() {
 
 // ページ遷移ボタンの処理
 function PagiNation(pid) {
+
     // 表示するページを求める
     switch (pid) {
         case "pista":
@@ -212,47 +215,55 @@ function PagiNation(pid) {
             NowPage = parseInt(pid.slice(2));
             break;
     }
-
+    
     // ページの中身を取得
-    $.ajax({
-        url: Ajax_File,
-        method: "POST",
-        data: {
-            "mode": "PagiNation",
-            "nowpage": NowPage
-        },
-        dataType: "json",
-        success: function (data) {
-            if (data != "") {
-                if (data.status == "OK") {
-                    // 何件目～何件目を計算
-                    const NowPageFm = (parseInt(NowPage) - 1) * 10 + 1;
-                    var NowPageTo = 0;
-                    if (NowPage == Math.ceil(CountOfHit / 10)) {
-                        NowPageTo = CountOfHit;
+    if (NowPage != "") {
+        $.ajax({
+            url: Ajax_File,
+            method: "POST",
+            data: {
+                "mode": "PagiNation",
+                "nowpage": NowPage
+            },
+            dataType: "json",
+            success: function (data) {
+                if (data != "") {
+                    if (data.status == "OK") {
+                        if (data.NowPage) {
+                            NowPage = data.NowPage;
+                        }
+                        // 何件目～何件目を計算
+                        const NowPageFm = (parseInt(NowPage) - 1) * 10 + 1;
+                        var NowPageTo = 0;
+                        if (NowPage == Math.ceil(CountOfHit / 10)) {
+                            NowPageTo = CountOfHit;
+                        } else {
+                            NowPageTo = parseInt(NowPage) * 10;
+                        }
+                        document.getElementById("CntArea").innerText = "件数：" + CountOfHit + "件" + " (表示中: " + NowPage + " ページ , " + NowPageFm + "件 ～ " + NowPageTo + "件)";
+                        if (data.html != "") {
+                            document.getElementById("PageNationArea").innerHTML = data.PageNationHTML;
+                            document.getElementById("ItiranArea").innerHTML = data.html;
+                            // .page-itemに関数を与える
+                            const page_item = document.querySelectorAll(".page-item");
+                            page_item.forEach(pi => {
+                                if (!pi.classList.contains('disabled')) {
+                                    pi.addEventListener('click', function () {
+                                        PagiNation(pi.id);
+                                    });
+                                }
+                            });
+                        }
                     } else {
-                        NowPageTo = parseInt(NowPage) * 10;
+                        alert(data.status);
                     }
-                    document.getElementById("CntArea").innerText = "件数：" + CountOfHit + "件" + " (表示中: " + NowPage + " ページ , " + NowPageFm + "件 ～ " + NowPageTo + "件)";
-                    if (data.html != "") {
-                        document.getElementById("PageNationArea").innerHTML = data.PageNationHTML;
-                        document.getElementById("ItiranArea").innerHTML = data.html;
-                        // .page-itemに関数を与える
-                        const page_item = document.querySelectorAll(".page-item");
-                        page_item.forEach(pi => {
-                            if (!pi.classList.contains('disabled')) {
-                                pi.addEventListener('click', function () {
-                                    PagiNation(pi.id);
-                                });
-                            }
-                        });
-                    } 
-                } else {
-                    alert(data.status);
                 }
             }
-        }
-    });
+        });
+    }
+    else {
+        document.getElementById("error_modal").click();
+    }
 };
 
 // 戻るボタンの処理
@@ -292,6 +303,16 @@ function btnCloseClick() {
         colb.classList.remove("col-4");
         colb.classList.add("col-2");
         document.getElementById("btnClose").textContent = "閉じる";
+    }
+}
+
+// ページ検索
+function PageNumber_Search() {
+    const PageNumber = document.getElementById("PageNumber").value;
+    if (PageNumber == "") {
+        document.getElementById("error_modal").click();
+    } else {
+        PagiNation("pi" + PageNumber);
     }
 }
 

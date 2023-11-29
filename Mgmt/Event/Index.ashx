@@ -167,7 +167,7 @@ Public Class Index : Implements IHttpHandler
         Dim sPageNationHTML As New StringBuilder
         Dim iCount As Integer = 0
 
-        Dim iNowPage As Integer = 0
+        Dim iNowPage As Integer = 1
 
         Try
             sTempTable = cCom.CmnGet_TableName("Itiran")
@@ -202,10 +202,10 @@ Public Class Index : Implements IHttpHandler
             sHTML.Clear()
             sHTML.Append("<table border=""1"" width=""1000px"" style=""border-collapse: collapse;"" class=""table table-striped table-bordered"">")
             sHTML.Append("<tr style=""background-color: #CCCCCC;"">")
-            sHTML.Append("<td width=""30%"" align=""center"">イベント名</td>")
-            sHTML.Append("<td width=""30%"" align=""center"">スケジュール</td>")
-            sHTML.Append("<td width=""30%"" align=""center"">キーワード</td>")
-            sHTML.Append("<td width=""10%"" align=""center"">ステータス</td>")
+            sHTML.Append("<th width=""30%"" align=""center"">イベント名</th>")
+            sHTML.Append("<th width=""30%"" align=""center"">スケジュール</th>")
+            sHTML.Append("<th width=""30%"" align=""center"">キーワード</th>")
+            sHTML.Append("<th width=""10%"" align=""center"">ステータス</th>")
             sHTML.Append("</tr>")
 
             '一覧の要素挿入
@@ -250,6 +250,7 @@ Public Class Index : Implements IHttpHandler
 
             'PageNation生成
             sPageNationHTML.Clear()
+            sPageNationHTML.Append("<div class=""col"">")
             sPageNationHTML.Append("<ul class=""pagination"" >")
             If iCount > 10 Then
                 sPageNationHTML.Append("<li class=""page-item disabled"" id=""pista"">")
@@ -259,26 +260,13 @@ Public Class Index : Implements IHttpHandler
                 sPageNationHTML.Append("</li>")
                 sPageNationHTML.Append("<li class=""page-item disabled"" id=""piback""><a class=""page-link"">‹</a></li>")
             End If
-            sPageNationHTML.Append("<li class=""page-item disabled"" id=""pi1""><a class=""page-link"">1</a></li>")
+            sPageNationHTML.Append("<li class=""page-item pe-none"" id=""pi1""><a class=""page-link bg-primary text-white"">1</a></li>")
 
             For i As Integer = 2 To cCom.gcPageNationNumCount
-                If iCount \ ((i - 1) * 10) >= 1 Then
+                If iCount > (i - 1) * 10 Then
                     sPageNationHTML.Append("<li class=""page-item"" id=""pi" & i & """><a class=""page-link"">" & i & "</a></li>")
                 End If
             Next
-            ''2ページ目が存在しない場合 "2" を押せなくする
-            'If iCount > 10 Then
-            '    sPageNationHTML.Append("<li class=""page-item"" id=""pi2""><a class=""page-link"">2</a></li>")
-            'Else
-            '    sPageNationHTML.Append("<li class=""page-item disabled"" id=""pi2""><a class=""page-link"">2</a></li>")
-            'End If
-
-            ''3ページ目が存在しない場合 "3" を押せなくする
-            'If iCount > 20 Then
-            '    sPageNationHTML.Append("<li class=""page-item"" id=""pi3""><a class=""page-link"">3</a></li>")
-            'Else
-            '    sPageNationHTML.Append("<li class=""page-item disabled"" id=""pi3""><a class=""page-link"">3</a></li>")
-            'End If
 
             '次のページが存在しない場合 ">", ">>" を押せなくする
             If iCount > 10 Then
@@ -289,7 +277,23 @@ Public Class Index : Implements IHttpHandler
                 sPageNationHTML.Append("</a>")
                 sPageNationHTML.Append("</li>")
             End If
-            sPageNationHTML.AppendLine("</ul>")
+            sPageNationHTML.Append("</ul>")
+            sPageNationHTML.Append("</div>")
+
+            'ページ検索作成
+            sPageNationHTML.Append("<div class=""col"">")
+            sPageNationHTML.Append("<div Class=""row g-3 align-items-center"">")
+            sPageNationHTML.Append("<div Class=""col-auto"">")
+            sPageNationHTML.Append("<Label for=""PageNumber"" class=""col-form-label"">ページ検索</label>")
+            sPageNationHTML.Append("</div>")
+            sPageNationHTML.Append("<div Class=""col-auto"">")
+            sPageNationHTML.Append("<input type=""text"" inputmode=""numeric"" pattern=""^[1-9][0-9]*$"" maxlength=""8"" oninput=""value = (value.replace(/[^0-9]+/i,'')).replace(/^0/i,'');"" id=""PageNumber"" Class=""form-control"" aria-labelledby=""passwordHelpInline"">")
+            sPageNationHTML.Append("</div>")
+            sPageNationHTML.Append("<div Class=""col-auto"">")
+            sPageNationHTML.Append("<input type=""button"" class=""btn btn-primary"" onclick=""PagiNation('pi' + document.getElementById('PageNumber').value);"" value=""検索"" />")
+            sPageNationHTML.Append("</div>")
+            sPageNationHTML.Append("</div>")
+            sPageNationHTML.Append("</div>")
 
             iNowPage = Cki.Get_Cookies("EventNowPage")
 
@@ -332,13 +336,12 @@ Public Class Index : Implements IHttpHandler
         Dim sHTML As New StringBuilder
         Dim sPageNationHTML As New StringBuilder
         Dim iCount As Integer = 0
+        Dim TotalPage As Integer = 0
         Dim NowPage As Integer = 1
         Dim OffSet As Integer = 0
 
         Try
             NowPage = context.Request.Item("nowpage")
-            Cki.Set_Cookies("EventNowPage", NowPage, 1)
-            OffSet = 10 * (NowPage - 1)
 
             sTempTable = cCom.CmnGet_TableName("Itiran")
 
@@ -349,10 +352,20 @@ Public Class Index : Implements IHttpHandler
             sSQL.Append(" WHERE wEventID <> 0")
             cDB.SelectSQL(sSQL.ToString)
 
-
             If cDB.ReadDr Then
                 iCount = cDB.DRData("count")
             End If
+
+            TotalPage = Math.Ceiling(iCount / 10)
+
+            '検索したいページが存在しないページであれば1/最後に変更する
+            If NowPage > TotalPage Then
+                NowPage = TotalPage
+            ElseIf NowPage <= 0 Then
+                NowPage = 1
+            End If
+            Cki.Set_Cookies("EventNowPage", NowPage, 1)
+            OffSet = 10 * (NowPage - 1)
 
             sSQL.Clear()
             sSQL.Append(" SELECT")
@@ -371,10 +384,10 @@ Public Class Index : Implements IHttpHandler
             sHTML.Clear()
             sHTML.Append("<table border=""1"" width=""1000px"" style=""border-collapse: collapse;"" class=""table table-striped table-bordered"">")
             sHTML.Append("<tr style=""background-color: #CCCCCC;"">")
-            sHTML.Append("<td width=""30%"" align=""center"">イベント名</td>")
-            sHTML.Append("<td width=""30%"" align=""center"">スケジュール</td>")
-            sHTML.Append("<td width=""30%"" align=""center"">キーワード</td>")
-            sHTML.Append("<td width=""10%"" align=""center"">ステータス</td>")
+            sHTML.Append("<th width=""30%"" align=""center"">イベント名</th>")
+            sHTML.Append("<th width=""30%"" align=""center"">スケジュール</th>")
+            sHTML.Append("<th width=""30%"" align=""center"">キーワード</th>")
+            sHTML.Append("<th width=""10%"" align=""center"">ステータス</th>")
             sHTML.Append("</tr>")
             Do Until Not cDB.ReadDr
                 Dim iCnt As Integer = 1
@@ -410,6 +423,7 @@ Public Class Index : Implements IHttpHandler
             sHTML.Append("</tr>")
             sHTML.Append("</table>")
             sPageNationHTML.Clear()
+            sPageNationHTML.Append("<div class=""col"">")
             sPageNationHTML.Append("<ul class=""pagination"" >")
             If iCount > 10 Then
                 If NowPage <= 1 Then
@@ -433,7 +447,7 @@ Public Class Index : Implements IHttpHandler
                 Dim PageNationNumMax As Integer = Math.Min(NowPage + (cCom.gcPageNationNumCount \ 2), (iCount - 1) \ 10 + 1)
                 For i As Integer = PageNationNumMax - cCom.gcPageNationNumCount + 1 To PageNationNumMax
                     If NowPage = i Then
-                        sPageNationHTML.Append("<li class=""page-item disabled"" id=""pi" & i & """><a class=""page-link"">" & i & "</a></li>")
+                        sPageNationHTML.Append("<li class=""page-item pe-none"" id=""pi" & i & """><a class=""page-link bg-primary text-white"">" & i & "</a></li>")
                     ElseIf i = 1 Then
                         sPageNationHTML.Append("<li class=""page-item"" id=""pi" & i & """><a class=""page-link"">" & i & "</a></li>")
                     ElseIf iCount \ ((i - 1) * 10) >= 1 Then
@@ -443,10 +457,10 @@ Public Class Index : Implements IHttpHandler
             Else
                 For i As Integer = 1 To cCom.gcPageNationNumCount
                     If i = NowPage Then
-                        sPageNationHTML.Append("<li class=""page-item disabled"" id=""pi" & i & """><a class=""page-link"">" & i & "</a></li>")
+                        sPageNationHTML.Append("<li class=""page-item pe-none"" id=""pi" & i & """><a class=""page-link bg-primary text-white"">" & i & "</a></li>")
                     ElseIf i = 1 Then
                         sPageNationHTML.Append("<li class=""page-item"" id=""pi" & i & """><a class=""page-link"">" & i & "</a></li>")
-                    ElseIf iCount \ ((i - 1) * 10) >= 1 Then
+                    ElseIf iCount > (i - 1) * 10 Then
                         sPageNationHTML.Append("<li class=""page-item"" id=""pi" & i & """><a class=""page-link"">" & i & "</a></li>")
                         'Else
                         '    sPageNationHTML.Append("<li class=""page-item disabled"" id=""pi" & i & """><a class=""page-link"">" & i & "</a></li>")
@@ -470,8 +484,23 @@ Public Class Index : Implements IHttpHandler
                     sPageNationHTML.Append("</li>")
                 End If
             End If
-            sPageNationHTML.AppendLine("</ul>")
+            sPageNationHTML.Append("</ul>")
+            sPageNationHTML.Append("</div>")
 
+            'ページ検索作成
+            sPageNationHTML.Append("<div class=""col"">")
+            sPageNationHTML.Append("<div Class=""row g-3 align-items-center"">")
+            sPageNationHTML.Append("<div Class=""col-auto"">")
+            sPageNationHTML.Append("<Label for=""PageNumber"" class=""col-form-label"">ページ検索</label>")
+            sPageNationHTML.Append("</div>")
+            sPageNationHTML.Append("<div Class=""col-auto"">")
+            sPageNationHTML.Append("<input type=""text"" inputmode=""numeric"" pattern=""^[1-9][0-9]*$"" maxlength=""8"" oninput=""value = (value.replace(/[^0-9]+/i,'')).replace(/^0/i,'');"" id=""PageNumber"" Class=""form-control"" aria-labelledby=""passwordHelpInline"">")
+            sPageNationHTML.Append("</div>")
+            sPageNationHTML.Append("<div Class=""col-auto"">")
+            sPageNationHTML.Append("<input type=""button"" class=""btn btn-primary"" onclick=""PagiNation('pi' + document.getElementById('PageNumber').value);"" value=""検索"" />")
+            sPageNationHTML.Append("</div>")
+            sPageNationHTML.Append("</div>")
+            sPageNationHTML.Append("</div>")
 
         Catch ex As Exception
             sRet = ex.Message
@@ -487,6 +516,7 @@ Public Class Index : Implements IHttpHandler
             hHash.Add("html", sHTML.ToString)
             hHash.Add("PageNationHTML", sPageNationHTML.ToString)
             hHash.Add("count", iCount)
+            hHash.Add("NowPage", NowPage)
 
             sJSON = jJSON.Serialize(hHash)
         End Try

@@ -21,20 +21,26 @@ if (getCookie("LogNowPage") != "") {
 var PageMedian = 2; // ページャの中央値 [ 1 , ② , 3 ]
 
 window.onload = function () {
+    // 登録日の入力欄でdatepickerを使う
+    // 初期設定
     $.datepicker.setDefaults({
         showButtonPanel: "true",
         changeMonth: "true",
         changeYear: "true",
         minDate: new Date(1900, 1, 1),
         maxDate: new Date(),
+        beforeShow: function (inst, elem) {
+            setCalsClearButton(null, null, elem);
+        },
+        onChangeMonthYear: setCalsClearButton
     });
-
+    // fromを選択すると、toで選択できる日付を制限する
     let fm = $("#DateFm").datepicker({
         onSelect: function (selectedDate) {
             $("#DateTo").datepicker("option", "minDate", selectedDate);
         }
     });
-
+    // toを選択すると、fromで選択できる日付を制限する
     let to = $("#DateTo").datepicker({
         onSelect: function (selectedDate) {
             $("#DateFm").datepicker("option", "maxDate", selectedDate);
@@ -45,14 +51,56 @@ window.onload = function () {
     Search("Yes");
 }
 
+// 登録日の入力欄のクリアボタン
+var setCalsClearButton = function (year, month, elem) {
 
+    var afterShow = function () {
+        var d = new $.Deferred();
+        var cnt = 0;
+        setTimeout(function () {
+            if (elem.dpDiv[0].style.display === "block") {
+                d.resolve();
+            }
+            if (cnt >= 500) {
+                d.reject("datepicker show timeout");
+            }
+            cnt++;
+        }, 10);
+        return d.promise();
+    }();
+
+    afterShow.done(function () {
+
+        // datepickerのz-indexを指定  
+        $('.ui-datepicker').css('z-index', 2000);
+
+        var buttonPane = $(elem).datepicker("widget").find(".ui-datepicker-buttonpane");
+
+        var btn = $('<button class="ui-datepicker-current ui-state-default ui-priority-primary ui-corner-all" type="button">クリア</button>');
+        btn.off("click").on("click", function () {
+            $.datepicker._clearDate(elem.input[0]);
+            $("#DateFm").datepicker("option", "maxDate", new Date());
+        });
+        btn.appendTo(buttonPane);
+    });
+}
+
+$(function () {
+    document.getElementById("btnSearch").addEventListener("click", btnSearchClick, false);
+    document.getElementById("btnSign_up").addEventListener("click", btnSignUpClick, false);
+    document.getElementById("btnBack").addEventListener("click", btnBackClick, false);
+    document.getElementById("btnClose").addEventListener("click", btnCloseClick, false);
+    document.getElementById("btnClear").addEventListener("click", btnClearClick, false);
+});
+
+// 検索ボタンクリック
 function btnSearchClick() {
     SearchPage = 1;
     document.cookie = document.cookie = "LogNowPage=" + 0 + "; max-age=86400; path=/";
     Search();
 }
 
-// 閉じる
+// 閉じるボタンクリック
 function btnCloseClick() {
     const cona = document.getElementById("cona");
     const conb = document.getElementById("conb");
@@ -73,16 +121,9 @@ function btnCloseClick() {
     }
 };
 
-$(function () {
-    document.getElementById("btnSearch").addEventListener("click", btnSearchClick, false);
-    document.getElementById("btnSign_up").addEventListener("click", btnSignUpClick, false);
-    document.getElementById("btnBack").addEventListener("click", btnBackClick, false);
-    document.getElementById("btnClose").addEventListener("click", btnCloseClick, false);
-    document.getElementById("btnClear").addEventListener("click", btnClearClick, false);
-});
-
 // 検索ボタンが押された時の処理
 function Search(first_flag) {
+    // 入力値を取得する
     var User_ID = $("#user_ID").val();
     var User_Name = $("#user_Name").val();
     var Admin_Check = $("#Kanrisya").val();
@@ -124,6 +165,7 @@ function Search(first_flag) {
                         }
                         MakeUserTable(PagerID);
                     } else {
+                        // 検索結果を表示する
                         MakeUserTable(1); // 初期検索・検索(1ページ目を強制表示)
                     }
                 } else {
@@ -133,6 +175,8 @@ function Search(first_flag) {
         }
     });
 }
+
+// 検索結果を表示する
 function MakeUserTable(PagerID){
     if (PagerID != "") {
         switch (PagerID) {

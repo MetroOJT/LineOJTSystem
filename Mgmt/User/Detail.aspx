@@ -34,7 +34,7 @@
                 <div class="d-flex mt-4">
                     <label class="m-auto" id="label_2">ユーザー名</label>
                     <div class="InputField_div">
-                        <input type="text" id="user_Name" required  class="border-0 w-100 form-control" maxlength="20" data-maxlen="20" data-regexp="^.+$"/>
+                        <input type="text" id="user_Name" required class="border-0 w-100 form-control" maxlength="20" data-maxlen="20" data-regexp="^.+$"/>
                     </div>
                 </div>
                 <div id="error_message_div_2" style="margin-left: 155px;"></div>
@@ -44,11 +44,11 @@
                     <div style="display: flex; margin-left: 55px; width: 300px;" >
                         <div class="form-check">
                             <input type="radio" id="contactChoice_1" name="contact" value="0" class="form-check-input" />
-                            <label for="contactChoice1" style="width: auto;" class="form-check-label h6" >ON</label>
+                            <label for="contactChoice_1" style="width: auto;" class="form-check-label h6" >ON</label>
                         </div>
                         <div class="form-check">
                             <input type="radio" id="contactChoice_2" name="contact" value="1" style=" margin-left: 10px;" class="form-check-input" />
-                            <label for="contactChoice2" style="width: auto; margin-left: 10px;" class="form-check-label h6" >OFF</label>
+                            <label for="contactChoice_2" style="width: auto; margin-left: 10px;" class="form-check-label h6" >OFF</label>
                         </div>
                     </div>
                 </div>
