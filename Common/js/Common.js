@@ -1,4 +1,8 @@
-﻿// クッキーを設定する関数
+﻿//上限日、下限日の設定
+var LowerLimitDate = new Date(1900, 1 - 1, 1);
+var UpperLimitDate = new Date(2099, 12 - 1, 31);
+
+// クッキーを設定する関数
 function setCookie(name, value, days) {
     let date = new Date();
     date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
@@ -69,6 +73,7 @@ function LogOut() {
     window.location.href = "../../Mgmt/Login/Index.aspx";
 }
 
+
 function CmnFlatpickr(sFmObj, sToObj, dMinDate, dMaxDate, bTimeFlg) {
     let lang = "ja";
     let sFormat = "";
@@ -138,4 +143,6 @@ function CmnFlatpickr(sFmObj, sToObj, dMinDate, dMaxDate, bTimeFlg) {
         })
     });
 }
+
+
 

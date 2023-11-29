@@ -27,7 +27,7 @@ $(function () {
     document.getElementById("MessageAddbtn").addEventListener("mouseup", MessageAddbtnClick, false);
 
     let dMinDate = new Date();
-    let dMaxDate = new Date(2099, 12 - 1, 31);
+    let dMaxDate = UpperLimitDate;
     CmnFlatpickr("txtScheduleFm", "txtScheduleTo", dMinDate, dMaxDate, false);
 
     //登録モードか更新モードかを判別する
