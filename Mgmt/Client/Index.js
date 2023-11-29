@@ -27,6 +27,12 @@ $(function () {
 
 // 検索処理
 function btnSearchClick() {
+    selectUserFlg = false;
+    nowSearchID = "0";
+    beforeSearchID = "0";
+    beforeLogID = "0";
+    document.getElementById("MessageHeader").innerHTML = '<img id="MessageHeaderImg" class="rounded-circle"/><p id="MessageHeaderName">氏名</p>';
+    document.getElementById("MessageBody").innerText = "";
     // 入力値取得
     let DisplayName = $("#txtDisplayName").val();
 
@@ -70,6 +76,24 @@ function MakeItiran() {
             if (data != "") {
                 if (data.status == "OK") {
                     document.getElementById("ItiranArea").innerHTML = data.html;
+
+                    const TextBreak = document.getElementsByClassName("search-message");
+                    for (let SearchMessage of TextBreak) {
+                        let previousRect = null;
+                        for (let i = 0; i < SearchMessage.firstChild.length; ++i) {
+                            const range = new Range();
+                            range.setStart(SearchMessage.firstChild, i);
+                            range.setEnd(SearchMessage.firstChild, i + 1);
+                            const rect = range.getBoundingClientRect();
+                            // rect.y が1文字前のものと異なるなら改行されているかも
+                            if (previousRect && previousRect.y < rect.y && i > 3) {
+                                SearchMessage.innerText = SearchMessage.innerText.slice(0, i - 1) + "...";
+                                break;
+                            }
+                            previousRect = rect;
+                        }
+                    }
+
                     const LineUsers = document.querySelectorAll(".LineUser");
                     LineUsers.forEach(LineUser => {
                         LineUser.addEventListener("click", function () {
@@ -102,12 +126,52 @@ function MakeMessageBody(SearchID, scrollUnder = false) {
                     const MessageBox = document.getElementById("MessageBox");
                     MessageBox.innerHTML = data.html;
                     const MessageBody = document.getElementById("MessageBody");
-                    document.getElementById("Search" + SearchID + "_message").innerText = data.lastmessage.replace(/\n/g, " ");
+                    const SearchMessage = document.getElementById("Search" + SearchID + "_message");
+                    const LineUsers = document.querySelectorAll(".LineUser");
+                    for (let LineUser of LineUsers) {
+                        if (LineUser.id == "Search" + SearchID) {
+                            LineUser.classList.add("SelectUser");
+                        }
+                        else {
+                            LineUser.classList.remove("SelectUser");
+                        }
+                    }
+                    SearchMessage.innerText = data.lastmessage.replace(/\n/g, " ");
+                    
+                    let previousRect = null;
+                    for (let i = 0; i < SearchMessage.firstChild.length; ++i) {
+                        const range = document.createRange();
+                        range.setStart(SearchMessage.firstChild, i);
+                        range.setEnd(SearchMessage.firstChild, i + 1);
+                        const rect = range.getBoundingClientRect();
+                        // rect.y が1文字前のものと異なるなら改行されているかも
+                        if (previousRect && previousRect.y < rect.y && i > 3) {
+                            SearchMessage.innerText = SearchMessage.innerText.slice(0, i - 1) + "...";
+                            break;
+                        }
+                        previousRect = rect;
+                    }
                     if (beforeSearchID == nowSearchID) {
                         MessageBody.scrollTop = scrollPosition;
                         if (data.lastlogid != beforeLogID) {
                             const name = document.getElementById("MessageHeaderName").innerText;
-                            document.getElementById("MessageFooter").innerText = name + ":" + data.lastusermessage.replace(/\n/g, " ");
+                            const MessageFooter = document.getElementById("MessageFooter");
+                            MessageFooter.innerText = name + ":" + data.lastusermessage.replace(/\n/g, " ");
+                            
+                            let previousRect = null;
+                            for (let i = 0; i < MessageFooter.firstChild.length; ++i) {
+                                const range = document.createRange();
+                                range.setStart(MessageFooter.firstChild, i);
+                                range.setEnd(MessageFooter.firstChild, i + 1);
+                                const rect = range.getBoundingClientRect();
+                                // rect.y が1文字前のものと異なるなら改行されているかも
+                                if (previousRect && previousRect.y < rect.y && i > 3) {
+                                    MessageFooter.innerText = MessageFooter.innerText.slice(0, i - 1) + "...";
+                                    break;
+                                }
+                                previousRect = rect;
+                            }
+
                             document.getElementById("MessageFooter").style.buttom = document.getElementById("MessageFooter").offsetHeight / 2 + "px";
                             document.querySelector("#MessageBody").addEventListener("scroll", function () {
                                 const LastUserMessage = $(".UserMessage:last");
@@ -194,6 +258,6 @@ function setTextareaHeight() {
 // Setinterbalでメッセージボックス更新(5s)
 const timer = setInterval(function () {
     if (nowSearchID != "0") {
-        MakeMessageBody(nowSearchID)
+        MakeMessageBody(nowSearchID);
     }
 }, 5000);

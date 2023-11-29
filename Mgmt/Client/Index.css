@@ -13,8 +13,14 @@ img {
     overflow-x: hidden;
     overflow-y: scroll;
 }
+.LineUser {
+    cursor: pointer;
+}
 .LineUser p {
     margin: 0.5rem;
+}
+.SelectUser {
+    background-color: #edeff0;
 }
 #MessageBody {
     position: relative;

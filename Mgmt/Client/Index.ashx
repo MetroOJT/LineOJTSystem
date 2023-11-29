@@ -110,16 +110,16 @@ Public Class Index : Implements IHttpHandler
             Loop
             If sValues.Length <> 0 Then
                 sValues.Remove(sValues.Length - 1, 1)
+                sSQL.Clear()
+                sSQL.Append(" INSERT INTO " & sTempTable)
+                sSQL.Append(" (")
+                sSQL.Append("  wLine_UserID")
+                sSQL.Append("  ,wDisplayName")
+                sSQL.Append("  ,wPictureUrl")
+                sSQL.Append(" )")
+                sSQL.Append(" VALUES " & sValues.ToString)
+                iCount = cDB.ExecuteSQL(sSQL.ToString)
             End If
-            sSQL.Clear()
-            sSQL.Append(" INSERT INTO " & sTempTable)
-            sSQL.Append(" (")
-            sSQL.Append("  wLine_UserID")
-            sSQL.Append("  ,wDisplayName")
-            sSQL.Append("  ,wPictureUrl")
-            sSQL.Append(" )")
-            sSQL.Append(" VALUES " & sValues.ToString)
-            iCount = cDB.ExecuteSQL(sSQL.ToString)
 
         Catch ex As Exception
             sRet = ex.Message
@@ -187,7 +187,7 @@ Public Class Index : Implements IHttpHandler
                     Dim messageObj As Object = eventsObj("message")
                     sLastMessage = messageObj("text").ToString()
                 End If
-                sHTML.Append("<div id=Seatch" & cDB.DRData("SearchID") & " class=""LineUser d-flex align-items-center""><img src=""" & cDB.DRData("wPictureUrl") & """ class=""rounded-circle""/><div class=""d-flex flex-column""><div id=Search" & cDB.DRData("SearchID") & "_name>" & cDB.DRData("wDisplayName") & "</div><div id=Search" & cDB.DRData("SearchID") & "_message class=""text-black-50"">" & sLastMessage.Replace(vbLf, " ") & "</div></div></div>")
+                sHTML.Append("<div id=Search" & cDB.DRData("SearchID") & " class=""LineUser d-flex align-items-center""><img src=""" & cDB.DRData("wPictureUrl") & """ class=""rounded-circle""/><div class=""d-flex flex-column""><div id=Search" & cDB.DRData("SearchID") & "_name>" & cDB.DRData("wDisplayName") & "</div><div id=Search" & cDB.DRData("SearchID") & "_message class=""text-black-50 text-break search-message"">" & sLastMessage.Replace(vbLf, " ") & "</div></div></div>")
             Loop
         Catch ex As Exception
             sRet = ex.Message
@@ -287,7 +287,7 @@ Public Class Index : Implements IHttpHandler
                     If sMessage.ToString.Substring(sMessage.Length - 1) = vbLf Then
                         sMessage.Append("&thinsp;")
                     End If
-                    sHTML.Append("<span class=""MessageText text-start"">" & sMessage.ToString & "</span>")
+                    sHTML.Append("<span class=""MessageText text-start text-break"">" & sMessage.ToString & "</span>")
                     sHTML.Append("</div>")
                     sHTML.Append("</div>")
                     sHTML.Append("</div>")
@@ -309,7 +309,7 @@ Public Class Index : Implements IHttpHandler
                     If sMessage.ToString.Substring(sMessage.Length - 1) = vbLf Then
                         sMessage.Append("&thinsp;")
                     End If
-                    sHTML.Append("<span class=""MessageText UserMessage"">" & sMessage.ToString & "</span>")
+                    sHTML.Append("<span class=""MessageText UserMessage text-break"">" & sMessage.ToString & "</span>")
                     sHTML.Append("</div>")
                     sHTML.Append("</div>")
                     sHTML.Append("<div class=""col-6""></div>")
@@ -320,7 +320,7 @@ Public Class Index : Implements IHttpHandler
                     sHTML.Append("</div>")
                 End If
             Loop
-            sHTML.Append("<div id=""MessageFooter"" class=""row""></div>")
+            sHTML.Append("<div id=""MessageFooter"" class=""row text-break""></div>")
             sHTML.Append("</div>")
 
         Catch ex As Exception
