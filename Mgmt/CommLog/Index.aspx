@@ -8,6 +8,13 @@
     <link rel="stylesheet" href="Index.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <%="<script src='../../Common/js/Common.js?ts=" & cCom.CmnTimeStamp & "'></script>" %>
+
+    <%--flatpickrの導入--%>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />  
+    <link rel="stylesheet" href="../../Common/css/Common.css" />
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
+
     <title>通信ログ</title>
 </head>
 <body>
@@ -27,8 +34,14 @@
                         <div id="Condition" class="accordion-body">
                             <div> 
                                 <label class="col-sm-2 col-form-label">通信日時</label>
-                                <input type="datetime-local" id="DateFm" class="form-control initial-time" runat="server" style="margin-right: 20px;" />～
-                                <input type="datetime-local" id="DateTo" class="form-control initial-time" runat="server" style="margin-left: 20px;" />
+                                <input type="text" id="DateFm" class="DateFm form-control initial-time" runat="server" style="margin-right: 20px;" readonly="readonly"/>～
+                                <input type="text" id="DateTo" class="DateTo form-control initial-time" runat="server" style="margin-left: 20px;" readonly="readonly"/>
+                                <script>
+                                    //上限日、下限日の設定
+                                    var LowerLimitDate = new Date(1900, 1 - 1, 1);
+                                    var UpperLimitDate = new Date(2099, 12 - 1, 31);
+                                    CmnFlatpickr("DateFm", "DateTo", LowerLimitDate, UpperLimitDate, true);
+　　                          </script>
                             </div>
                             
                             <div>
