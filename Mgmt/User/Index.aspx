@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="Index.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/ui-lightness/jquery-ui.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />  
+    <link rel="stylesheet" href="../../Common/css/Common.css" />
     <script src="../../Common/js/Common.js"></script>
     <%="<script src='../../Common/js/Common.js?ts=" & cCom.CmnTimeStamp & "'></script>" %>
     <title>ユーザー検索</title>
@@ -49,8 +51,8 @@
 
                             <div class="d-flex"> 
                                 <label class="col-sm-2 col-form-label">登録日</label>
-                                <input type="text" id="DateFm" class="form-control initial-time" style="margin-right: 20px;" runat="server"  maxlength="10" readonly /><span class="mt-auto mb-auto">～</span>
-                                <input type="text" id="DateTo" class="form-control initial-time" style="margin-left: 20px;" runat="server"  maxlength="10" readonly />
+                                <input type="text" id="DateFm" class="form-control initial-time" style="margin-right: 20px;" runat="server"  maxlength="10" /><span class="mt-auto mb-auto">～</span>
+                                <input type="text" id="DateTo" class="form-control initial-time" style="margin-left: 20px;" runat="server"  maxlength="10" />
                             </div>
                         </div>
                     </div>
@@ -77,6 +79,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="Index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
     <!-- jQuery UI -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <!-- 日本語化ファイル -->

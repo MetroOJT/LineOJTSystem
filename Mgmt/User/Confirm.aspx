@@ -71,7 +71,7 @@
                         新規登録が完了しました。
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="modal_close1">Close</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="modal_close1">閉じる</button>
                     </div>
                 </div>
             </div>
@@ -89,7 +89,7 @@
                         そのユーザーIDはすでに登録されています。
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="modal_close3">Close</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="modal_close3">閉じる</button>
                     </div>
                 </div>
             </div>
