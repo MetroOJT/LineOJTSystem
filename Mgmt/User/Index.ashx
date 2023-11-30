@@ -283,7 +283,7 @@ Public Class Index : Implements IHttpHandler
                     If NowPage <> 1 And NowPage <> TotalPage Then
                         sPNList.Append("<li class=""page-item pe-none"" id=""pi2"" onclick=""MakeUserTable('pi2')""><a class=""page-link bg-primary text-white"">" & PageMedian & "</a></li>")
                     ElseIf NowPage = 2 And iCount < 21 Then
-                        sPNList.Append("<li class=""page-item pe-none"" id=""pi2"" onclick=""MakeUserTable('pi2')""><a class=""page-link disabled"">" & PageMedian & "</a></li>")
+                        sPNList.Append("<li class=""page-item pe-none"" id=""pi2"" onclick=""MakeUserTable('pi2')""><a class=""page-link bg-primary text-white"">" & PageMedian & "</a></li>")
                     Else
                         sPNList.Append("<li class=""page-item"" id=""pi2"" onclick=""MakeUserTable('pi2')""><a class=""page-link"">" & PageMedian & "</a></li>")
                     End If

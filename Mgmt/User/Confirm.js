@@ -33,6 +33,9 @@ if (dUser_ID) {
     document.getElementById("delete_button").addEventListener("click", btnDeleteClick, false);
 } else {
     // ユーザー検索画面で登録ボタンを押下してきた場合
+    if (sessionStorage.getItem("koushin_mode") == "Yes") {
+        document.querySelector("#registration_button").value = "更新";
+    }
     document.getElementById("registration_button").addEventListener("click", btnRegistrationClick, false);
 };
 
@@ -72,6 +75,7 @@ function btnRegistrationClick() {
                             const modal_sentence1 = document.querySelector('#modal_sentence1');
                             modal_sentence1.textContent = "更新が完了しました。";
                             $('#staticBackdrop1').modal('show');
+                            sessionStorage.removeItem('koushin_mode');
                         };
                         sessionStorage.removeItem('hUserID');
                         if (sessionStorage.getItem("dUser_ID")) {
@@ -152,6 +156,7 @@ function fnc_Yes() {
                     };
                     if (data.ErrorMessage == "") {
                         // 削除が完了した場合
+                        sessionStorage.removeItem("koushin_mode");
                         const modal_sentence2 = document.querySelector('#modal_sentence1');
                         modal_sentence2.textContent = "削除が完了しました。";
                         $('#staticBackdrop1').modal('show');

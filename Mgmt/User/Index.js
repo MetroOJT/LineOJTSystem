@@ -245,6 +245,7 @@ function MakeUserTable(PagerID){
                                     document.querySelector("#piend a").classList.add("disabled");
                                     document.getElementById("piend").style.pointerEvents = "none";
                                 }
+
                                 transition(); // 詳細ボタンのid振り分け
                             }
                         } else {
