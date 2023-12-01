@@ -2,9 +2,12 @@
 }
 #ItiranBox {
 }
+.hidden {
+    display: none;
+}
 img {
     height: 60px;
-    width: 60px;
+    min-width: 60px;
     border: 1px solid #EEE;
 }
 #ItiranArea {
@@ -13,8 +16,15 @@ img {
     overflow-x: hidden;
     overflow-y: scroll;
 }
+.dot {
+    position: absolute;
+    top: -80px;
+    right: 0;
+    font-size: 5rem;
+}
 .LineUser {
     cursor: pointer;
+    position: relative;
 }
 .LineUser p {
     margin: 0.5rem;
@@ -44,6 +54,7 @@ img {
     display: inline-block;
     white-space: pre-line;
     padding: 0 0.5rem;
+    text-align: justify;
 }
 #txtPushMessage {
     resize: none; /* 手動リサイズを禁止 */
@@ -56,4 +67,5 @@ img {
     bottom: -5px;
     color: white;
     background-color: rgba(0, 0, 0, 0.5);
+    cursor: pointer;
 }

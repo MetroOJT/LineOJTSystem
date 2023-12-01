@@ -39,6 +39,8 @@ Public Class Index : Implements IHttpHandler
                 context.Response.Write(MessageBox(context))
             Case "PushMessage"
                 context.Response.Write(PushMessage(context))
+            Case "GetLastLog"
+                context.Response.Write(GetLastLog(context))
         End Select
     End Sub
 
@@ -148,6 +150,7 @@ Public Class Index : Implements IHttpHandler
         Dim sJson As String = ""
         Dim sSQL As New StringBuilder
         Dim sHTML As New StringBuilder
+        Dim hLogIDList As New Hashtable
         Try
             Dim sTempTable As String = cCom.CmnGet_TableName("LineUserItiran")
             sSQL.Clear()
@@ -158,6 +161,7 @@ Public Class Index : Implements IHttpHandler
             sSQL.Append(" ,wPictureUrl")
             sSQL.Append(" ,SendRecv")
             sSQL.Append(" ,Log")
+            sSQL.Append(" ,MaxLogID")
             sSQL.Append(" FROM " & sTempTable)
             sSQL.Append(" JOIN")
             sSQL.Append(" (")
@@ -187,7 +191,15 @@ Public Class Index : Implements IHttpHandler
                     Dim messageObj As Object = eventsObj("message")
                     sLastMessage = messageObj("text").ToString()
                 End If
-                sHTML.Append("<div id=Search" & cDB.DRData("SearchID") & " class=""LineUser d-flex align-items-center""><img src=""" & cDB.DRData("wPictureUrl") & """ class=""rounded-circle""/><div class=""d-flex flex-column""><div id=Search" & cDB.DRData("SearchID") & "_name>" & cDB.DRData("wDisplayName") & "</div><div id=Search" & cDB.DRData("SearchID") & "_message class=""text-black-50 text-break search-message"">" & sLastMessage.Replace(vbLf, " ") & "</div></div></div>")
+                sHTML.Append("<div id=Search" & cDB.DRData("SearchID") & " class=""LineUser d-flex align-items-center"">")
+                sHTML.Append("<div class=""hidden text-success dot"">.</div>")
+                sHTML.Append("<img src = """ & cDB.DRData("wPictureUrl") & """ Class=""rounded-circle""/>")
+                sHTML.Append("<div Class=""d-flex flex-column"">")
+                sHTML.Append("<div id = Search" & cDB.DRData("SearchID") & "_name>" & cDB.DRData("wDisplayName") & "</div>")
+                sHTML.Append("<div id = Search" & cDB.DRData("SearchID") & "_message Class=""text-black-50 text-break search-message"">" & sLastMessage.Replace(vbLf, " ") & "</div>")
+                sHTML.Append("</div>")
+                sHTML.Append("</div>")
+                hLogIDList.Add(cDB.DRData("SearchID").ToString, cDB.DRData("MaxLogID").ToString)
             Loop
         Catch ex As Exception
             sRet = ex.Message
@@ -201,8 +213,9 @@ Public Class Index : Implements IHttpHandler
 
             hHash.Add("status", sStatus)
             hHash.Add("html", sHTML.ToString)
+            hHash.Add("beforelogidlist", hLogIDList)
 
-            sJSON = jJSON.Serialize(hHash)
+            sJson = jJSON.Serialize(hHash)
         End Try
 
         Return sJSON
@@ -220,6 +233,7 @@ Public Class Index : Implements IHttpHandler
         Dim sJson As String = ""
         Dim sSQL As New StringBuilder
         Dim dLogDate As Date = Nothing
+        Dim sLastUserLogID As String = ""
         Dim sLastLogID As String = ""
         Dim sLastUserMessage As String = ""
         Dim sLastMessage As String = ""
@@ -242,8 +256,8 @@ Public Class Index : Implements IHttpHandler
             cDB.SelectSQL(sSQL.ToString)
             If cDB.ReadDr Then
                 sHTML.Clear()
-                sHTML.Append("<div id=""MessageHeader"" class=""d-flex align-items-center"">")
-                sHTML.Append("<img id=""MessageHeaderImg"" src=""" & cDB.DRData("wPictureUrl") & """ class=""rounded-circle""/>")
+                sHTML.Append("<div id=""MessageHeader"" Class=""d-flex align-items-center"">")
+                sHTML.Append("<img id=""MessageHeaderImg"" src=""" & cDB.DRData("wPictureUrl") & """ Class=""rounded-circle""/>")
                 sHTML.Append("<p id=""MessageHeaderName"">" & cDB.DRData("wDisplayName") & "</p>")
                 sHTML.Append("</div>")
                 cDB.AddWithValue("@Line_UserID", cDB.DRData("wLine_UserID"))
@@ -280,6 +294,7 @@ Public Class Index : Implements IHttpHandler
                     sMessage.Clear()
                     sMessage.Append(jMessage("text").ToString)
                     sLastMessage = sMessage.ToString
+                    sLastLogID = cDB.DRData("LogID")
                     sHTML.Append("<div class=""row"">")
                     sHTML.Append("<div class=""col-6""></div>")
                     sHTML.Append("<div class=""col-6 text-end"">")
@@ -300,7 +315,8 @@ Public Class Index : Implements IHttpHandler
                     Dim messageObj As Object = eventsObj("message")
                     sMessage.Clear()
                     sMessage.Append(messageObj("text").ToString)
-                    sLastLogID = cDB.DRData("LogID").ToString
+                    sLastUserLogID = cDB.DRData("LogID").ToString
+                    sLastLogID = sLastUserLogID
                     sLastUserMessage = sMessage.ToString
                     sLastMessage = sLastUserMessage
                     sHTML.Append("<div class=""row"">")
@@ -335,8 +351,99 @@ Public Class Index : Implements IHttpHandler
 
             hHash.Add("status", sStatus)
             hHash.Add("html", sHTML.ToString)
+            hHash.Add("lastuserlogid", sLastUserLogID)
             hHash.Add("lastlogid", sLastLogID)
             hHash.Add("lastusermessage", sLastUserMessage)
+            hHash.Add("lastmessage", sLastMessage)
+
+            sJson = jJson.Serialize(hHash)
+        End Try
+
+        Return sJson
+    End Function
+
+    'ログ更新チェック
+    Public Function GetLastLog(ByVal context As HttpContext) As String
+        Dim cCom As New Common
+        Dim cDB As New CommonDB
+        Dim sRet As String = ""
+        Dim sStatus As String = "OK"
+        Dim hHash As New Hashtable
+        Dim jJson As New JavaScriptSerializer
+        Dim sJson As String = ""
+        Dim sSQL As New StringBuilder
+        Dim sLastLogID As String = ""
+        Dim sLastMessage As String = ""
+        Try
+            '送信データ取得
+            Dim SearchID As String = context.Request.Item("SearchID")
+
+            Dim sTempTable As String = cCom.CmnGet_TableName("LineUserItiran")
+
+            cDB.AddWithValue("@SearchID", SearchID)
+            sSQL.Clear()
+            sSQL.Append(" SELECT")
+            sSQL.Append(" wLine_UserID")
+            sSQL.Append(" FROM " & sTempTable)
+            sSQL.Append(" WHERE SearchID = @SearchID")
+            cDB.SelectSQL(sSQL.ToString)
+
+            If cDB.ReadDr Then
+                cDB.AddWithValue("@Line_UserID", cDB.DRData("wLine_UserID"))
+
+                sSQL.Clear()
+                sSQL.Append(" SELECT " & cCom.gctbl_LineUserMst & ".Line_UserID, MAX(LogID) AS Last_LogID")
+                sSQL.Append(" FROM " & cCom.gctbl_LineUserMst)
+                sSQL.Append(" JOIN " & cCom.gctbl_LogMst)
+                sSQL.Append(" ON " & cCom.gctbl_LineUserMst & ".Line_UserID = " & cCom.gctbl_LogMst & ".Line_UserID")
+                sSQL.Append(" WHERE " & cCom.gctbl_LineUserMst & ".Line_UserID = @Line_UserID")
+                sSQL.Append(" GROUP BY Line_UserID")
+                cDB.SelectSQL(sSQL.ToString)
+                If cDB.ReadDr Then
+                    sLastLogID = cDB.DRData("Last_LogID").ToString
+                    cDB.AddWithValue("@Last_LogID", sLastLogID)
+                    sSQL.Clear()
+                    sSQL.Append(" UPDATE " & cCom.gctbl_LineUserMst)
+                    sSQL.Append(" SET Last_LogID = @Last_LogID")
+                    sSQL.Append(" WHERE Line_UserID = @Line_UserID")
+                    cDB.ExecuteSQL(sSQL.ToString)
+                End If
+
+                sSQL.Clear()
+                sSQL.Append(" SELECT")
+                sSQL.Append(" Log")
+                sSQL.Append(" ,SendRecv")
+                sSQL.Append(" FROM " & cCom.gctbl_LogMst)
+                sSQL.Append(" WHERE LogID = @Last_LogID")
+                cDB.SelectSQL(sSQL.ToString)
+                If cDB.ReadDr Then
+                    Dim sLastLog As String = cDB.DRData("Log")
+                    Dim jLastLog As Object = JsonConvert.DeserializeObject(sLastLog)
+                    If cDB.DRData("SendRecv").ToString = "Send" Then
+                        Dim jLastMessages As Object
+                        Dim jLastMessage As Object = Nothing
+                        jLastMessages = jLastLog("messages")
+                        jLastMessage = jLastMessages.Last()
+                        sLastMessage = jLastMessage("text").ToString
+                    ElseIf cDB.DRData("SendRecv").ToString = "Recv" Then
+                        Dim eventsObj As Object = jLastLog("events")(0)
+                        Dim messageObj As Object = eventsObj("message")
+                        sLastMessage = messageObj("text").ToString
+                    End If
+                End If
+            End If
+        Catch ex As Exception
+            sRet = ex.Message
+        Finally
+            cDB.DrClose()
+            cDB.Dispose()
+            If sRet <> "" Then
+                sStatus = "NG"
+                cCom.CmnWriteStepLog(sRet)
+            End If
+
+            hHash.Add("status", sStatus)
+            hHash.Add("lastlogid", sLastLogID)
             hHash.Add("lastmessage", sLastMessage)
 
             sJson = jJson.Serialize(hHash)
@@ -415,6 +522,40 @@ Public Class Index : Implements IHttpHandler
                 sSQL.Append(" SET Status = @Status, Log = @SendLog")
                 sSQL.Append(" ORDER BY LogID DESC LIMIT 1")
                 cDB.ExecuteSQL(sSQL.ToString)
+
+                '最後のログIDを取得
+                sSQL.Clear()
+                sSQL.Append(" SELECT")
+                sSQL.Append(" MAX(LogID) AS Last_LogID")
+                sSQL.Append(" FROM " & cCom.gctbl_LogMst)
+                sSQL.Append(" WHERE Line_UserID = @Line_UserID")
+                cDB.SelectSQL(sSQL.ToString)
+                If cDB.ReadDr Then
+                    cDB.AddWithValue("@Last_LogID", cDB.DRData("Last_LogID"))
+                End If
+
+                'Line_UserIDが登録済みか確認
+                sSQL.Clear()
+                sSQL.Append(" SELECT")
+                sSQL.Append(" *")
+                sSQL.Append(" FROM " & cCom.gctbl_LineUserMst)
+                sSQL.Append(" WHERE Line_UserID = @Line_UserID")
+                cDB.SelectSQL(sSQL.ToString)
+
+                '未登録の場合挿入
+                If Not cDB.IsSelectExistRecord() Then
+                    sSQL.Clear()
+                    sSQL.Append(" INSERT INTO " & cCom.gctbl_LineUserMst)
+                    sSQL.Append(" VALUES (@Line_UserID, NOW(), @Last_LogID)")
+                    cDB.ExecuteSQL(sSQL.ToString)
+                Else
+                    '登録済みの場合
+                    sSQL.Clear()
+                    sSQL.Append(" UPDATE " & cCom.gctbl_LineUserMst)
+                    sSQL.Append(" SET Last_LogID = @Last_LogID")
+                    sSQL.Append(" WHERE Line_UserID = @Line_UserID")
+                    cDB.ExecuteSQL(sSQL.ToString)
+                End If
 
             End If
 
