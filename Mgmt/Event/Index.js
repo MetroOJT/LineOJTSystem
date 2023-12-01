@@ -4,6 +4,10 @@ function_login_check();
 // 担当者名表示
 DspLoginUserName();
 
+let dMinDate = LowerLimitDate;
+let dMaxDate = UpperLimitDate;
+CmnFlatpickr("txtScheduleFm", "txtScheduleTo", dMinDate, dMaxDate, false);
+
 // global変数
 let Ajax_File = "Index.ashx";
 let AccordionOpenFlg = true;
