@@ -43,6 +43,8 @@ function btnClearClick() {
     Status_select.options[0].selected = true;
     Order_select.options[0].selected = true;
 
+    $("#DateFm").change();
+    $("#DateTo").change();
 }
 
 // 戻る
