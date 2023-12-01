@@ -144,6 +144,8 @@ function btnRegistrationClick() {
         document.querySelector("#error_message_div_3").appendChild(error_p);
     }
 
+    console.log(document.querySelector("#user_password").value != document.querySelector("#user_password_confirmation").value);
+
     // ラジオボタン以外のバリデータ
     const isBelowThreshold = (currentValue) => currentValue == 0;
     var c_element = 0;
@@ -204,35 +206,51 @@ function btnRegistrationClick() {
                     error_message_p.textContent = `${p_textcontent}を入力してください。`;
                 }
                 error_message_div.appendChild(error_message_p);
+            } else {
+                if (document.querySelector("#user_password").value != document.querySelector("#user_password_confirmation").value) {
+                    const i_element = document.querySelector("#user_password");
+                    const u_element = document.querySelector("#user_password_confirmation");
+                    elm.classList.add('is-invalid');
+                    elm.classList.remove('is-valid');
+                    u_element.classList.add('is-invalid');
+                    u_element.classList.remove('is-valid');
+                    error_judgement[5] = 1;
+                    elm.parentNode.style.borderColor = "#dc3545";
+                    u_element.parentNode.style.borderColor = "#dc3545";
+                    const error_message_p = document.createElement("p");
+                    error_message_p.className = "h6";
+                    error_message_p.id = `p_5`;
+                    error_message_p.style.color = "#dc3545";
+                    const i_div = document.querySelector("#error_message_div_5");
+                    error_message_p.textContent = "パスワードが一致しません。";
+                    i_div.style.textAlign = "left";
+                    if (document.querySelector("#error_message_div_5").firstChild) {
+                        i_div.removeChild(document.querySelector("#error_message_div_5").firstChild);
+                    }
+                    i_div.appendChild(error_message_p);
+                }
             }
-        } else if (c_element == 4) {
+        } else if (document.querySelector("#user_password").value != document.querySelector("#user_password_confirmation").value) {
             const i_element = document.querySelector("#user_password");
             const u_element = document.querySelector("#user_password_confirmation");
-            if (i_element.value != u_element.value) {
-                elm.classList.add('is-invalid');
-                elm.classList.remove('is-valid');
-                u_element.classList.add('is-invalid');
-                u_element.classList.remove('is-valid');
-                error_judgement[c_element] = 1;
-                elm.parentNode.style.borderColor = "#dc3545";
-                u_element.parentNode.style.borderColor = "#dc3545";
-                const error_message_p = document.createElement("p");
-                error_message_p.className = "h6";
-                error_message_p.id = `p_${c_element}`;
-                error_message_p.style.color = "#dc3545";
-                const i_div = document.querySelector("#error_message_div_5");
-                error_message_p.textContent = "パスワードが一致しません。";
-                i_div.style.textAlign = "left";
-                if (document.querySelector("#error_message_div_5").firstChild) {
-                    i_div.removeChild(document.querySelector("#error_message_div_5").firstChild);
-                }
-                i_div.appendChild(error_message_p);
-            } else {
-                // 緑にする
-                elm.classList.add('is-valid');
-                elm.classList.remove('is-invalid');
-                elm.parentNode.style.borderColor = "#198754";
+            elm.classList.add('is-invalid');
+            elm.classList.remove('is-valid');
+            u_element.classList.add('is-invalid');
+            u_element.classList.remove('is-valid');
+            error_judgement[5] = 1;
+            elm.parentNode.style.borderColor = "#dc3545";
+            u_element.parentNode.style.borderColor = "#dc3545";
+            const error_message_p = document.createElement("p");
+            error_message_p.className = "h6";
+            error_message_p.id = `p_5`;
+            error_message_p.style.color = "#dc3545";
+            const i_div = document.querySelector("#error_message_div_5");
+            error_message_p.textContent = "パスワードが一致しません。";
+            i_div.style.textAlign = "left";
+            if (document.querySelector("#error_message_div_5").firstChild) {
+                i_div.removeChild(document.querySelector("#error_message_div_5").firstChild);
             }
+            i_div.appendChild(error_message_p);
         } else if (c_element == 2) {
             if (elm.value.match(/^[ 　]{1,}/)) {
                 elm.classList.add('is-invalid');
