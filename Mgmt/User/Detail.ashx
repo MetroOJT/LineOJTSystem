@@ -12,6 +12,8 @@ Public Class Index : Implements IHttpHandler
                 context.Response.Write(Load(context))
             Case "Search"
                 context.Response.Write(sea(context))
+            Case "Search_Delete"
+                context.Response.Write(sea_Del(context))
         End Select
     End Sub
 
@@ -126,6 +128,58 @@ Public Class Index : Implements IHttpHandler
                     sErrorMessage = "そのユーザーIDはすでに登録されています。"
                 End If
             End If
+        Catch ex As Exception
+            sRet = ex.Message
+        Finally
+            cDB.DrClose()
+            cDB.Dispose()
+            If sRet <> "" Then
+                sStatus = sRet
+                cCom.CmnWriteStepLog(sRet)
+
+            End If
+
+            hHash.Add("status", sStatus)
+            hHash.Add("count", iCount)
+            hHash.Add("ErrorMessage", sErrorMessage)
+            sJSON = jJSON.Serialize(hHash)
+        End Try
+
+        Return sJSON
+    End Function
+
+    '検索（ログインしているユーザーではないか）
+    Public Function sea_Del(ByVal context As HttpContext) As String
+        Dim cCom As New Common
+        Dim cDB As New CommonDB
+        Dim Cki As New Cookie
+        Dim sSQL As New StringBuilder
+        Dim sWhere As New StringBuilder
+        Dim sOb As New StringBuilder
+        Dim jJSON As New JavaScriptSerializer
+        Dim sJSON As String = ""
+        Dim hHash As New Hashtable
+        Dim sRet As String = ""
+        Dim sStatus As String = "OK"
+        Dim sTempTable As String = ""
+
+        Dim sUser_ID As String = ""
+        Dim sSere As String = ""
+        Dim sCond_Status As String = ""
+        Dim sOrder As String = ""
+
+        Dim iCount As Integer = 0
+        Dim sErrorMessage As String = ""
+
+        Try
+            sUser_ID = context.Request.Item("User_ID")
+            cDB.AddWithValue("@UserID", sUser_ID)
+
+
+            If Cki.Get_Cookies("User_ID") = sUser_ID Then
+                sErrorMessage = "現在ログインしているユーザーのため、削除することが出来ません。"
+            End If
+
         Catch ex As Exception
             sRet = ex.Message
         Finally

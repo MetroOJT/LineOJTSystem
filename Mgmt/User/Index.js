@@ -202,7 +202,7 @@ function MakeUserTable(PagerID){
         }
         PageID = "";
     } else {
-        SearchPage = 1;
+        $('#exampleModal').modal('show');
     }
     if (PagerID == 0) {
         $.ajax({
@@ -232,14 +232,16 @@ function MakeUserTable(PagerID){
                             if (data.html != "") {
                                 document.getElementById("PNArea").innerHTML = data.pnlist;
                                 document.getElementById("ResultArea").innerHTML = data.html;
-
+                                console.log(NowPage);
+                                console.log(TotalPage);
+                                console.log(Nod);
                                 if (NowPage == 1 || Nod < 31) { // 表示ページが1またはヒット数が30件以下でボタンを押下できなくする
                                     document.querySelector("#pista a").classList.add("disabled");
                                     document.getElementById("pista").style.pointerEvents = "none";
                                     document.querySelector("#piback a").classList.add("disabled");
                                     document.getElementById("piback").style.pointerEvents = "none";
                                 }
-                                if (NowPage == TotalPage || Nod < 31) { // 表示ページが最後またはヒット数が30件以下でボタンを押下できなくする
+                                if (NowPage == TotalPage || Nod < 21) { // 表示ページが最後またはヒット数が30件以下でボタンを押下できなくする
                                     document.querySelector("#pinext a").classList.add("disabled");
                                     document.getElementById("pinext").style.pointerEvents = "none";
                                     document.querySelector("#piend a").classList.add("disabled");
@@ -247,6 +249,7 @@ function MakeUserTable(PagerID){
                                 }
 
                                 transition(); // 詳細ボタンのid振り分け
+                                document.querySelector("#PageNumber").addEventListener("click", PageNumber_Search, false);
                             }
                         } else {
                             document.getElementById("CntArea").innerText = "";
@@ -259,7 +262,7 @@ function MakeUserTable(PagerID){
                 }
             }
         });
-    } else {
+    } else if (PagerID != ""){
         // 検索結果表示
         $.ajax({
             url: Ajax_File,
@@ -413,8 +416,10 @@ function NoEnter() {
 
 // ページ検索
 function PageNumber_Search() {
+    console.log("a");
     const PageNumber = document.getElementById("PageNumber").value;
     if (PageNumber == "") {
+        $('#exampleModal').modal('show');
         document.getElementById("error_modal").click();
     } else {
         PagiNation(parseInt(PageNumber));

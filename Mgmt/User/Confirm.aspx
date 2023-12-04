@@ -107,8 +107,8 @@
                         本当に削除しますか？
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-danger btn-lg" data-bs-dismiss="modal" id="modal_Yes">削除</button>
-                        <button type="button" class="btn btn-outline-secondary btn-lg" data-bs-dismiss="modal" id="modal_No">キャンセル</button>
+                        <button type="button" class="btn btn-outline-danger col-sm" data-bs-dismiss="modal" id="modal_Yes">削除</button>
+                        <button type="button" class="btn btn-outline-secondary col-sm" data-bs-dismiss="modal" id="modal_No">キャンセル</button>
                     </div>
                 </div>
             </div>

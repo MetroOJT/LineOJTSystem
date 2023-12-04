@@ -60,7 +60,7 @@ if (sessionStorage.getItem('hUserID') != null) {
 } else {
     // ユーザー検索画面で新規登録ボタンを押下してきた場合
     document.querySelector("#user_ID").focus();
-    document.getElementById("delete_button").style.display = "none";
+    document.getElementById("delete_button").style.visibility = "hidden";
     document.getElementById("delete_button").classList.remove("btn-outline-danger");
     document.getElementById("delete_button").classList.add("btn-secondary");
     if (sessionStorage.getItem("Detail_UserID") != null) {
@@ -93,7 +93,7 @@ function btnRegistrationClick() {
             if (delChild) {
                 document.querySelector(`#error_message_div_${i}`).removeChild(delChild);
             }
-            document.querySelector(`#error_message_div_${i}`).style.marginLeft = "155px";
+            document.querySelector(`#error_message_div_${i}`).style.marginLeft = "200px";
             document.querySelector(`#error_message_div_${i}`).textAlign = "left";
         };
     };
@@ -147,9 +147,11 @@ function btnRegistrationClick() {
     console.log(document.querySelector("#user_password").value != document.querySelector("#user_password_confirmation").value);
 
     // ラジオボタン以外のバリデータ
-    const isBelowThreshold = (currentValue) => currentValue == 0;
     var c_element = 0;
     form.querySelectorAll('.form-control').forEach(function (elm) {
+        var color_flag = "green";
+        var error_message = "";
+        var style_change = "No";
         if (c_element == 2) {
             c_element += 2;
         } else {
@@ -158,8 +160,77 @@ function btnRegistrationClick() {
 
         var maxlen = elm.getAttribute('data-maxlen');
         var regexp = elm.getAttribute('data-regexp');
+        console.log(elm);
         if (elm.value == "") {
-            // 赤にする
+            color_flag = "red";
+            error_judgement[c_element] = 1;
+            // エラーメッセージを入れる
+            const error_message_p = document.createElement("p");
+            if (c_element == 1) {
+                error_message_p.textContent = "ユーザーIDを入力してください。";
+            }else if (c_element == 2){
+                error_message_p.textContent = "ユーザー名を入力してください。";
+            } else if (c_element == 4) {
+                error_message_p.textContent = "パスワードを入力してください。";
+            } else if (c_element == 5) {
+                error_message_p.textContent = "パスワード（確認用）を入力してください。";
+            }
+            error_message = error_message_p.textContent;
+        } else if ((maxlen && (maxlen < elm.value.length)) ||
+            (regexp && !(elm.value.match(regexp))) && c_element != 5) {
+            const error_message_div = document.querySelector(`#error_message_div_${c_element}`);
+            color_flag = "red";
+            error_judgement[c_element] = 1;
+            const error_message_p = document.createElement("p");
+            const p_textcontent = document.querySelector(`#label_${c_element}`).textContent;
+            if (c_element == 1) {
+                error_message_p.textContent = "ユーザーIDは半角数字5桁で入力してください。";
+            } else if (c_element == 4) {
+                error_message_p.textContent = "パスワードは半角英数字8～20文字以下で入力してください。";
+                style_change = "Yes";
+            } else if (c_element == 5) {
+                error_message_p.textContent = "パスワード（確認用）は半角英数字8～20文字以下で入力してください。";
+                style_change = "Yes";
+            } else {
+                error_message_p.textContent = `${p_textcontent}を入力してください。`;
+            }
+            error_message = error_message_p.textContent;
+
+        } else if ((c_element == 5) && (document.querySelector("#user_password").value != document.querySelector("#user_password_confirmation").value)) {
+            const i_element = document.querySelector("#user_password");
+            const u_element = document.querySelector("#user_password_confirmation");
+            color_flag = "red";
+            error_judgement[c_element] = 1;
+            const error_message_p = document.createElement("p");
+            error_message_p.textContent = "パスワードが一致しません。";
+            error_message = error_message_p.textContent;
+
+        } else if (c_element == 2) {
+            if (elm.value.match(/^[ 　]{1,}/)) {
+                color_flag = "red";
+                error_judgement[c_element] = 1;
+                const error_message_div = document.querySelector(`#error_message_div_${c_element}`);
+                const error_message_p = document.createElement("p");
+                error_message_p.className = "h6";
+                error_message_p.id = `p_${c_element}`;
+                error_message_p.style.color = "#dc3545";
+
+                error_message_p.textContent = "ユーザー名は半角数字5桁で入力してください。";
+                error_message = error_message_p.textContent;
+            } else {
+                // 緑にする
+                color_flag = "green";
+                error_judgement[c_element] = 0;
+            }
+        } else {
+            if ((c_element != 5 && c_element != 4) || (c_element == 5 && error_judgement[4] == 0)) {
+                // 緑にする
+                color_flag = "green";
+                error_judgement[c_element] = 0;
+            }
+        }
+        if (color_flag == "red") {
+            console.log(error_message);
             elm.classList.add('is-invalid');
             elm.classList.remove('is-valid');
             error_judgement[c_element] = 1;
@@ -168,119 +239,37 @@ function btnRegistrationClick() {
             const error_message_p = document.createElement("p");
             error_message_p.className = "h6";
             error_message_p.id = `p_${c_element}`;
+            if (style_change == "Yes") {
+                error_message_div.style.marginLeft = null;
+                error_message_div.style.textAlign = "right";
+            } else {
+                error_message_div.style.marginLeft = "200px";
+                error_message_div.style.textAlign = "left";
+            }
+            
             error_message_p.style.color = "#dc3545";
-
-            const p_textcontent = document.querySelector(`#label_${c_element}`).textContent;
-            error_message_p.textContent = `${p_textcontent}を入力してください。`;
-            error_message_div.style.marginLeft = "155px";
-            error_message_div.style.textAlign = "left";
+            error_message_p.textContent = error_message;
             error_message_div.appendChild(error_message_p);
-        } else if ((maxlen && (maxlen < elm.value.length)) ||
-            (regexp && !(elm.value.match(regexp)))) {
-            if (c_element != 5) {
-                // 赤にする
-                elm.classList.add('is-invalid');
-                elm.classList.remove('is-valid');
-                error_judgement[c_element] = 1;
-                elm.parentNode.style.borderColor = "#dc3545";
-                const error_message_div = document.querySelector(`#error_message_div_${c_element}`);
-                const error_message_p = document.createElement("p");
-                error_message_p.className = "h6";
-                error_message_p.id = `p_${c_element}`;
-                error_message_p.style.color = "#dc3545";
-
-                const p_textcontent = document.querySelector(`#label_${c_element}`).textContent;
-                if (c_element == 1) {
-                    error_message_p.textContent = "ユーザーIDは半角数字5桁で入力してください。";
-                } else if (c_element == 4) {
-                    error_message_p.textContent = "パスワードは半角英数字8～20文字以下で入力してください。";
-                    error_message_div.style.marginLeft = null;
-                    error_message_div.style.textAlign = "right";
-                } else if (c_element == 5) {
-                    error_message_p.textContent = "パスワード（確認用）は半角英数字8～20文字以下で入力してください。";
-                    error_message_div.style.marginLeft = null;
-                    error_message_div.style.textAlign = "right";
-                } else {
-                    error_message_div.style.marginLeft = "155px";
-                    error_message_div.style.textAlign = "left";
-                    error_message_p.textContent = `${p_textcontent}を入力してください。`;
-                }
-                error_message_div.appendChild(error_message_p);
-            } else {
-                if (document.querySelector("#user_password").value != document.querySelector("#user_password_confirmation").value) {
-                    const i_element = document.querySelector("#user_password");
-                    const u_element = document.querySelector("#user_password_confirmation");
-                    elm.classList.add('is-invalid');
-                    elm.classList.remove('is-valid');
-                    u_element.classList.add('is-invalid');
-                    u_element.classList.remove('is-valid');
-                    error_judgement[5] = 1;
-                    elm.parentNode.style.borderColor = "#dc3545";
-                    u_element.parentNode.style.borderColor = "#dc3545";
-                    const error_message_p = document.createElement("p");
-                    error_message_p.className = "h6";
-                    error_message_p.id = `p_5`;
-                    error_message_p.style.color = "#dc3545";
-                    const i_div = document.querySelector("#error_message_div_5");
-                    error_message_p.textContent = "パスワードが一致しません。";
-                    i_div.style.textAlign = "left";
-                    if (document.querySelector("#error_message_div_5").firstChild) {
-                        i_div.removeChild(document.querySelector("#error_message_div_5").firstChild);
-                    }
-                    i_div.appendChild(error_message_p);
-                }
-            }
-        } else if (document.querySelector("#user_password").value != document.querySelector("#user_password_confirmation").value) {
-            const i_element = document.querySelector("#user_password");
-            const u_element = document.querySelector("#user_password_confirmation");
-            elm.classList.add('is-invalid');
-            elm.classList.remove('is-valid');
-            u_element.classList.add('is-invalid');
-            u_element.classList.remove('is-valid');
-            error_judgement[5] = 1;
-            elm.parentNode.style.borderColor = "#dc3545";
-            u_element.parentNode.style.borderColor = "#dc3545";
-            const error_message_p = document.createElement("p");
-            error_message_p.className = "h6";
-            error_message_p.id = `p_5`;
-            error_message_p.style.color = "#dc3545";
-            const i_div = document.querySelector("#error_message_div_5");
-            error_message_p.textContent = "パスワードが一致しません。";
-            i_div.style.textAlign = "left";
-            if (document.querySelector("#error_message_div_5").firstChild) {
-                i_div.removeChild(document.querySelector("#error_message_div_5").firstChild);
-            }
-            i_div.appendChild(error_message_p);
-        } else if (c_element == 2) {
-            if (elm.value.match(/^[ 　]{1,}/)) {
-                elm.classList.add('is-invalid');
-                elm.classList.remove('is-valid');
-                error_judgement[c_element] = 1;
-                elm.parentNode.style.borderColor = "#dc3545";
-                const error_message_div = document.querySelector(`#error_message_div_${c_element}`);
-                const error_message_p = document.createElement("p");
-                error_message_p.className = "h6";
-                error_message_p.id = `p_${c_element}`;
-                error_message_p.style.color = "#dc3545";
-
-                error_message_p.textContent = "ユーザー名は半角数字5桁で入力してください。";
-                error_message_div.appendChild(error_message_p);
-            } else {
-                // 緑にする
-                elm.classList.add('is-valid');
-                elm.classList.remove('is-invalid');
-                elm.parentNode.style.borderColor = "#198754";
-            }
         } else {
-            if (c_element != 5 || (c_element == 5 && error_judgement[4] == 0)) {
-                // 緑にする
-                elm.classList.add('is-valid');
-                elm.classList.remove('is-invalid');
-                elm.parentNode.style.borderColor = "#198754";
-            }
+            elm.classList.add('is-valid');
+            elm.classList.remove('is-invalid');
+            elm.parentNode.style.borderColor = "#198754";
         }
-
     });
+    if (error_judgement[5] == 1) {
+        const elm = document.querySelector("#user_password");
+        elm.classList.add('is-invalid');
+        elm.classList.remove('is-valid');
+        error_judgement[c_element] = 1;
+        elm.parentNode.style.borderColor = "#dc3545";
+    }
+    if (error_judgement[4] == 1) {
+        const elm = document.querySelector("#user_password_confirmation");
+        elm.classList.add('is-invalid');
+        elm.classList.remove('is-valid');
+        error_judgement[c_element] = 1;
+        elm.parentNode.style.borderColor = "#dc3545";
+    }
     if (error_judgement[1] == 0) {
         if (!sessionStorage.getItem('hUserID')) {
             elm = document.querySelector("#user_ID");
@@ -299,17 +288,18 @@ function btnRegistrationClick() {
                         if (data.status == "OK") {
                             if (data.ErrorMessage != "") {
                                 // 赤にする
-                                elm.classList.add('is-invalid');
-                                elm.classList.remove('is-valid');
+                                color_flag = "red";
                                 error_judgement[1] = 1;
-                                elm.parentNode.style.borderColor = "#dc3545";
+                                
                                 const error_message_div = document.querySelector(`#error_message_div_1`);
                                 const error_message_p = document.createElement("p");
                                 error_message_p.className = "h6";
                                 error_message_p.id = `p_1`;
                                 error_message_p.style.color = "#dc3545";
-                                error_message_p.textContent = "このユーザーIDは既に登録されています。";
-                                error_message_div.appendChild(error_message_p);
+                                error_message_p.textContent = data.ErrorMessage;
+                                if (error_message == "") {
+                                    error_message = error_message_p.textContent;
+                                }
                                 f_errorjudgement();
                             }
                             f_errorjudgement();
@@ -319,8 +309,7 @@ function btnRegistrationClick() {
                     };
                }
             });
-        }
-        else {
+        } else {
             f_errorjudgement();
         }
     }
@@ -347,12 +336,47 @@ function btnDeleteClick() {
     var Password_confirmation = iPassword;
     var User_Name = iUserName;
     var Admin_Check = iAdmin;
-    sessionStorage.setItem("iUser_ID", User_ID);
-    sessionStorage.setItem("iPassword", Password);
-    sessionStorage.setItem("iUser_Name", User_Name);
-    sessionStorage.setItem("iAdmin_Check", Admin_Check);
-    sessionStorage.setItem("dUser_ID", User_ID);
-    window.location.href = "Confirm.aspx";
+    $.ajax({
+        url: Ajax_File,
+        method: "POST",
+        data: {
+            "mode": "Search_Delete",
+            "User_ID": User_ID
+        },
+        dataType: "json",
+        success: function (data) {
+            if (data != "") {
+                if (data.status == "OK") {
+                    console.log(data);
+                    if (data.ErrorMessage != "") {
+                        // 赤にする
+                        const elm = document.querySelector("#user_ID")
+                        elm.classList.add('is-invalid');
+                        elm.classList.remove('is-valid');
+                        elm.parentNode.style.borderColor = "#dc3545";
+                        const error_message_div = document.querySelector(`#error_message_div_1`);
+                        const error_message_p = document.createElement("p");
+                        error_message_p.className = "h6";
+                        error_message_p.id = `p_1`;
+                        error_message_p.style.color = "#dc3545";
+                        error_message_p.textContent = data.ErrorMessage;
+                        error_message_div.appendChild(error_message_p);
+                        error_message_div.style.marginLeft = "100px";
+
+                    } else {
+                        sessionStorage.setItem("iUser_ID", User_ID);
+                        sessionStorage.setItem("iPassword", Password);
+                        sessionStorage.setItem("iUser_Name", User_Name);
+                        sessionStorage.setItem("iAdmin_Check", Admin_Check);
+                        sessionStorage.setItem("dUser_ID", User_ID);
+                        window.location.href = "Confirm.aspx";
+                    }
+                } else {
+                    alert("エラーが発生しました。");
+                };
+            };
+        }
+    });    
 }
 
 // 戻るボタンを押したときの処理
