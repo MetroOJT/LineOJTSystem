@@ -474,6 +474,9 @@ Public Class Index : Implements IHttpHandler
             Dim nowSearchID As Integer = context.Request.Item("nowSearchID")
 
             cDB.AddWithValue("@SearchID", nowSearchID)
+
+            cDB.BeginTran()
+
             sSQL.Clear()
             sSQL.Append(" SELECT")
             sSQL.Append(" wLine_UserID")
@@ -561,9 +564,11 @@ Public Class Index : Implements IHttpHandler
                 End If
 
             End If
+            cDB.CommitTran()
 
         Catch ex As Exception
             sRet = ex.Message
+            cDB.RollBackTran()
         Finally
             cDB.DrClose()
             cDB.Dispose()

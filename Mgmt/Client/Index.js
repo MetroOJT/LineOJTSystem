@@ -351,6 +351,8 @@ function btnPushMessageClick() {
                 if (data.status == "OK") {
                     MakeMessageBody(nowSearchID, true);
                     docTxtPushMessage.value = "";
+                    beforeLogIDList[nowSearchID] = data.lastlogid;
+                    checkLogUpd(nowSearchID);
                 }
                 else {
                     alert("エラーが発生しました。");
