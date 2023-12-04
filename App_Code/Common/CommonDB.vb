@@ -38,7 +38,7 @@ Public Class CommonDB
             mConn.Open()
 
             mCmd.Connection = mConn
-            mCmd.CommandTimeout = 30
+            mCmd.CommandTimeout = 99999
 
         Catch ex As Exception
             Throw New Exception("DBエラー:SQLサーバの接続に失敗しました。" & ex.Message)
@@ -147,6 +147,8 @@ Public Class CommonDB
                     Me.mDr = Nothing
                 End If
             End If
+
+
 
             'SQL実行
             Me.mCmd.CommandText = vsSQL
