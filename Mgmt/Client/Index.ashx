@@ -520,6 +520,7 @@ Public Class Index : Implements IHttpHandler
                 sSQL.Clear()
                 sSQL.Append(" UPDATE " & cCom.gctbl_LogMst)
                 sSQL.Append(" SET Status = @Status, Log = @SendLog")
+                sSQL.Append(" WHERE Status = 999")
                 sSQL.Append(" ORDER BY LogID DESC LIMIT 1")
                 cDB.ExecuteSQL(sSQL.ToString)
 
