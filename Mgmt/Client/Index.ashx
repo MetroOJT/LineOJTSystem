@@ -273,6 +273,7 @@ Public Class Index : Implements IHttpHandler
             sSQL.Append(" ,Datetime")
             sSQL.Append(" FROM " & cCom.gctbl_LogMst)
             sSQL.Append(" WHERE Line_UserID = @Line_UserID")
+            sSQL.Append("   AND Status <> 999")
             sSQL.Append(" ORDER BY LogID")
             cDB.SelectSQL(sSQL.ToString)
 
