@@ -119,7 +119,7 @@ function MakeItiran() {
                     LineUsers.forEach(LineUser => {
                         LineUser.addEventListener("click", function () {
                             document.getElementById(LineUser.id).firstChild.classList.add("hidden");
-                            MakeMessageBody(LineUser.id.slice(6));
+                            MakeMessageBody(LineUser.id.slice(6), fromclick = true);
                         })
                     });
                 } else {
@@ -131,7 +131,7 @@ function MakeItiran() {
 };
 
 // 一覧クリック
-function MakeMessageBody(SearchID, scrollUnder = false) {
+function MakeMessageBody(SearchID, scrollUnder = false, fromclick = false) {
     nowSearchID = SearchID;
     $.ajax({
         url: Ajax_File,
@@ -144,6 +144,9 @@ function MakeMessageBody(SearchID, scrollUnder = false) {
         success: function (data) {
             if (data != "") {
                 if (data.status == "OK") {
+                    if (fromclick) {
+                        beforeLogIDList[nowSearchID] = data.lastlogid;
+                    }
                     const scrollPosition = document.getElementById("MessageBody").scrollTop;
                     const MessageBox = document.getElementById("MessageBox");
                     MessageBox.innerHTML = data.html;
