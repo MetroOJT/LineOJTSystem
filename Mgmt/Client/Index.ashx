@@ -462,6 +462,7 @@ Public Class Index : Implements IHttpHandler
         Dim sJson As String = ""
         Dim sSQL As New StringBuilder
         Dim enc As Encoding = Encoding.GetEncoding("UTF-8")
+        Dim sLastLogID As String = ""
         Try
             'Requestmessageのインスタンス化
             Dim requestmessage As Requestmessage = New Requestmessage
@@ -532,6 +533,7 @@ Public Class Index : Implements IHttpHandler
                 sSQL.Append(" WHERE Line_UserID = @Line_UserID")
                 cDB.SelectSQL(sSQL.ToString)
                 If cDB.ReadDr Then
+                    sLastLogID = cDB.DRData("Last_LogID").ToString
                     cDB.AddWithValue("@Last_LogID", cDB.DRData("Last_LogID"))
                 End If
 
@@ -571,6 +573,7 @@ Public Class Index : Implements IHttpHandler
             End If
 
             hHash.Add("status", sStatus)
+            hHash.Add("lastlogid", sLastLogID)
 
             sJson = jJson.Serialize(hHash)
         End Try

@@ -146,6 +146,7 @@ function MakeMessageBody(SearchID, scrollUnder = false, fromclick = false) {
                 if (data.status == "OK") {
                     if (fromclick) {
                         beforeLogIDList[nowSearchID] = data.lastlogid;
+                        checkLogUpd(nowSearchID);
                     }
                     const scrollPosition = document.getElementById("MessageBody").scrollTop;
                     const MessageBox = document.getElementById("MessageBox");
@@ -240,12 +241,14 @@ function MakeMessageBody(SearchID, scrollUnder = false, fromclick = false) {
                                 if (MessageBody.offsetHeight >= target_position) {
                                     document.getElementById("MessageFooter").innerText = "";
                                     beforeLogIDList[nowSearchID] = data.lastlogid;
+                                    checkLogUpd(nowSearchID);
                                     document.getElementById("Search" + SearchID).firstChild.classList.remove("hidden");
                                 }
                             }, true);
                             document.querySelector("#MessageFooter").addEventListener("click", function () {
                                 MessageBody.scrollTo(0, MessageBody.scrollHeight);
                                 beforeLogIDList[nowSearchID] = data.lastlogid;
+                                checkLogUpd(nowSearchID);
                                 document.getElementById("Search" + SearchID).firstChild.classList.remove("hidden");
                             })
                         }
@@ -253,6 +256,7 @@ function MakeMessageBody(SearchID, scrollUnder = false, fromclick = false) {
                     else {
                         MessageBody.scrollTo(0, MessageBody.scrollHeight);
                         beforeLogIDList[nowSearchID] = data.lastlogid;
+                        checkLogUpd(nowSearchID);
                     }
                     if (scrollUnder) {
                         MessageBody.scrollTo(0, MessageBody.scrollHeight);
