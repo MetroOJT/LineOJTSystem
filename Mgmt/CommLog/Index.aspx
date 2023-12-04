@@ -7,7 +7,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="Index.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-    <%="<script src='../../Common/js/Common.js?ts=" & cCom.CmnTimeStamp & "'></script>" %>
 
     <%--flatpickrの導入--%>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />  
@@ -36,17 +35,12 @@
                                 <label class="col-sm-2 col-form-label">通信日時</label>
                                 <input type="text" id="DateFm" class="DateFm form-control initial-time" runat="server" style="margin-right: 20px;" readonly="readonly"/>～
                                 <input type="text" id="DateTo" class="DateTo form-control initial-time" runat="server" style="margin-left: 20px;" readonly="readonly"/>
-                                <script>
-                                    //上限日、下限日の設定
-                                    var LowerLimitDate = new Date(1900, 1 - 1, 1);
-                                    var UpperLimitDate = new Date(2099, 12 - 1, 31);
-                                    CmnFlatpickr("DateFm", "DateTo", LowerLimitDate, UpperLimitDate, true);
-　　                          </script>
+   
                             </div>
                             
                             <div>
                                 <label class="col-sm-2 col-form-label">送信/受信</label>
-                                <select aria-label="全て" class="form-select form-select-sm" runat="server" style="display: inline-block; width: 20%;" id="Sere">
+                                <select aria-label="全て" class="form-select" runat="server" style="display: inline-block; width: 20%;" id="Sere">
                                     <option value="" selected>全て</option>
                                     <option value="Send">送信</option>
                                     <option value="Recv">受信</option>
@@ -55,7 +49,7 @@
                             
                             <div>
                                 <label class="col-sm-2 col-form-label">ステータス</label>
-                                <select aria-label="全て" class="form-select form-select-sm" runat="server" style="display: inline-block; width: 20%;" id="Status">
+                                <select aria-label="全て" class="form-select" runat="server" style="display: inline-block; width: 20%;" id="Status">
                                     <option value="" selected>全て</option>
                                     <option value="normal">正常</option>
                                     <option value="abnormality">異常</option>
@@ -64,7 +58,7 @@
 
                             <div>
                                 <label class="col-sm-2 col-form-label">並べ替え</label>
-                                <select aria-label="全て" class="form-select form-select-sm" runat="server" style="display: inline-block; width: 20%;" id="Order">
+                                <select aria-label="全て" class="form-select" runat="server" style="display: inline-block; width: 20%;" id="Order">
                                     <option value="all" selected>指定なし</option>
                                     <option value="time_asc">通信日時(昇順)</option>
                                     <option value="time_desc">通信日時(降順)</option>
@@ -117,5 +111,13 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="Index.js"></script>
+    <%="<script src='../../Common/js/Common.js?ts=" & cCom.CmnTimeStamp & "'></script>" %>
+
+    <script>
+        //上限日、下限日の設定
+        var LowerLimitDate = new Date(1900, 1 - 1, 1);
+        var UpperLimitDate = new Date(2099, 12 - 1, 31);
+        CmnFlatpickr("DateFm", "DateTo", LowerLimitDate, UpperLimitDate, true);
+　  </script>
 </body>
 </html>
