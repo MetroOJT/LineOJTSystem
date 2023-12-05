@@ -144,13 +144,12 @@ function btnRegistrationClick() {
         document.querySelector("#error_message_div_3").appendChild(error_p);
     }
 
-    console.log(document.querySelector("#user_password").value != document.querySelector("#user_password_confirmation").value);
-
+    var error_message = "";
     // ラジオボタン以外のバリデータ
     var c_element = 0;
     form.querySelectorAll('.form-control').forEach(function (elm) {
         var color_flag = "green";
-        var error_message = "";
+        error_message = "";
         var style_change = "No";
         if (c_element == 2) {
             c_element += 2;
@@ -160,7 +159,6 @@ function btnRegistrationClick() {
 
         var maxlen = elm.getAttribute('data-maxlen');
         var regexp = elm.getAttribute('data-regexp');
-        console.log(elm);
         if (elm.value == "") {
             color_flag = "red";
             error_judgement[c_element] = 1;
@@ -230,7 +228,6 @@ function btnRegistrationClick() {
             }
         }
         if (color_flag == "red") {
-            console.log(error_message);
             elm.classList.add('is-invalid');
             elm.classList.remove('is-valid');
             error_judgement[c_element] = 1;
@@ -292,14 +289,19 @@ function btnRegistrationClick() {
                                 error_judgement[1] = 1;
                                 
                                 const error_message_div = document.querySelector(`#error_message_div_1`);
-                                const error_message_p = document.createElement("p");
+                                var error_message_p = document.createElement("p");
                                 error_message_p.className = "h6";
                                 error_message_p.id = `p_1`;
                                 error_message_p.style.color = "#dc3545";
                                 error_message_p.textContent = data.ErrorMessage;
-                                if (error_message == "") {
-                                    error_message = error_message_p.textContent;
-                                }
+                                error_message = error_message_p.textContent;
+                                const elm = document.querySelector("#user_ID");
+                                elm.classList.add('is-invalid');
+                                elm.classList.remove('is-valid');
+                                elm.parentNode.style.borderColor = "#dc3545";
+                                error_message_p.textContent = error_message;
+                                error_message_div.appendChild(error_message_p);
+
                                 f_errorjudgement();
                             }
                             f_errorjudgement();
@@ -347,7 +349,6 @@ function btnDeleteClick() {
         success: function (data) {
             if (data != "") {
                 if (data.status == "OK") {
-                    console.log(data);
                     if (data.ErrorMessage != "") {
                         // 赤にする
                         const elm = document.querySelector("#user_ID")
