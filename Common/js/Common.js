@@ -1,6 +1,7 @@
 ﻿//上限日、下限日の設定
 var LowerLimitDate = new Date(1900, 1 - 1, 1);
 var UpperLimitDate = new Date(2099, 12 - 1, 31);
+var Com_Ajax_File = "../../Common/ashx/Common.ashx";
 
 // クッキーを設定する関数
 function setCookie(name, value, days) {
@@ -68,9 +69,27 @@ function DspLoginUserName() {
 }
 
 function LogOut() {
-    sessionStorage.clear();
-    document.cookie.split(";").forEach(function (c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });
-    window.location.href = "../../Mgmt/Login/Index.aspx";
+    $.ajax({
+        url: Com_Ajax_File,
+        method: "POST",
+        data: {
+            "mode": "LogOut",
+        },
+        dataType: "json",
+        success: function (data) {
+            if (data != "") {
+                if (data.status == "OK") {
+                    sessionStorage.clear();
+                    document.cookie.split(";").forEach(function (c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });
+                    window.location.href = "../../Mgmt/Login/Index.aspx";
+                }
+                else {
+                    alert("エラーが発生しました。");
+                }
+            }
+        }
+    })
+    
 }
 
 
