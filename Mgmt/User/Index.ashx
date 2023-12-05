@@ -179,8 +179,8 @@ Public Class Index : Implements IHttpHandler
             sTempTable = Cki.Get_Cookies("Useritiran")
 
             sSQL.Clear()
-            sSQL.Append(" Select")
-            sSQL.Append(" COUNT(*) As Count")
+            sSQL.Append(" SELECT")
+            sSQL.Append(" COUNT(*) As count")
             sSQL.Append(" FROM " & sTempTable)
             cDB.SelectSQL(sSQL.ToString)
 
@@ -372,21 +372,26 @@ Public Class Index : Implements IHttpHandler
         Dim hHash As New Hashtable
         Dim sRet As String = ""
         Dim sStatus As String = "OK"
+        Dim clear_flag As String = ""
 
         Try
+
+            clear_flag = context.Request.Item("clear_flag")
 
             Cki.Release_Cookies("u_User_ID")
             Cki.Release_Cookies("User_Name")
             Cki.Release_Cookies("User_Index_Admin_Check")
             Cki.Release_Cookies("DateFm")
             Cki.Release_Cookies("DateTo")
-            Cki.Release_Cookies("PNList")
-            Cki.Release_Cookies("Useritiran")
-            Cki.Release_Cookies("pagemedian")
-            Cki.Release_Cookies("nowpage")
-            Cki.Release_Cookies("count")
-            Cki.Release_Cookies("UserNowPage")
 
+            If clear_flag = "No" Then
+                Cki.Release_Cookies("PNList")
+                Cki.Release_Cookies("Useritiran")
+                Cki.Release_Cookies("pagemedian")
+                Cki.Release_Cookies("nowpage")
+                Cki.Release_Cookies("count")
+                Cki.Release_Cookies("UserNowPage")
+            End If
 
         Catch ex As Exception
             sRet = ex.Message

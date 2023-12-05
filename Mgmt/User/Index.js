@@ -357,11 +357,13 @@ function btnSignUpClick() {
 // 戻るボタンが押された時の処理
 function btnBackClick() {
     // クッキーの情報を削除したい
+    var clear_flag = "No";
     $.ajax({
         url: Ajax_File,
         method: "POST",
         data: {
             "mode": "Clear",
+            "clear_flag": clear_flag
         },
         dataType: "json",
         success: function (data) {
@@ -383,21 +385,19 @@ function btnClearClick() {
     document.querySelector("#DateFm").value = "";
     document.querySelector("#DateTo").value = "";
     document.querySelector("#kanrisya_all").selected = true;
+    var clear_flag = "Yes";
     $.ajax({
         url: Ajax_File,
         method: "POST",
         data: {
             "mode": "Clear",
+            "clear_flag": clear_flag
         },
         dataType: "json",
         success: function (data) {
             if (data != "") {
                 if (data.status == "OK") {
-                    console.log($('#DateFm').datepicker.minDate);
-                    $("#DateFm").datepicker("option", "minDate", new Date(1900, 1, 1));
-                    $("#DateFm").datepicker("option", "maxDate", new Date());
-                    $("#DateTo").datepicker("option", "minDate", new Date(1900, 1, 1));
-                    $("#DateTo").datepicker("option", "maxDate", new Date());
+                    
                 } else {
                     alert("エラーが発生しました。");
                 };
