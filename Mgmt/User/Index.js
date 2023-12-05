@@ -248,8 +248,7 @@ function MakeUserTable(PagerID){
                                     document.getElementById("piend").style.pointerEvents = "none";
                                 }
 
-                                transition(); // 詳細ボタンのid振り分け
-                                document.querySelector("#PageNumber").addEventListener("click", PageNumber_Search, false);
+                                transition();
                             }
                         } else {
                             document.getElementById("CntArea").innerText = "";
@@ -411,17 +410,5 @@ function btnClearClick() {
 function NoEnter() {
     if (window.event.keyCode == 13) {
         return false;
-    }
-};
-
-// ページ検索
-function PageNumber_Search() {
-    console.log("a");
-    const PageNumber = document.getElementById("PageNumber").value;
-    if (PageNumber == "") {
-        $('#exampleModal').modal('show');
-        document.getElementById("error_modal").click();
-    } else {
-        PagiNation(parseInt(PageNumber));
     }
 };
