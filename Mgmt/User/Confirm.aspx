@@ -65,7 +65,6 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="staticBackdropLabel1">成功</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="functionSeni_Index()"></button>
                     </div>
                     <div class="modal-body" id="modal_sentence1">
                         新規登録が完了しました。
@@ -83,7 +82,6 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="staticBackdropLabel3">失敗</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="functionSeni_Detail()"></button>
                     </div>
                     <div class="modal-body" id="modal_sentence3">
                         そのユーザーIDはすでに登録されています。
@@ -101,7 +99,6 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="staticBackdropLabel5">確認</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="fnc_No()"></button>
                     </div>
                     <div class="modal-body">
                         本当に削除しますか？
