@@ -520,9 +520,9 @@ Public Class Common
         Dim sRet As String = ""
 
         Try
-
-            If Not HttpContext.Current.Request.Cookies("AttKey") Is Nothing Then
-                sRet = HttpContext.Current.Request.Cookies("AttKey").Value
+            Dim User_ID As String = HttpContext.Current.Request.Cookies("User_ID").Value
+            If Not HttpContext.Current.Request.Cookies(User_ID & "AttKey") Is Nothing Then
+                sRet = HttpContext.Current.Request.Cookies(User_ID & "AttKey").Value
             End If
 
         Catch ex As Exception
