@@ -12,9 +12,33 @@ $(function () {
     document.getElementById("registration_button").addEventListener("click", btnRegistrationClick, false);
     document.getElementById("delete_button").addEventListener("click", btnDeleteClick, false);
     document.getElementById("back_button").addEventListener("click", btnBackClick, false);
+    document.getElementById("user_ID").addEventListener("keydown", go_next_1, false);
+    document.getElementById("user_Name").addEventListener("keydown", go_next_2, false);
+    document.getElementById("user_password").addEventListener("keydown", go_next_3, false);
     document.getElementById("buttonEye_1").addEventListener("click", btnEyeClick_1, false);
     document.getElementById("buttonEye_2").addEventListener("click", btnEyeClick_2, false);
 });
+
+// ユーザーID入力欄でエンターキーを押すと、ユーザー名入力欄にフォーカスが移動する
+function go_next_1() {
+    if (window.event.keyCode == 13) {
+        document.querySelector("#user_Name").focus();
+    }
+}
+
+// ユーザー名入力欄でエンターキーを押すと、パスワード入力欄にフォーカスが移動する
+function go_next_2() {
+    if (window.event.keyCode == 13) {
+        document.querySelector("#user_password").focus();
+    }
+}
+
+// パスワード入力欄でエンターキーを押すと、パスワード（確認用）入力欄にフォーカスが移動する
+function go_next_3() {
+    if (window.event.keyCode == 13) {
+        document.querySelector("#user_password_confirmation").focus();
+    }
+}
 
 if (sessionStorage.getItem('hUserID') != null) {
     // ユーザー検索画面でユーザー名を押下して来た場合
