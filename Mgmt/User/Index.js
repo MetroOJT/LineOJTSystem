@@ -18,19 +18,12 @@ if (getCookie("LogNowPage") != "") {
 var PageMedian = 2; // ページャの中央値 [ 1 , ② , 3 ]
 
 window.onload = function () {
-    if (getCookie("DateFm") != "") {
-        var dMinDate = getCookie("DateFm");
-    } else {
-        var dMinDate = LowerLimitDate;
-    };
-    if (getCookie("DateTo") != "") {
-        var dMaxDate = getCookie("DateTo");
-    } else {
-        var dMaxDate = UpperLimitDate;
-    };
+    var dMinDate = LowerLimitDate;
+    var dMaxDate = UpperLimitDate;
 
     CmnFlatpickr("DateFm", "DateTo", dMinDate, dMaxDate, false);
-
+    $('#DateFm').trigger('change');
+    $('#DateTo').trigger('change');
     // 初期検索
     Search("Yes");
 }
