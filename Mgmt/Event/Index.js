@@ -7,6 +7,8 @@ DspLoginUserName();
 let dMinDate = LowerLimitDate;
 let dMaxDate = UpperLimitDate;
 CmnFlatpickr("txtScheduleFm", "txtScheduleTo", dMinDate, dMaxDate, false);
+$('#txtScheduleFm').trigger('change');
+$('#txtScheduleTo').trigger('change');
 
 // global変数
 let Ajax_File = "Index.ashx";
