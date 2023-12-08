@@ -221,8 +221,12 @@ function PagiNation(pid) {
             break;
         default:
             NowPage = parseInt(pid.slice(2));
+            if (NowPage == 0) {
+                NowPage = 1;
+            }
             break;
     }
+    
     
     // ページの中身を取得
     if (NowPage != "") {
