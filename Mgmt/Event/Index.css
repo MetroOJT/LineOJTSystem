@@ -18,8 +18,11 @@
 #txtScheduleTo {
     margin-left: 20px;
 }
-#txtEventName, #txtKeyword {
+#txtEventName {
     width: 70%;
+}
+#txtKeyword {
+    width: 40%;
 }
 #EventStatus {
     display: inline-block;
