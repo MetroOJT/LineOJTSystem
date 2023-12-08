@@ -51,7 +51,8 @@ Public Class Confirm : Implements IHttpHandler
             sPassword = context.Request.Item("Password")
             sUser_Name = context.Request.Item("User_Name")
             sAdmin_Check = context.Request.Item("Admin_Check")
-            sRe_UserID = context.Request.Item("Re_UserID")
+            'sRe_UserID = context.Request.Item("Re_UserID")
+            sRe_UserID = Cki.Get_Cookies("User_ID")
             sH_UserID = context.Request.Item("hUser_ID")
 
             cDB.AddWithValue("@UserID", sUser_ID)
@@ -102,7 +103,7 @@ Public Class Confirm : Implements IHttpHandler
                         sSQL.Append(" ,UserName")
                         sSQL.Append(" ,Admin")
                         sSQL.Append(" ,Update_Date")
-                        sSQL.Append(" ,Update_ID")
+                        sSQL.Append(" ,Update_UserID")
                         sSQL.Append(" )")
                         sSQL.Append(" VALUES")
                         sSQL.Append(" (")
@@ -111,7 +112,7 @@ Public Class Confirm : Implements IHttpHandler
                         sSQL.Append(" ,@User_Name")
                         sSQL.Append(" ,b" & "'" & sAdmin_Check & "'")
                         sSQL.Append(" ,NOW()")
-                        sSQL.Append(" ,@Re_UserID")
+                        sSQL.Append(" ," & sRe_UserID & "")
                         sSQL.Append(" )")
                         cDB.ExecuteSQL(sSQL.ToString)
 
@@ -126,7 +127,7 @@ Public Class Confirm : Implements IHttpHandler
                         sSQL.Append(" ,UserName       = @User_Name")
                         sSQL.Append(" ,Admin          = " & "b" & "'" & sAdmin_Check & "'")
                         sSQL.Append(" ,Update_Date    = NOW()")
-                        sSQL.Append(" ,Update_ID      = @Re_UserID")
+                        sSQL.Append(" ,Update_UserID      = @Re_UserID")
                         sSQL.Append(" WHERE UserID    = @H_UserID")
                         cDB.ExecuteSQL(sSQL.ToString)
 

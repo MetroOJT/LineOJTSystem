@@ -4,14 +4,11 @@ DspLoginUserName();
 
 var Ajax_File = "Index.ashx";
 
-var StyleBold = 1; // 現在表示しているページの強調
-
 var oac = 1; // アコーディオン[開:1,閉:0]
 var Nod = 0; // 検索に引っかかった件数
 var TotalPage = 0; // 全体ページ
 var NowPage = 0; // 表示ページ
 var page_item = document.querySelectorAll(".page-item");
-var detail_button = document.querySelectorAll(".btnDetail");
 var SearchPage = 1;
 var GetLogNowPage = "";
 if (getCookie("LogNowPage") != "") {
@@ -21,47 +18,21 @@ if (getCookie("LogNowPage") != "") {
 var PageMedian = 2; // ページャの中央値 [ 1 , ② , 3 ]
 
 window.onload = function () {
-    var dMinDate = LowerLimitDate;
-    var dMaxDate = UpperLimitDate;
+    if (getCookie("DateFm") != "") {
+        var dMinDate = getCookie("DateFm");
+    } else {
+        var dMinDate = LowerLimitDate;
+    };
+    if (getCookie("DateTo") != "") {
+        var dMaxDate = getCookie("DateTo");
+    } else {
+        var dMaxDate = UpperLimitDate;
+    };
 
     CmnFlatpickr("DateFm", "DateTo", dMinDate, dMaxDate, false);
 
     // 初期検索
     Search("Yes");
-}
-
-// 登録日の入力欄のクリアボタン
-var setCalsClearButton = function (year, month, elem) {
-
-    var afterShow = function () {
-        var d = new $.Deferred();
-        var cnt = 0;
-        setTimeout(function () {
-            if (elem.dpDiv[0].style.display === "block") {
-                d.resolve();
-            }
-            if (cnt >= 500) {
-                d.reject("datepicker show timeout");
-            }
-            cnt++;
-        }, 10);
-        return d.promise();
-    }();
-
-    afterShow.done(function () {
-
-        // datepickerのz-indexを指定  
-        $('.ui-datepicker').css('z-index', 2000);
-
-        var buttonPane = $(elem).datepicker("widget").find(".ui-datepicker-buttonpane");
-
-        var btn = $('<button class="ui-datepicker-current ui-state-default ui-priority-primary ui-corner-all" type="button">クリア</button>');
-        btn.off("click").on("click", function () {
-            $.datepicker._clearDate(elem.input[0]);
-            $("#DateFm").datepicker("option", "maxDate", new Date());
-        });
-        btn.appendTo(buttonPane);
-    });
 }
 
 $(function () {
@@ -232,9 +203,6 @@ function MakeUserTable(PagerID){
                             if (data.html != "") {
                                 document.getElementById("PNArea").innerHTML = data.pnlist;
                                 document.getElementById("ResultArea").innerHTML = data.html;
-                                console.log(NowPage);
-                                console.log(TotalPage);
-                                console.log(Nod);
                                 if (NowPage == 1 || Nod < 31) { // 表示ページが1またはヒット数が30件以下でボタンを押下できなくする
                                     document.querySelector("#pista a").classList.add("disabled");
                                     document.getElementById("pista").style.pointerEvents = "none";
@@ -397,7 +365,10 @@ function btnClearClick() {
         success: function (data) {
             if (data != "") {
                 if (data.status == "OK") {
-                    
+                    var dMinDate = LowerLimitDate;
+                    var dMaxDate = UpperLimitDate;
+
+                    CmnFlatpickr("DateFm", "DateTo", dMinDate, dMaxDate, false);
                 } else {
                     alert("エラーが発生しました。");
                 };

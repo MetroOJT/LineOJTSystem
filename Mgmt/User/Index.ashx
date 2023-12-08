@@ -114,7 +114,8 @@ Public Class Index : Implements IHttpHandler
             End If
 
             If sDateTo <> "" Then
-                sSQL.Append(" '" & CDate(sDateTo) & "' >= Update_Date AND")
+                sSQL.Append(" '" & CDate(sDateTo).AddDays(1) & "' > Update_Date AND")
+                hHash.Add("DateTo", CDate(sDateTo).AddDays(1))
             End If
 
             sSQL.Append(" 1=1" & sWhere.ToString)

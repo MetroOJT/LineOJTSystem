@@ -26,7 +26,7 @@ user_ID_input.focus();
 // ユーザーID入力欄でエンターキーを押すと、パスワード入力欄にフォーカスが移動する
 function go_next() {
     if (window.event.keyCode == 13) {
-        user_password_button.focus();
+        document.querySelector("#user_password").focus();
     }
 }
 
