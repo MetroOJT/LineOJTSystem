@@ -26,7 +26,7 @@
                 <div class="d-flex" style="width: 500px;">
                     <label class="m-auto" id="label_1">ユーザーID</label>
                     <div class="InputField_div">
-                        <input type="text" id="user_ID" required  class="border-0 w-100 form-control" maxlength="20" data-regexp="^[0-9]{5}$" />
+                        <input type="text" id="user_ID" required  class="border-0 w-100 form-control" maxlength="5" data-regexp="^[0-9]{5}$" />
                     </div>
                 </div>
                 <div id="error_message_div_1" style="margin-left: 200px;"></div>

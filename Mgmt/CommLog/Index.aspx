@@ -117,6 +117,8 @@
         var LowerLimitDate = new Date(1900, 1 - 1, 1);
         var UpperLimitDate = new Date(2099, 12 - 1, 31);
         CmnFlatpickr("DateFm", "DateTo", LowerLimitDate, UpperLimitDate, true);
+        $('#DateFm').trigger('change');
+        $('#DateTo').trigger('change');
 　  </script>
 </body>
 </html>
