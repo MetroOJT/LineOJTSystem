@@ -35,15 +35,15 @@
                                 <label class="col-sm-2 col-form-label">イベント名</label>
                                 <input type="text" id="txtEventName" class="form-control" runat="server" maxlength="50"/>
                             </div>
-                            <div>
+                            <div class="row">
                                 <label class="col-sm-2 col-form-label">ステータス</label>
-                                <select aria-label="全て" class="form-select form-select-sm" id="EventStatus" runat="server">
+                                <select aria-label="全て" class="form-select" id="EventStatus" runat="server">
                                     <option value="" selected="">全て</option>
                                     <option value="1">ON</option>
                                     <option value="0">OFF</option>
                                 </select>
                             </div>
-                            <div>
+                            <div class="row">
                                 <label class="col-sm-2 col-form-label">スケジュール</label>
                                 <input type="text" class="form-control flatpickr-input active" id="txtScheduleFm" name="" required="required" autocomplete="off" readonly="readonly" runat="server">～
                                 <input type="text" class="form-control flatpickr-input" id="txtScheduleTo" required="required" autocomplete="off" readonly="readonly" runat="server">

@@ -197,6 +197,10 @@ function MakeItiran() {
 // ページ遷移ボタンの処理
 function PagiNation(pid) {
 
+    if (pid == "pi") {
+        document.getElementById("error_modal").click();
+        return false;
+    }
     // 表示するページを求める
     switch (pid) {
         case "pista":
