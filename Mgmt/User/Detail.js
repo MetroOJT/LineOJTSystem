@@ -357,6 +357,14 @@ function f_errorjudgement() {
 
 // 削除ボタンを押された時の処理
 function btnDeleteClick() {
+    if (document.querySelector(`#p_1`)) {
+        let delChild = document.querySelector(`#error_message_div_1`).firstChild;
+        if (delChild) {
+            document.querySelector(`#error_message_div_1`).removeChild(delChild);
+        }
+        document.querySelector(`#error_message_div_1`).style.marginLeft = "200px";
+        document.querySelector(`#error_message_div_1`).textAlign = "left";
+    };
     var User_ID = iUserID;
     var Password = iPassword;
     var Password_confirmation = iPassword;
