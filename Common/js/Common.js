@@ -3,6 +3,15 @@ var LowerLimitDate = new Date(1900, 1 - 1, 1);
 var UpperLimitDate = new Date(2099, 12 - 1, 31);
 var Com_Ajax_File = "../../Common/ashx/Common.ashx";
 
+$(function () {
+    history.pushState(null, null, location.href); //ブラウザバック無効化
+    //ブラウザバックボタン押下時
+    $(window).on("popstate", function (event) {
+        history.go(1);
+    });
+});
+
+
 // クッキーを設定する関数
 function setCookie(name, value, days) {
     let date = new Date();
@@ -59,7 +68,7 @@ function function_login_check() {
     if (login_check != 1) {
         const unauthorized_access = 1;
         sessionStorage.setItem("unauthorized_access", unauthorized_access);
-        window.location.href = "../../Mgmt/Login/Index.aspx";
+                window.location.href = "../../Mgmt/Login/Index.aspx";
     }
 }
 
@@ -83,6 +92,9 @@ function LogOut() {
                     document.cookie.split(";").forEach(function (c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });
                     window.location.href = "../../Mgmt/Login/Index.aspx";
                 }
+                else if (data.status == "PASS") {
+                    return;
+                }
                 else {
                     alert("エラーが発生しました。");
                 }
@@ -91,7 +103,6 @@ function LogOut() {
     })
     
 }
-
 
 function CmnFlatpickr(sFmObj, sToObj, dMinDate, dMaxDate, bTimeFlg) {
     let lang = "ja";
