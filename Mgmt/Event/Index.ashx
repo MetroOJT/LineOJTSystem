@@ -494,7 +494,7 @@ Public Class Index : Implements IHttpHandler
             sPageNationHTML.Append("<Label for=""PageNumber"" class=""col-form-label"">ページ検索</label>")
             sPageNationHTML.Append("</div>")
             sPageNationHTML.Append("<div Class=""col-auto"">")
-            sPageNationHTML.Append("<input type=""text"" inputmode=""numeric"" pattern=""^[1-9][0-9]*$"" maxlength=""8"" oninput=""value = (value.replace(/[^0-9]+/i,'')).replace(/^0/i,'');"" id=""PageNumber"" Class=""form-control"" aria-labelledby=""passwordHelpInline"">")
+            sPageNationHTML.Append("<input type=""text"" inputmode=""numeric"" pattern=""^[1-9][0-9]*$"" maxlength=""8"" oninput=""value = value.replace(/[^0-9]+/i,'');"" id=""PageNumber"" Class=""form-control"" aria-labelledby=""passwordHelpInline"">")
             sPageNationHTML.Append("</div>")
             sPageNationHTML.Append("<div Class=""col-auto"">")
             sPageNationHTML.Append("<input type=""button"" class=""btn btn-primary"" onclick=""PagiNation('pi' + document.getElementById('PageNumber').value);"" value=""検索"" />")
