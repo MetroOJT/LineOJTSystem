@@ -40,7 +40,7 @@
 
                             <div class="d-flex">
                                 <label class="col-sm-2 col-form-label">管理者</label>
-                                <select aria-label="全て" class="form-select form-select-sm w-25" id="Kanrisya" name="kanrisya" runat="server">
+                                <select aria-label="全て" class="form-select w-25" id="Kanrisya" name="kanrisya" runat="server">
                                     <option value="all" selected="" id="kanrisya_all" runat="server" >全て</option>
                                     <option value="1" id="kanrisya_on" runat="server" >ON</option>
                                     <option value="0" id="kanrisya_off" runat="server" >OFF</option>

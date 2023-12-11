@@ -39,69 +39,98 @@ function go_next_3() {
         document.querySelector("#user_password_confirmation").focus();
     }
 }
-
-if (sessionStorage.getItem('hUserID') != null) {
-    // ユーザー検索画面でユーザー名を押下して来た場合
-    const hUserID = sessionStorage.getItem('hUserID');
-    document.querySelector("#registration_button").value = "更新";
-    sessionStorage.setItem("koushin_mode", "Yes");
-    $.ajax({
-        url: Ajax_File,
-        method: "POST",
-        data: {
-            mode: "Load",
-            "User_ID": hUserID
-        },
-        dataType: "json",
-        success: function (data) {
-            if (data != "") {
-                if (data.status == "OK") {
-                    if (Number(data.count) > 0) {
-                        // 表示するコードを書く
-                        iUserID = data.UserID;
-                        iUserName = data.UserName;
-                        iPassword = data.Password;
-                        document.querySelector("#user_ID").value = iUserID;
-                        document.querySelector("#user_Name").value = iUserName;
-                        document.querySelector("#user_password").value = iPassword;
-                        document.querySelector("#user_password_confirmation").value = iPassword;
-                        iAdmin = data.Admin;
-                        if (data.admin != "") {
-                            if (data.Admin == 1) {
-                                $('input[value="0"]').prop('checked', true);
-                            } else if (data.Admin == 0) {
-　                               $('input[value="1"]').prop('checked', true);
+console.log(sessionStorage.getItem("Detail_UserID"));
+if (sessionStorage.getItem("Detail_UserID")) {
+    // ユーザー登録確認画面から戻るボタンを押下されて帰ってきた場合
+    document.querySelector("#user_ID").value = sessionStorage.getItem("Detail_UserID");
+    document.querySelector("#user_Name").value = sessionStorage.getItem("Detail_UserName");
+    document.querySelector("#user_password").value = sessionStorage.getItem("Detail_Password");
+    document.querySelector("#user_password_confirmation").value = sessionStorage.getItem("Detail_Password");
+    iAdmin = sessionStorage.getItem("Detail_AdminCheck");
+    if (iAdmin == 1) {
+        $('input[value="0"]').prop('checked', true);
+    } else if (iAdmin == 0) {
+        $('input[value="1"]').prop('checked', true);
+    };
+    console.log(sessionStorage.getItem("hUserID"));
+    if (sessionStorage.getItem('hUserID') != null) {
+        // ユーザー登録確認画面で戻るを押下して来た場合（ユーザー名を押して更新モードの時）
+        const hUserID = sessionStorage.getItem('hUserID');
+        document.querySelector("#registration_button").value = "更新";
+        sessionStorage.setItem("koushin_mode", "Yes");
+        document.querySelector('#user_ID').readOnly = true;
+    } else {
+        // ユーザー登録確認画面で戻るを押下して来た場合（新規登録モードの時）
+        document.querySelector("#user_ID").focus();
+        document.getElementById("delete_button").style.visibility = "hidden";
+        document.getElementById("delete_button").classList.remove("btn-outline-danger");
+        document.getElementById("delete_button").classList.add("btn-secondary");
+    }
+} else {
+    if (sessionStorage.getItem('hUserID') != null) {
+        // ユーザー検索画面でユーザー名を押下して来た場合
+        const hUserID = sessionStorage.getItem('hUserID');
+        document.querySelector("#registration_button").value = "更新";
+        sessionStorage.setItem("koushin_mode", "Yes");
+        $.ajax({
+            url: Ajax_File,
+            method: "POST",
+            data: {
+                mode: "Load",
+                "User_ID": hUserID
+            },
+            dataType: "json",
+            success: function (data) {
+                if (data != "") {
+                    if (data.status == "OK") {
+                        if (Number(data.count) > 0) {
+                            // 表示するコードを書く
+                            iUserID = data.UserID;
+                            iUserName = data.UserName;
+                            iPassword = data.Password;
+                            document.querySelector("#user_ID").value = iUserID;
+                            document.querySelector("#user_Name").value = iUserName;
+                            document.querySelector("#user_password").value = iPassword;
+                            document.querySelector("#user_password_confirmation").value = iPassword;
+                            iAdmin = data.Admin;
+                            if (data.admin != "") {
+                                if (data.Admin == 1) {
+                                    $('input[value="0"]').prop('checked', true);
+                                } else if (data.Admin == 0) {
+                                    $('input[value="1"]').prop('checked', true);
+                                };
                             };
+                            document.querySelector('#user_ID').readOnly = true;
                         };
-                        document.querySelector('#user_ID').readOnly = true;
+                    } else {
+                        alert("エラーが発生しました。");
                     };
-                } else {
-                    alert("エラーが発生しました。");
+                };
+            }
+        });
+    } else {
+        // ユーザー検索画面で新規登録ボタンを押下してきた場合
+        document.querySelector("#user_ID").focus();
+        document.getElementById("delete_button").style.visibility = "hidden";
+        document.getElementById("delete_button").classList.remove("btn-outline-danger");
+        document.getElementById("delete_button").classList.add("btn-secondary");
+        if (sessionStorage.getItem("Detail_UserID") != null) {
+            document.querySelector("#user_ID").value = sessionStorage.getItem("Detail_UserID");
+            document.querySelector("#user_Name").value = sessionStorage.getItem("Detail_UserName");
+            document.querySelector("#user_password").value = sessionStorage.getItem("Detail_Password");
+            document.querySelector("#user_password_confirmation").value = sessionStorage.getItem("Detail_Password");
+            iAdmin = sessionStorage.getItem("Detail_AdminCheck");
+            if (iAdmin != "") {
+                if (iAdmin == 1) {
+                    $('input[value="0"]').prop('checked', true);
+                } else if (iAdmin == 0) {
+                    $('input[value="1"]').prop('checked', true);
                 };
             };
         }
-    });
-} else {
-    // ユーザー検索画面で新規登録ボタンを押下してきた場合
-    document.querySelector("#user_ID").focus();
-    document.getElementById("delete_button").style.visibility = "hidden";
-    document.getElementById("delete_button").classList.remove("btn-outline-danger");
-    document.getElementById("delete_button").classList.add("btn-secondary");
-    if (sessionStorage.getItem("Detail_UserID") != null) {
-        document.querySelector("#user_ID").value = sessionStorage.getItem("Detail_UserID");
-        document.querySelector("#user_Name").value = sessionStorage.getItem("Detail_UserName");
-        document.querySelector("#user_password").value = sessionStorage.getItem("Detail_Password");
-        document.querySelector("#user_password_confirmation").value = sessionStorage.getItem("Detail_Password");
-        iAdmin = sessionStorage.getItem("Detail_AdminCheck");
-        if (iAdmin != "") {
-            if (iAdmin == 1) {
-                $('input[value="0"]').prop('checked', true);
-            } else if (iAdmin == 0) {
-                $('input[value="1"]').prop('checked', true);
-            };
-        };
     }
 }
+
 
 let error_judgement = [0, 0, 0, 0, 0, 0];
 let User_ID;
@@ -421,6 +450,12 @@ function btnBackClick() {
     sessionStorage.removeItem('Detail_AdminCheck');
     sessionStorage.removeItem('Detail_Password');
     sessionStorage.removeItem('koushin_mode');
+    if (sessionStorage.getItem("iUser_ID")) {
+        sessionStorage.removeItem('iUser_ID');
+        sessionStorage.removeItem('iPassword');
+        sessionStorage.removeItem('iUser_Name');
+        sessionStorage.removeItem('iAdmin_Check');
+    }
     window.location.href = "Index.aspx";
 };
 

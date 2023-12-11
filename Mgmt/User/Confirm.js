@@ -185,10 +185,6 @@ function fnc_No() {
 
 // 戻るボタンを押下した場合
 function btnBackClick() {
-    sessionStorage.removeItem('iUser_ID');
-    sessionStorage.removeItem('iPassword');
-    sessionStorage.removeItem('iUser_Name');
-    sessionStorage.removeItem('iAdmin_Check');
     if (sessionStorage.getItem('dUser_ID')) {
         sessionStorage.removeItem('dUser_ID');
     }
