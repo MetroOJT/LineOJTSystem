@@ -46,13 +46,13 @@ function btnLoginClick() {
     error_div.innerHTML = '';
 
     // 入力値のチェック
-    if (User_ID == "") {
+    if (User_ID == "" || User_ID.match(/^\s$/)) {
         const error_p = document.createElement('p');
         error_p.textContent = "ユーザーIDを入力してください";
         error_p.style.color = "red";
         error_div.appendChild(error_p);
         user_ID_input.focus();
-    } else if (Password == "") {
+    } else if (Password == "" || Password.match(/^\s$/)) {
         const error_p = document.createElement('p');
         error_p.textContent = "パスワードを入力してください";
         error_p.style.color = "red";
