@@ -44,6 +44,7 @@ Public Class Index : Implements IHttpHandler
         End Select
     End Sub
 
+    '検索
     Public Function Search(ByVal context As HttpContext) As String
         Dim cCom As New Common
         Dim cDB As New CommonDB
@@ -79,7 +80,7 @@ Public Class Index : Implements IHttpHandler
             sSQL.Append("  )")
             cDB.ExecuteSQL(sSQL.ToString)
 
-            'ラインユーザーIDをリストで取得
+            'ラインユーザーIDを最終ログの降順で取得
             sSQL.Clear()
             sSQL.Append(" SELECT")
             sSQL.Append(" Line_UserID")
@@ -112,6 +113,7 @@ Public Class Index : Implements IHttpHandler
             Loop
             If sValues.Length <> 0 Then
                 sValues.Remove(sValues.Length - 1, 1)
+                '検索結果を挿入
                 sSQL.Clear()
                 sSQL.Append(" INSERT INTO " & sTempTable)
                 sSQL.Append(" (")
@@ -150,9 +152,11 @@ Public Class Index : Implements IHttpHandler
         Dim sJson As String = ""
         Dim sSQL As New StringBuilder
         Dim sHTML As New StringBuilder
+        'SearchIDごとにLastLogIDを保存
         Dim hLogIDList As New Hashtable
         Try
             Dim sTempTable As String = cCom.CmnGet_TableName("LineUserItiran")
+            '最終ログを添付テーブルに結合
             sSQL.Clear()
             sSQL.Append(" SELECT")
             sSQL.Append(" SearchID")
@@ -176,6 +180,7 @@ Public Class Index : Implements IHttpHandler
             sSQL.Append(" ON A.MaxLogID = " & cCom.gctbl_LogMst & ".LogID")
             cDB.SelectSQL(sSQL.ToString)
             sHTML.Clear()
+            '最終ログから最終メッセージを取得
             Do Until Not cDB.ReadDr
                 Dim sLastLog As String = cDB.DRData("Log")
                 Dim sLastMessage As String = ""
@@ -191,11 +196,13 @@ Public Class Index : Implements IHttpHandler
                     Dim messageObj As Object = eventsObj("message")
                     sLastMessage = messageObj("text").ToString()
                 End If
+                '一覧のhtmlを生成
                 sHTML.Append("<div id=Search" & cDB.DRData("SearchID") & " class=""LineUser d-flex align-items-center"">")
                 sHTML.Append("<div class=""hidden text-success dot"">.</div>")
                 sHTML.Append("<img src = """ & cDB.DRData("wPictureUrl") & """ Class=""rounded-circle""/>")
                 sHTML.Append("<div Class=""d-flex flex-column"">")
                 sHTML.Append("<div id = Search" & cDB.DRData("SearchID") & "_name>" & cDB.DRData("wDisplayName") & "</div>")
+                '改行を半角空白に
                 sHTML.Append("<div id = Search" & cDB.DRData("SearchID") & "_message Class=""text-black-50 text-break search-message"">" & sLastMessage.Replace(vbLf, " ") & "</div>")
                 sHTML.Append("</div>")
                 sHTML.Append("</div>")
@@ -244,7 +251,7 @@ Public Class Index : Implements IHttpHandler
             '送信データ取得
             Dim SearchID As Integer = context.Request.Item("SearchID")
 
-            'ヘッダーの生成
+            '添付テーブルからデータの取得
             cDB.AddWithValue("@SearchID", SearchID)
             sSQL.Clear()
             sSQL.Append(" SELECT")
@@ -254,6 +261,7 @@ Public Class Index : Implements IHttpHandler
             sSQL.Append(" FROM " & sTempTable)
             sSQL.Append(" WHERE SearchID = @SearchID")
             cDB.SelectSQL(sSQL.ToString)
+            'ヘッダーの生成
             If cDB.ReadDr Then
                 sHTML.Clear()
                 sHTML.Append("<div id=""MessageHeader"" Class=""d-flex align-items-center"">")
@@ -263,8 +271,7 @@ Public Class Index : Implements IHttpHandler
                 cDB.AddWithValue("@Line_UserID", cDB.DRData("wLine_UserID"))
             End If
 
-            'ボディーの生成
-            'ログの読み込み
+            '有効なログの読み込み
             sSQL.Clear()
             sSQL.Append(" SELECT")
             sSQL.Append(" LogID")
@@ -277,16 +284,20 @@ Public Class Index : Implements IHttpHandler
             sSQL.Append(" ORDER BY LogID")
             cDB.SelectSQL(sSQL.ToString)
 
+            'ボディーの生成
             sHTML.Append("<div id=""MessageBody"">")
             Do Until Not cDB.ReadDr
+                'ログをObjectに変換
                 Dim sLog As String = cDB.DRData("Log")
                 Dim sMessage As New StringBuilder
                 Dim jLog As Object = JsonConvert.DeserializeObject(sLog)
                 Dim dLogDatetime As Date = Date.Parse(cDB.DRData("Datetime").ToString)
+                '日付変更時
                 If dLogDate = Nothing OrElse dLogDate.Year < dLogDatetime.Year OrElse dLogDate.Month < dLogDatetime.Month OrElse dLogDate.Day < dLogDatetime.Day Then
                     dLogDate = Date.Parse(cDB.DRData("Datetime").ToString)
                     sHTML.Append("<div class=""text-center"">" & dLogDate.ToString("yyyy/MM/dd") & "</div>")
                 End If
+                '右側緑メッセージ
                 If cDB.DRData("SendRecv").ToString = "Send" Then
                     Dim jMessages As Object
                     Dim jMessage As Object = Nothing
@@ -300,6 +311,7 @@ Public Class Index : Implements IHttpHandler
                     sHTML.Append("<div class=""col-6""></div>")
                     sHTML.Append("<div class=""col-6 text-end"">")
                     sHTML.Append("<div class=""border MessageTextArea"" style=""background:rgba(76,199,100,0.5);"">")
+                    '改行終わりの場合、有効にするために半角スペース挿入
                     If sMessage.ToString.Substring(sMessage.Length - 1) = vbLf Then
                         sMessage.Append("&thinsp;")
                     End If
@@ -312,6 +324,7 @@ Public Class Index : Implements IHttpHandler
                     sHTML.Append("<div class=""col-6 text-end"">" & dLogDatetime.ToString("hh:mm") & "</div>")
                     sHTML.Append("</div>")
                 ElseIf cDB.DRData("SendRecv").ToString = "Recv" Then
+                    '左側白メッセージ
                     Dim eventsObj As Object = jLog("events")(0)
                     Dim messageObj As Object = eventsObj("message")
                     sMessage.Clear()
@@ -323,6 +336,7 @@ Public Class Index : Implements IHttpHandler
                     sHTML.Append("<div class=""row"">")
                     sHTML.Append("<div class=""col-6 text-start"">")
                     sHTML.Append("<div class=""border MessageTextArea"">")
+                    '改行終わりの場合、有効にするために半角スペース挿入
                     If sMessage.ToString.Substring(sMessage.Length - 1) = vbLf Then
                         sMessage.Append("&thinsp;")
                     End If
@@ -337,9 +351,9 @@ Public Class Index : Implements IHttpHandler
                     sHTML.Append("</div>")
                 End If
             Loop
+            'フッター用のdiv用意
             sHTML.Append("<div id=""MessageFooter"" class=""row text-break""></div>")
             sHTML.Append("</div>")
-
         Catch ex As Exception
             sRet = ex.Message
         Finally
@@ -381,6 +395,7 @@ Public Class Index : Implements IHttpHandler
 
             Dim sTempTable As String = cCom.CmnGet_TableName("LineUserItiran")
 
+            '添付テーブルからデータ取得
             cDB.AddWithValue("@SearchID", SearchID)
             sSQL.Clear()
             sSQL.Append(" SELECT")
@@ -390,8 +405,8 @@ Public Class Index : Implements IHttpHandler
             cDB.SelectSQL(sSQL.ToString)
 
             If cDB.ReadDr Then
+                'ユーザーの最終ログを取得
                 cDB.AddWithValue("@Line_UserID", cDB.DRData("wLine_UserID"))
-
                 sSQL.Clear()
                 sSQL.Append(" SELECT " & cCom.gctbl_LineUserMst & ".Line_UserID, MAX(LogID) AS Last_LogID")
                 sSQL.Append(" FROM " & cCom.gctbl_LineUserMst)
@@ -401,6 +416,7 @@ Public Class Index : Implements IHttpHandler
                 sSQL.Append(" GROUP BY Line_UserID")
                 cDB.SelectSQL(sSQL.ToString)
                 If cDB.ReadDr Then
+                    'LineUserMstのLast_LogIDを更新
                     sLastLogID = cDB.DRData("Last_LogID").ToString
                     cDB.AddWithValue("@Last_LogID", sLastLogID)
                     sSQL.Clear()
@@ -410,6 +426,7 @@ Public Class Index : Implements IHttpHandler
                     cDB.ExecuteSQL(sSQL.ToString)
                 End If
 
+                '最終ログの内容を取得
                 sSQL.Clear()
                 sSQL.Append(" SELECT")
                 sSQL.Append(" Log")
@@ -417,6 +434,7 @@ Public Class Index : Implements IHttpHandler
                 sSQL.Append(" FROM " & cCom.gctbl_LogMst)
                 sSQL.Append(" WHERE LogID = @Last_LogID")
                 cDB.SelectSQL(sSQL.ToString)
+                'メッセージ文を取得
                 If cDB.ReadDr Then
                     Dim sLastLog As String = cDB.DRData("Log")
                     Dim jLastLog As Object = JsonConvert.DeserializeObject(sLastLog)
@@ -453,6 +471,7 @@ Public Class Index : Implements IHttpHandler
         Return sJson
     End Function
 
+    'プッシュメッセージ
     Public Function PushMessage(ByVal context As HttpContext) As String
         Dim cCom As New Common
         Dim cDB As New CommonDB
@@ -478,6 +497,7 @@ Public Class Index : Implements IHttpHandler
 
             cDB.BeginTran()
 
+            '添付テーブルからデータ取得
             sSQL.Clear()
             sSQL.Append(" SELECT")
             sSQL.Append(" wLine_UserID")
@@ -556,7 +576,7 @@ Public Class Index : Implements IHttpHandler
                     sSQL.Append(" VALUES (@Line_UserID, NOW(), @Last_LogID)")
                     cDB.ExecuteSQL(sSQL.ToString)
                 Else
-                    '登録済みの場合
+                    '登録済みの場合更新
                     sSQL.Clear()
                     sSQL.Append(" UPDATE " & cCom.gctbl_LineUserMst)
                     sSQL.Append(" SET Last_LogID = @Last_LogID")

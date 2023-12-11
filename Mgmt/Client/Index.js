@@ -61,6 +61,49 @@ function btnSearchClick() {
     });
 }
 
+// '...'で文字列短縮
+function StrShortening(obj) {
+    //　初回スルーのためのnull
+    let previousRect = null;
+    let count = 0;
+    //　一文字ずつy座標を比較
+    for (let i = 0; i < obj.firstChild.length; ++i) {
+        count++;
+        const range = document.createRange();
+        range.setStart(obj.firstChild, i);
+        range.setEnd(obj.firstChild, i + 1);
+        const rect = range.getBoundingClientRect();
+        // rect.y が1文字前のものと異なるなら改行されている
+        if (previousRect && previousRect.y < rect.y) {
+            // '...'を改行されないぎりぎりで追加
+            for (let j = 1; j < Math.min(4, i); j++) {
+                let new_line_flg = false;
+                obj.innerText = obj.innerText.slice(0, i - j) + "...";
+                let previousRect2 = null;
+                // 一文字ずつy座標を比較
+                for (let k = 0; k < obj.firstChild.length; ++k) {
+                    const range2 = document.createRange();
+                    range2.setStart(obj.firstChild, k);
+                    range2.setEnd(obj.firstChild, k + 1);
+                    const rect2 = range2.getBoundingClientRect();
+                    // rect.y が1文字前のものと異なるなら改行されている
+                    if (previousRect2 && previousRect2.y < rect2.y) {
+                        new_line_flg = true;
+                        break;
+                    }
+                    previousRect2 = rect2;
+                }
+                // 改行がなくなったら抜ける
+                if (!new_line_flg) {
+                    break;
+                }
+            }
+            break;
+        }
+        previousRect = rect;
+    }
+}
+
 // 一覧を生成
 function MakeItiran() {
     document.getElementById("ItiranArea").innerHTML = "";
@@ -78,48 +121,17 @@ function MakeItiran() {
                     beforeLogIDList = data.beforelogidlist;
                     document.getElementById("ItiranArea").innerHTML = data.html;
 
-                    const TextBreak = document.querySelectorAll(".search-message");
-                    for (let SearchMessage of TextBreak) {
-                        let previousRect = null;
-                        let count = 0;
-                        for (let i = 0; i < SearchMessage.firstChild.length; ++i) {
-                            count++;
-                            const range = document.createRange();
-                            range.setStart(SearchMessage.firstChild, i);
-                            range.setEnd(SearchMessage.firstChild, i + 1);
-                            const rect = range.getBoundingClientRect();
-                            // rect.y が1文字前のものと異なるなら改行されているかも
-                            if (previousRect && previousRect.y < rect.y) {
-                                for (let j = 1; j < Math.min(4, i); j++) {
-                                    let new_line_flg = false;
-                                    SearchMessage.innerText = SearchMessage.innerText.slice(0, i - j) + "...";
-                                    let previousRect2 = null;
-                                    for (let k = 0; k < SearchMessage.firstChild.length; ++k) {
-                                        const range2 = document.createRange();
-                                        range2.setStart(SearchMessage.firstChild, k);
-                                        range2.setEnd(SearchMessage.firstChild, k + 1);
-                                        const rect2 = range2.getBoundingClientRect();
-                                        if (previousRect2 && previousRect2.y < rect2.y) {
-                                            new_line_flg = true;
-                                            break;
-                                        }
-                                        previousRect2 = rect2;
-                                    }
-                                    if (!new_line_flg) {
-                                        break;
-                                    }
-                                }
-                                break;
-                            }
-                            previousRect = rect;
-                        }
+                    // 一覧内のメッセージの表記を1行に
+                    const SearchMessages = document.querySelectorAll(".search-message");
+                    for (let SearchMessage of SearchMessages) {
+                        StrShortening(SearchMessage);
                     }
-
+                    // 一覧にクリックイベント追加
                     const LineUsers = document.querySelectorAll(".LineUser");
                     LineUsers.forEach(LineUser => {
                         LineUser.addEventListener("click", function () {
                             document.getElementById(LineUser.id).firstChild.classList.add("hidden");
-                            MakeMessageBody(LineUser.id.slice(6), fromclick = true);
+                            MakeMessageBody(LineUser.id.slice(6), undefined, fromclick = true);
                         })
                     });
                 } else {
@@ -130,7 +142,9 @@ function MakeItiran() {
     });
 };
 
-// 一覧クリック
+// メッセージボディ作成
+//  scrollUnder:プッシュメッセージ送信と、一覧クリックの場合true,
+//  fromclick:一覧クリックの場合true
 function MakeMessageBody(SearchID, scrollUnder = false, fromclick = false) {
     nowSearchID = SearchID;
     $.ajax({
@@ -144,6 +158,7 @@ function MakeMessageBody(SearchID, scrollUnder = false, fromclick = false) {
         success: function (data) {
             if (data != "") {
                 if (data.status == "OK") {
+                    // 一覧クリックからなら、通知を表示しない
                     if (fromclick) {
                         beforeLogIDList[nowSearchID] = data.lastlogid;
                         checkLogUpd(nowSearchID);
@@ -153,6 +168,7 @@ function MakeMessageBody(SearchID, scrollUnder = false, fromclick = false) {
                     MessageBox.innerHTML = data.html;
                     const MessageBody = document.getElementById("MessageBody");
                     const SearchMessage = document.getElementById("Search" + SearchID + "_message");
+                    // 選択されたユーザーの背景色を変更
                     const LineUsers = document.querySelectorAll(".LineUser");
                     for (let LineUser of LineUsers) {
                         if (LineUser.id == "Search" + SearchID) {
@@ -164,77 +180,19 @@ function MakeMessageBody(SearchID, scrollUnder = false, fromclick = false) {
                     }
                     SearchMessage.innerText = data.lastmessage.replace(/\n/g, " ");
                     
-                    let previousRect = null;
-                    for (let i = 0; i < SearchMessage.firstChild.length; ++i) {
-                        const range = document.createRange();
-                        range.setStart(SearchMessage.firstChild, i);
-                        range.setEnd(SearchMessage.firstChild, i + 1);
-                        const rect = range.getBoundingClientRect();
-                        // rect.y が1文字前のものと異なるなら改行されているかも
-                        if (previousRect && previousRect.y < rect.y) {
-                            for (let j = 1; j < Math.min(4, i); j++) {
-                                let new_line_flg = false;
-                                SearchMessage.innerText = SearchMessage.innerText.slice(0, i - j) + "...";
-                                let previousRect2 = null;
-                                for (let k = 0; k < SearchMessage.firstChild.length; ++k) {
-                                    const range2 = document.createRange();
-                                    range2.setStart(SearchMessage.firstChild, k);
-                                    range2.setEnd(SearchMessage.firstChild, k + 1);
-                                    const rect2 = range2.getBoundingClientRect();
-                                    if (previousRect2 && previousRect2.y < rect2.y) {
-                                        new_line_flg = true;
-                                        break;
-                                    }
-                                    previousRect2 = rect2;
-                                }
-                                if (!new_line_flg) {
-                                    break;
-                                }
-                            }
-                            break;
-                        }
-                        previousRect = rect;
-                    }
+                    StrShortening(SearchMessage);
                     if (beforeSearchID == nowSearchID) {
                         MessageBody.scrollTop = scrollPosition;
+                        // SearchIDがそのままで、ログが変わるとフッター(通知)を表示
                         if (data.lastlogid != beforeLogIDList[nowSearchID]) {
                             const name = document.getElementById("MessageHeaderName").innerText;
                             const MessageFooter = document.getElementById("MessageFooter");
                             MessageFooter.innerText = name + ":" + data.lastusermessage.replace(/\n/g, " ");
                             
-                            let previousRect = null;
-                            for (let i = 0; i < MessageFooter.firstChild.length; ++i) {
-                                const range = document.createRange();
-                                range.setStart(MessageFooter.firstChild, i);
-                                range.setEnd(MessageFooter.firstChild, i + 1);
-                                const rect = range.getBoundingClientRect();
-                                // rect.y が1文字前のものと異なるなら改行されているかも
-                                if (previousRect && previousRect.y < rect.y) {
-                                    for (let j = 1; j < Math.min(4, i); j++) {
-                                        let new_line_flg = false;
-                                        MessageFooter.innerText = MessageFooter.innerText.slice(0, i - j) + "...";
-                                        let previousRect2 = null;
-                                        for (let k = 0; k < MessageFooter.firstChild.length; ++k) {
-                                            const range2 = document.createRange();
-                                            range2.setStart(MessageFooter.firstChild, k);
-                                            range2.setEnd(MessageFooter.firstChild, k + 1);
-                                            const rect2 = range2.getBoundingClientRect();
-                                            if (previousRect2 && previousRect2.y < rect2.y) {
-                                                new_line_flg = true;
-                                                break;
-                                            }
-                                            previousRect2 = rect2;
-                                        }
-                                        if (!new_line_flg) {
-                                            break;
-                                        }
-                                    }
-                                    break;
-                                }
-                                previousRect = rect;
-                            }
+                            StrShortening(MessageFooter);
 
                             document.getElementById("MessageFooter").style.buttom = document.getElementById("MessageFooter").offsetHeight / 2 + "px";
+                            // 画面に最新ログが見えたら、フッター(通知)削除
                             document.querySelector("#MessageBody").addEventListener("scroll", function () {
                                 const LastUserMessage = $(".UserMessage:last");
                                 target_position = LastUserMessage.position().top + 7;
@@ -245,6 +203,7 @@ function MakeMessageBody(SearchID, scrollUnder = false, fromclick = false) {
                                     document.getElementById("Search" + SearchID).firstChild.classList.remove("hidden");
                                 }
                             }, true);
+                            // MessageFooterクリック時、フッター削除と一番下にスクロール
                             document.querySelector("#MessageFooter").addEventListener("click", function () {
                                 MessageBody.scrollTo(0, MessageBody.scrollHeight);
                                 beforeLogIDList[nowSearchID] = data.lastlogid;
@@ -254,15 +213,18 @@ function MakeMessageBody(SearchID, scrollUnder = false, fromclick = false) {
                         }
                     }
                     else {
+                        // 選択ユーザが変わった場合
                         MessageBody.scrollTo(0, MessageBody.scrollHeight);
                         beforeLogIDList[nowSearchID] = data.lastlogid;
                         checkLogUpd(nowSearchID);
                     }
+                    // プッシュメッセージと一覧クリックの場合
                     if (scrollUnder) {
                         MessageBody.scrollTo(0, MessageBody.scrollHeight);
                     }
                     beforeSearchID = nowSearchID;
                     selectUserFlg = true;
+                    // 送信ボタンを押せるようにするため
                     PushMessageKeyUp();
                 } else {
                     alert("エラーが発生しました。");
@@ -272,7 +234,7 @@ function MakeMessageBody(SearchID, scrollUnder = false, fromclick = false) {
     });
 };
 
-// 更新チェック
+// 更新チェック(緑点の表示)
 function checkLogUpd(SearchID) {
     $.ajax({
         url: Ajax_File,
@@ -285,44 +247,13 @@ function checkLogUpd(SearchID) {
         success: function (data) {
             if (data != "") {
                 if (data.status == "OK") {
-                    console.log(beforeLogIDList);
-                    console.log(data);
-                    if (beforeLogIDList[SearchID] != data.lastlogid) {
+                    if (beforeLogIDList[SearchID] != data.lastlogid && nowSearchID != SearchID) {
+                        // 新規ログがあり、現在選択中のユーザーではない場合
                         document.getElementById("Search" + SearchID).firstChild.classList.remove("hidden");
                         const SearchMessage = document.getElementById("Search" + SearchID + "_message");
                         SearchMessage.innerText = data.lastmessage.replace(/\n/g, " ");
                     
-                        let previousRect = null;
-                        for (let i = 0; i < SearchMessage.firstChild.length; ++i) {
-                            const range = document.createRange();
-                            range.setStart(SearchMessage.firstChild, i);
-                            range.setEnd(SearchMessage.firstChild, i + 1);
-                            const rect = range.getBoundingClientRect();
-                            // rect.y が1文字前のものと異なるなら改行されているかも
-                            if (previousRect && previousRect.y < rect.y) {
-                                for (let j = 1; j < Math.min(4, i); j++) {
-                                    let new_line_flg = false;
-                                    SearchMessage.innerText = SearchMessage.innerText.slice(0, i - j) + "...";
-                                    let previousRect2 = null;
-                                    for (let k = 0; k < SearchMessage.firstChild.length; ++k) {
-                                        const range2 = document.createRange();
-                                        range2.setStart(SearchMessage.firstChild, k);
-                                        range2.setEnd(SearchMessage.firstChild, k + 1);
-                                        const rect2 = range2.getBoundingClientRect();
-                                        if (previousRect2 && previousRect2.y < rect2.y) {
-                                            new_line_flg = true;
-                                            break;
-                                        }
-                                        previousRect2 = rect2;
-                                    }
-                                    if (!new_line_flg) {
-                                        break;
-                                    }
-                                }
-                                break;
-                            }
-                            previousRect = rect;
-                        }
+                        StrShortening(SearchMessage);
                     }
                     else {
                         document.getElementById("Search" + SearchID).firstChild.classList.add("hidden");
@@ -336,6 +267,7 @@ function checkLogUpd(SearchID) {
     })
 }
 
+// 送信ボタンクリック
 function btnPushMessageClick() {
     $.ajax({
         url: Ajax_File,
@@ -362,8 +294,10 @@ function btnPushMessageClick() {
     })
 }
 
+// 送信ボタンが押せるかを制御
 docTxtPushMessage.addEventListener("keyup", PushMessageKeyUp);
 function PushMessageKeyUp(){
+    // ブランク、空白改行のみ、ユーザー未選択の場合、非活性
     if (docTxtPushMessage.value == "" || docTxtPushMessage.value.match(/^[\n| |　]+$/) !== null || !selectUserFlg) {
         docBtnPushMessage.disabled = true;
         docBtnPushMessage.classList.add("disabled");
@@ -381,16 +315,15 @@ function btnBackClick() {
     location.href = "../Menu/Index.aspx";
 };
 
-// inputイベントが発生するたびに関数呼び出し
+// テキストエリアの高さ自動調整(最大4行,それ以上はスクロール)
 docTxtPushMessage.addEventListener("input", setTextareaHeight);
 
-// textareaの高さを計算して指定する関数
 function setTextareaHeight() {
     this.style.height = "auto";
     this.style.height = `${this.scrollHeight}px`;
 }
 
-// Setinterbalでメッセージボックス更新(5s)
+// Setinterbalでメッセージボックス更新,新規ログ確認(5s)
 const timer = setInterval(function () {
     for (let key in beforeLogIDList) {
         checkLogUpd(key);
