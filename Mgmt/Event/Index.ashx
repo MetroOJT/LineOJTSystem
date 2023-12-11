@@ -202,10 +202,10 @@ Public Class Index : Implements IHttpHandler
             sHTML.Clear()
             sHTML.Append("<table border=""1"" width=""1000px"" style=""border-collapse: collapse;"" class=""table table-striped table-bordered"">")
             sHTML.Append("<tr style=""background-color: #CCCCCC;"">")
-            sHTML.Append("<th width=""30%"" align=""center"">イベント名</th>")
-            sHTML.Append("<th width=""30%"" align=""center"">スケジュール</th>")
-            sHTML.Append("<th width=""30%"" align=""center"">キーワード</th>")
-            sHTML.Append("<th width=""10%"" align=""center"">ステータス</th>")
+            sHTML.Append("<th width=""30%"" class=""text-center"">イベント名</th>")
+            sHTML.Append("<th width=""30%"" class=""text-center"">スケジュール</th>")
+            sHTML.Append("<th width=""30%"" class=""text-center"">キーワード</th>")
+            sHTML.Append("<th width=""10%"" class=""text-center"">ステータス</th>")
             sHTML.Append("</tr>")
 
             '一覧の要素挿入
