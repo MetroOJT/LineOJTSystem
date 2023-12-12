@@ -70,9 +70,7 @@ Public Class Index : Implements IHttpHandler
                 rUserID.Append(cDB.DRData("UserID"))
                 rUserName.Append(cDB.DRData("UserName"))
                 rAdmin.Append(cDB.DRData("Admin"))
-                If Cki.Get_Cookies(cDB.DRData("UserID").ToString & "AttKey") = "" Then
-                    Cki.Set_Cookies(cDB.DRData("UserID").ToString & "AttKey", cCom.CmnTimeStamp, 1)
-                End If
+                Cki.Set_Cookies(cDB.DRData("UserID").ToString & "AttKey", cCom.CmnTimeStamp, 1)
             End If
 
 
