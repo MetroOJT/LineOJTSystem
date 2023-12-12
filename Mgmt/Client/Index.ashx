@@ -258,7 +258,7 @@ Public Class Index : Implements IHttpHandler
             sSQL.Append(" ,wDisplayName")
             sSQL.Append(" ,wPictureUrl")
             sSQL.Append(" FROM " & sTempTable)
-            sSQL.Append(" WHERE SearchID = '" & SearchID & "'")
+            sSQL.Append(" WHERE SearchID = " & SearchID)
             cDB.SelectSQL(sSQL.ToString)
             'ヘッダーの生成
             If cDB.ReadDr Then
@@ -399,7 +399,7 @@ Public Class Index : Implements IHttpHandler
             sSQL.Append(" SELECT")
             sSQL.Append(" wLine_UserID")
             sSQL.Append(" FROM " & sTempTable)
-            sSQL.Append(" WHERE SearchID = '" & SearchID & "'")
+            sSQL.Append(" WHERE SearchID = " & SearchID)
             cDB.SelectSQL(sSQL.ToString)
 
             If cDB.ReadDr Then
