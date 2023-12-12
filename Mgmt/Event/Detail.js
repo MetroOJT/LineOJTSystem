@@ -200,8 +200,8 @@ function SameCheck(Flg) {
         method: "POST",
         data: {
             "mode": "FinalCheck",
-            "EventName": EventName,
-            "Keyword": Keyword,
+            "EventName": encodeURI(EventName),
+            "Keyword": encodeURI(Keyword),
             "Update_EventID": sessionStorage.getItem("EventID")
         },
         dataType: "json",
@@ -379,12 +379,12 @@ function Modalsavebtnclick() {
         method: "POST",
         data: {
             "mode": "Save",
-            "EventName": EventName,
-            "EventStatus": EventStatus,
-            "ScheduleFm": ScheduleFm,
-            "ScheduleTo": ScheduleTo,
-            "Keyword": Keyword,
-            "Messages": Messages,
+            "EventName": encodeURI(EventName),
+            "EventStatus": encodeURI(EventStatus),
+            "ScheduleFm": encodeURI(ScheduleFm),
+            "ScheduleTo": encodeURI(ScheduleTo),
+            "Keyword": encodeURI(Keyword),
+            "Messages": Messages.map((x) => encodeURIComponent(x)),
             "Update_UserID": sessionStorage.getItem("UserID"),
             "Update_EventID": sessionStorage.getItem("EventID")
         },

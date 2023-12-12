@@ -44,11 +44,11 @@ Public Class Index : Implements IHttpHandler
 
         Try
             '送信データ取得
-            sEventName = context.Request.Item("EventName")
-            sEventStatus = context.Request.Item("EventStatus")
-            sScheduleFm = context.Request.Item("ScheduleFm")
-            sScheduleTo = context.Request.Item("ScheduleTo")
-            sKeyword = context.Request.Item("Keyword")
+            sEventName = HttpUtility.UrlDecode(context.Request.Item("EventName"))
+            sEventStatus = HttpUtility.UrlDecode(context.Request.Item("EventStatus"))
+            sScheduleFm = HttpUtility.UrlDecode(context.Request.Item("ScheduleFm"))
+            sScheduleTo = HttpUtility.UrlDecode(context.Request.Item("ScheduleTo"))
+            sKeyword = HttpUtility.UrlDecode(context.Request.Item("Keyword"))
 
             'クッキーを保存
             Cki.Set_Cookies("EventName", sEventName, 1)

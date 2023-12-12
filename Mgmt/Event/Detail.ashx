@@ -137,8 +137,8 @@ Public Class Detail : Implements IHttpHandler
         Try
             '各変数を設定
             sEventID = context.Request.Item("Update_EventID")
-            sEventName = context.Request.Item("EventName")
-            sKeyword = context.Request.Item("Keyword")
+            sEventName = HttpUtility.UrlDecode(context.Request.Item("EventName"))
+            sKeyword = HttpUtility.UrlDecode(context.Request.Item("Keyword"))
 
             If sEventID = "" Then
                 sMode = "Ins"
@@ -281,12 +281,12 @@ Public Class Detail : Implements IHttpHandler
             '各変数を設定
             sUserID = context.Request.Item("Update_UserID")
             sEventID = context.Request.Item("Update_EventID")
-            sEventName = context.Request.Item("EventName")
-            sEventStatus = context.Request.Item("EventStatus")
-            sScheduleFm = context.Request.Item("ScheduleFm")
-            sScheduleTo = context.Request.Item("ScheduleTo")
-            sKeyword = context.Request.Item("Keyword")
-            lMessages = context.Request.Item("Messages[]").Split(",")
+            sEventName = HttpUtility.UrlDecode(context.Request.Item("EventName"))
+            sEventStatus = HttpUtility.UrlDecode(context.Request.Item("EventStatus"))
+            sScheduleFm = HttpUtility.UrlDecode(context.Request.Item("ScheduleFm"))
+            sScheduleTo = HttpUtility.UrlDecode(context.Request.Item("ScheduleTo"))
+            sKeyword = HttpUtility.UrlDecode(context.Request.Item("Keyword"))
+            lMessages = Array.ConvertAll(context.Request.Item("Messages[]").Split(","), AddressOf HttpUtility.UrlDecode)
 
             If sEventID = "" Then
                 sMode = "Ins"

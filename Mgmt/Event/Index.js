@@ -60,11 +60,11 @@ function Search() {
         method: "POST",
         data: {
             "mode": "Search",
-            "EventName": EventName,
-            "EventStatus": EventStatus,
-            "ScheduleFm": ScheduleFm,
-            "ScheduleTo": ScheduleTo,
-            "Keyword": Keyword
+            "EventName": encodeURI(EventName),
+            "EventStatus": encodeURI(EventStatus),
+            "ScheduleFm": encodeURI(ScheduleFm),
+            "ScheduleTo": encodeURI(ScheduleTo),
+            "Keyword": encodeURI(Keyword)
         },
         dataType: "json",
         success: function (data) {
