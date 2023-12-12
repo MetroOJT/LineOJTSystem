@@ -10,9 +10,9 @@ var TotalPage = 0; // 全体ページ
 var NowPage = 0; // 表示ページ
 var page_item = document.querySelectorAll(".page-item");
 var SearchPage = 1;
-var GetLogNowPage = "";
-if (getCookie("LogNowPage") != "") {
-    GetLogNowPage = getCookie("LogNowPage");
+var GetUserNowPage = "";
+if (getCookie("UserNowPage") != "") {
+    GetUserNowPage = getCookie("UserNowPage");
 }
 
 var PageMedian = 2; // ページャの中央値 [ 1 , ② , 3 ]
@@ -39,7 +39,7 @@ $(function () {
 // 検索ボタンクリック
 function btnSearchClick() {
     SearchPage = 1;
-    document.cookie = document.cookie = "LogNowPage=" + 0 + "; max-age=86400; path=/";
+    document.cookie = document.cookie = "UserNowPage=" + 0 + "; max-age=86400; path=/";
     Search();
 }
 
@@ -184,7 +184,7 @@ function MakeUserTable(PagerID){
                     if (data.status == "OK") { // エラーの有無
                         if (Nod > 0) { // 検索ヒット数が1以上であれば検索結果表示
                             NowPage = data.AshxNowPage;
-                            document.cookie = "LogNowPage=" + NowPage + "; max-age=86400; path=/";
+                            document.cookie = "UserNowPage=" + NowPage + "; max-age=86400; path=/";
                             const NowPageFm = (NowPage - 1) * 10 + 1;
                             var NowPageTo = NowPage * 10;
 
@@ -238,7 +238,7 @@ function MakeUserTable(PagerID){
                     if (data.status == "OK") { // エラーの有無
                         if (Nod > 0) { // 検索ヒット数が1以上であれば検索結果表示
                             NowPage = data.AshxNowPage;
-                            document.cookie = "LogNowPage=" + NowPage + "; max-age=86400; path=/";
+                            document.cookie = "UserNowPage=" + NowPage + "; max-age=86400; path=/";
                             const NowPageFm = (NowPage - 1) * 10 + 1;
                             var NowPageTo = NowPage * 10;
 
