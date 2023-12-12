@@ -62,7 +62,7 @@ Public Class Index : Implements IHttpHandler
 
         Try
             '送信データ取得
-            sDisplayName = context.Request.Item("DisplayName")
+            sDisplayName = HttpUtility.UrlDecode(context.Request.Item("DisplayName"))
 
             '作業用テーブルの生成
             Dim sTempTable As String = cCom.CmnGet_TableName("LineUserItiran")
@@ -488,7 +488,7 @@ Public Class Index : Implements IHttpHandler
             Dim sTempTable As String = cCom.CmnGet_TableName("LineUserItiran")
 
             '送信データ取得
-            Dim message As String = context.Request.Item("message")
+            Dim message As String = HttpUtility.UrlDecode(context.Request.Item("message"))
             Dim nowSearchID As Integer = context.Request.Item("nowSearchID")
 
             cDB.AddWithValue("@SearchID", nowSearchID)

@@ -34,7 +34,7 @@ function btnSearchClick() {
     document.getElementById("MessageHeader").innerHTML = '<img id="MessageHeaderImg" class="rounded-circle"/><p id="MessageHeaderName">氏名</p>';
     document.getElementById("MessageBody").innerText = "";
     // 入力値取得
-    let DisplayName = $("#txtDisplayName").val();
+    let DisplayName = encodeURI($("#txtDisplayName").val());
 
     // 非同期通信でデータベース検索
     $.ajax({
@@ -274,7 +274,7 @@ function btnPushMessageClick() {
         method: "POST",
         data: {
             "mode": "PushMessage",
-            "message": docTxtPushMessage.value,
+            "message": encodeURI(docTxtPushMessage.value),
             "nowSearchID": nowSearchID
         },
         dataType: "json",
