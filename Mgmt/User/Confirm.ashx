@@ -47,13 +47,12 @@ Public Class Confirm : Implements IHttpHandler
 
         Try
             ' jsからのデータを取得
-            sUser_ID = context.Request.Item("User_ID")
-            sPassword = context.Request.Item("Password")
-            sUser_Name = context.Request.Item("User_Name")
-            sAdmin_Check = context.Request.Item("Admin_Check")
-            'sRe_UserID = context.Request.Item("Re_UserID")
-            sRe_UserID = Cki.Get_Cookies("User_ID")
-            sH_UserID = context.Request.Item("hUser_ID")
+            sUser_ID = HttpUtility.UrlDecode(context.Request.Item("User_ID"))
+            sPassword = HttpUtility.UrlDecode(context.Request.Item("Password"))
+            sUser_Name = HttpUtility.UrlDecode(context.Request.Item("User_Name"))
+            sAdmin_Check = HttpUtility.UrlDecode(context.Request.Item("Admin_Check"))
+            sRe_UserID = HttpUtility.UrlDecode(Cki.Get_Cookies("User_ID"))
+            sH_UserID = HttpUtility.UrlDecode(context.Request.Item("hUser_ID"))
 
             cDB.AddWithValue("@UserID", sUser_ID)
             cDB.AddWithValue("@Password", sPassword)
@@ -180,7 +179,7 @@ Public Class Confirm : Implements IHttpHandler
         Dim iCount As Integer = 0
 
         Try
-            sUser_ID = context.Request.Item("User_ID")
+            sUser_ID = HttpUtility.UrlDecode(context.Request.Item("User_ID"))
 
             cDB.AddWithValue("@UserID", sUser_ID)
             Cookie_UserID = Cki.Get_Cookies("User_ID")

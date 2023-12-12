@@ -324,7 +324,7 @@ function btnRegistrationClick() {
         if (!sessionStorage.getItem('hUserID')) {
             elm = document.querySelector("#user_ID");
             // 既に登録されているユーザーIDがないかチェック
-            const User_ID = elm.value;
+            const User_ID = encodeURI(elm.value);
             $.ajax({
                 url: Ajax_File,
                 method: "POST",

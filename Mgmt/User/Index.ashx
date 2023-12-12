@@ -45,11 +45,11 @@ Public Class Index : Implements IHttpHandler
         Dim iCount As Integer = 0
 
         Try
-            sUser_ID = context.Request.Item("User_ID")
-            sUser_Name = context.Request.Item("User_Name")
-            sAdmin_Check = context.Request.Item("Admin_Check")
-            sDateFm = context.Request.Item("DateFm")
-            sDateTo = context.Request.Item("DateTo")
+            sUser_ID = HttpUtility.UrlDecode(context.Request.Item("User_ID"))
+            sUser_Name = HttpUtility.UrlDecode(context.Request.Item("User_Name"))
+            sAdmin_Check = HttpUtility.UrlDecode(context.Request.Item("Admin_Check"))
+            sDateFm = HttpUtility.UrlDecode(context.Request.Item("DateFm"))
+            sDateTo = HttpUtility.UrlDecode(context.Request.Item("DateTo"))
             sFirst = context.Request.Item("First_Flag")
 
             sTempTable = cCom.CmnGet_TableName("Useritiran")
@@ -213,9 +213,6 @@ Public Class Index : Implements IHttpHandler
             End If
 
             PageMedian = context.Request.Item("pagemedian")
-            'If Cookie_hantei <> "" Then
-            '    PageMedian = SearchPage
-            'End If
             sSQL.Clear()
             sSQL.Append(" SELECT")
             sSQL.Append(" wUserID")

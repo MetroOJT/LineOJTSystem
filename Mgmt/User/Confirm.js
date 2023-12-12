@@ -3,12 +3,12 @@ function_login_check();
 DspLoginUserName();
 
 var Ajax_File = "Confirm.ashx";
-const re_UserID = sessionStorage.getItem('UserID');
-const User_ID = sessionStorage.getItem("iUser_ID");
-const User_Name = sessionStorage.getItem("iUser_Name");
-const Admin_Check = sessionStorage.getItem("iAdmin_Check");
-const Password = sessionStorage.getItem("iPassword");
-const hUser_ID = sessionStorage.getItem("hUserID");
+const re_UserID = encodeURI(sessionStorage.getItem('UserID'));
+const User_ID = encodeURI(sessionStorage.getItem("iUser_ID"));
+const User_Name = encodeURI(sessionStorage.getItem("iUser_Name"));
+const Admin_Check = encodeURI(sessionStorage.getItem("iAdmin_Check"));
+const Password = encodeURI(sessionStorage.getItem("iPassword"));
+const hUser_ID = encodeURI(sessionStorage.getItem("hUserID"));
 var location_flag = 0;
 
 document.querySelector("#user_ID").value = User_ID;

@@ -39,8 +39,8 @@ function go_login() {
 
 // ログインボタンクリック
 function btnLoginClick() {
-    var User_ID = $("#user_ID").val();
-    var Password = $("#user_password").val();
+    var User_ID = encodeURI($("#user_ID").val());
+    var Password = encodeURI($("#user_password").val());
     
     const error_div = document.querySelector('.error_div');
     error_div.innerHTML = '';

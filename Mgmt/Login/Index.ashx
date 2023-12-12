@@ -36,8 +36,9 @@ Public Class Index : Implements IHttpHandler
         Dim iCount As Integer = 0
 
         Try
-            sUser_ID = context.Request.Item("User_ID")
-            sPassword = context.Request.Item("Password")
+            HttpUtility.UrlDecode(context.Request.Item("User_ID"))
+            sUser_ID = HttpUtility.UrlDecode(context.Request.Item("User_ID"))
+            sPassword = HttpUtility.UrlDecode(context.Request.Item("Password"))
 
             Cki.Set_Cookies("User_ID", sUser_ID, 1)
             Cki.Set_Cookies("Password", sPassword, 1)

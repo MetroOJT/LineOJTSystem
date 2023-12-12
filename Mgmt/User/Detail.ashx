@@ -111,7 +111,7 @@ Public Class Index : Implements IHttpHandler
         Dim sErrorMessage As String = ""
 
         Try
-            sUser_ID = context.Request.Item("User_ID")
+            sUser_ID = HttpUtility.UrlDecode(context.Request.Item("User_ID"))
             cDB.AddWithValue("@UserID", sUser_ID)
 
             sWhere.Clear()

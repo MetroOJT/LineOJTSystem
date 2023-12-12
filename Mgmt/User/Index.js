@@ -67,11 +67,11 @@ function btnCloseClick() {
 // 検索ボタンが押された時の処理
 function Search(first_flag) {
     // 入力値を取得する
-    var User_ID = $("#user_ID").val();
-    var User_Name = $("#user_Name").val();
-    var Admin_Check = $("#Kanrisya").val();
-    var Date_Fm = $("#DateFm").val();
-    var Date_To = $("#DateTo").val();
+    var User_ID = encodeURI($("#user_ID").val());
+    var User_Name = encodeURI($("#user_Name").val());
+    var Admin_Check = encodeURI($("#Kanrisya").val());
+    var Date_Fm = encodeURI($("#DateFm").val());
+    var Date_To = encodeURI($("#DateTo").val());
     var w;
 
     $.ajax({
