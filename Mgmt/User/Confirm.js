@@ -12,7 +12,7 @@ const hUser_ID = encodeURI(sessionStorage.getItem("hUserID"));
 var location_flag = 0;
 
 document.querySelector("#user_ID").value = User_ID;
-document.querySelector("#user_Name").value = User_Name;
+document.querySelector("#user_Name").value = decodeURI(User_Name);
 document.querySelector("#user_password").value = Password;
 document.querySelector("#user_password_confirmation").value = Password;
 

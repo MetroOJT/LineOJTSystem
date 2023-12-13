@@ -14,6 +14,7 @@ $(function () {
     document.getElementById("back_button").addEventListener("click", btnBackClick, false);
     document.getElementById("user_ID").addEventListener("keydown", go_next_1, false);
     document.getElementById("user_Name").addEventListener("keydown", go_next_2, false);
+    document.getElementById("user_Name").addEventListener("input", CmnRegExp, false);
     document.getElementById("user_password").addEventListener("keydown", go_next_3, false);
     document.getElementById("buttonEye_1").addEventListener("click", btnEyeClick_1, false);
     document.getElementById("buttonEye_2").addEventListener("click", btnEyeClick_2, false);
@@ -43,7 +44,7 @@ console.log(sessionStorage.getItem("Detail_UserID"));
 if (sessionStorage.getItem("Detail_UserID")) {
     // ユーザー登録確認画面から戻るボタンを押下されて帰ってきた場合
     document.querySelector("#user_ID").value = sessionStorage.getItem("Detail_UserID");
-    document.querySelector("#user_Name").value = sessionStorage.getItem("Detail_UserName");
+    document.querySelector("#user_Name").value = decodeURI(sessionStorage.getItem("Detail_UserName"));
     document.querySelector("#user_password").value = sessionStorage.getItem("Detail_Password");
     document.querySelector("#user_password_confirmation").value = sessionStorage.getItem("Detail_Password");
     iAdmin = sessionStorage.getItem("Detail_AdminCheck");
