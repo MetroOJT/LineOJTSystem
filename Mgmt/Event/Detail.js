@@ -26,6 +26,9 @@ $(function () {
     document.getElementById("Backbtn").addEventListener("mouseup", BackbtnClick, false);
     document.getElementById("MessageAddbtn").addEventListener("mouseup", MessageAddbtnClick, false);
 
+    document.getElementById("txtEventName").addEventListener("input", CmnRegExp)
+    document.getElementById("txtKeyword").addEventListener("input", CmnRegExp)
+
     let dMinDate = new Date();
     let dMaxDate = UpperLimitDate;
     CmnFlatpickr("txtScheduleFm", "txtScheduleTo", dMinDate, dMaxDate, false);

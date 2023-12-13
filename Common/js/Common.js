@@ -104,6 +104,10 @@ function LogOut() {
     
 }
 
+function CmnRegExp(event) {
+    event.target.value = event.target.value.replace(/[!-/:-@[-`{-~]/g, '');
+}
+
 function CmnFlatpickr(sFmObj, sToObj, dMinDate, dMaxDate, bTimeFlg) {
     let lang = "ja";
     let sFormat = "";
@@ -173,6 +177,8 @@ function CmnFlatpickr(sFmObj, sToObj, dMinDate, dMaxDate, bTimeFlg) {
         })
     });
 }
+
+
 
 
 
