@@ -4,6 +4,9 @@ function_login_check();
 // 担当者名表示
 DspLoginUserName();
 
+// モーダル
+ModalSet("ModalArea", "Error", "検索するページを入力してください。", "", "", "戻る", "");
+
 let dMinDate = LowerLimitDate;
 let dMaxDate = UpperLimitDate;
 CmnFlatpickr("txtScheduleFm", "txtScheduleTo", dMinDate, dMaxDate, false);
