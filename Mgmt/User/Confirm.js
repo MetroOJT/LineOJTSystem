@@ -46,6 +46,7 @@ $(function () {
 // 登録ボタンクリック
 function btnRegistrationClick() {
     const hUserID = sessionStorage.getItem("hUserID");
+    console.log("b");
     $.ajax({
         url: Ajax_File,
         method: "POST",
@@ -61,6 +62,7 @@ function btnRegistrationClick() {
         dataType: "json",
         success: function (data) {
             if (data != "") {
+                console.log(data);
                 if (data.status == "OK") {
                     if (data.ErrorMessage == "") {
                         if (data.Mode == "Ins") {
@@ -69,23 +71,26 @@ function btnRegistrationClick() {
                             sessionStorage.removeItem('Detail_UserName');
                             sessionStorage.removeItem('Detail_AdminCheck');
                             sessionStorage.removeItem('Detail_Password');
-                            $('#staticBackdrop1').modal('show');
+                            ModalSet("ModalArea", "ユーザー登録", "登録が完了しました。", "", "", "戻る", "");
+                            $('#ConfirmModal').modal('show');
                         } else {
                             // 更新が完了した
-                            const modal_sentence1 = document.querySelector('#modal_sentence1');
-                            modal_sentence1.textContent = "更新が完了しました。";
-                            $('#staticBackdrop1').modal('show');
+                            console.log("a");
+                            ModalSet("ModalArea", "ユーザー更新", "更新が完了しました。", "", "", "戻る", "");
+                            //const modal_sentence1 = document.querySelector('#modal_sentence1');
+                            //modal_sentence1.textContent = "更新が完了しました。";
+                            $('#ConfirmModal').modal('show');
                             sessionStorage.removeItem('koushin_mode');
                         };
                         sessionStorage.removeItem('hUserID');
                         if (sessionStorage.getItem("dUser_ID")) {
                             sessionStrorage.removeItem('dUser_ID');
                         }
-                        document.querySelector('#modal_close1').addEventListener('click', functionSeni_Index);
+                        //document.querySelector('#ModalBackbtn').addEventListener('click', functionSeni_Index);
                     } else {
                         // 追加しようとしたユーザーが既に登録されていた場合
                         $('#staticBackdrop3').modal('show');
-                        document.querySelector('#modal_close3').addEventListener('click', functionSeni_Detail);
+                        //document.querySelector('#ModalBackbtn').addEventListener('click', functionSeni_Detail);
                     };                    
                 } else {
                     alert("エラーが発生しました。");

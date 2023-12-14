@@ -14,7 +14,8 @@
     <div class="container">
         <%=cCom.CmnDspHeader() %>
         <div id="buttonArea" class="row">
-            <input type="button" value="登録" id="registration_button" class="btn btn-outline-primary col-sm" />
+            <input type="button" id="registration_button" class="btn btn-outline-primary col-sm" data-bs-toggle="modal" data-bs-target="#ConfirmModal" value="登録" />
+            <%--<input type="button" value="登録" id="registration_button" class="btn btn-outline-primary col-sm" />--%>
             <div class="col-sm"></div>
             <div class="col-sm"></div>
             <input type="button" value="戻る" id="back_button" class="btn btn-outline-secondary col-sm" />
@@ -58,8 +59,8 @@
                 <div class="invalid-feedback">Required.</div>
             </div>
         </div>
-        <!-- Modal -->
-        <%--新規登録・更新・削除が完了したときのモーダル--%>
+        <%--<!-- Modal -->
+        新規登録・更新・削除が完了したときのモーダル
         <div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -76,7 +77,7 @@
             </div>
         </div>
         <!-- Modal -->
-        <%--追加したいユーザーのユーザーIDが既にあったときのモーダル--%>
+        追加したいユーザーのユーザーIDが既にあったときのモーダル--
         <div class="modal fade" id="staticBackdrop3" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -93,7 +94,7 @@
             </div>
         </div>
         <!-- Modal -->
-        <%--削除をしていいのかを問うモーダル--%>
+        削除をしていいのかを問うモーダル
         <div class="modal fade" id="staticBackdrop5" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -109,7 +110,8 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>--%>
+        <div id="ModalArea"></div>
     <%=cCom.CmnDspFooter() %>
     </form>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
