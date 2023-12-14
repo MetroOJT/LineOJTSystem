@@ -19,6 +19,11 @@ Public Class Index : Implements IHttpHandler
         End Select
     End Sub
 
+    '「<」「>」をhtmlで表示できるようにする
+    Public Function HtmlReplace(ByVal str As String) As String
+        Return Replace(Replace(str, "<", "&lt;"), ">", "&gt")
+    End Function
+
     '検索
     Public Function Search(ByVal context As HttpContext) As String
         '変数定義,インスタンス化
@@ -238,9 +243,9 @@ Public Class Index : Implements IHttpHandler
 
                 '一行分生成
                 sHTML.Append("<tr class=""" & sRow & """>")
-                sHTML.Append("<td align=""left""><a href=""Detail.aspx"" onclick=""EventIdToSession(" & cDB.DRData("wEventID") & ")"">" & cDB.DRData("wEventName") & "</a></td>")
+                sHTML.Append("<td align=""left""><a href=""Detail.aspx"" onclick=""EventIdToSession(" & cDB.DRData("wEventID") & ")"">" & HtmlReplace(cDB.DRData("wEventName").ToString) & "</a></td>")
                 sHTML.Append("<td align=""left"">" & ScheduleFm & "～" & ScheduleTo & "</td>")
-                sHTML.Append("<td align=""left"">&nbsp;" & cDB.DRData("wKeyword") & "</td>")
+                sHTML.Append("<td align=""left"">&nbsp;" & HtmlReplace(cDB.DRData("wKeyword").ToString) & "</td>")
                 sHTML.Append("<td align=""center"">&nbsp;" & Status & "</td>")
                 sHTML.Append("</tr>")
 
@@ -413,9 +418,9 @@ Public Class Index : Implements IHttpHandler
                 End If
 
                 sHTML.Append("<tr class=""" & sRow & """>")
-                sHTML.Append("<td align=""left""><a href=""Detail.aspx"" onclick=""EventIdToSession(" & cDB.DRData("wEventID") & ")"">" & cDB.DRData("wEventName") & "</a></td>")
+                sHTML.Append("<td align=""left""><a href=""Detail.aspx"" onclick=""EventIdToSession(" & cDB.DRData("wEventID") & ")"">" & HtmlReplace(cDB.DRData("wEventName").ToString) & "</a></td>")
                 sHTML.Append("<td align=""left"">" & ScheduleFm & "～" & ScheduleTo & "</td>")
-                sHTML.Append("<td align=""left"">&nbsp;" & cDB.DRData("wKeyword") & "</td>")
+                sHTML.Append("<td align=""left"">&nbsp;" & HtmlReplace(cDB.DRData("wKeyword").ToString) & "</td>")
                 sHTML.Append("<td align=""center"">&nbsp;" & Status & "</td>")
                 sHTML.Append("</tr>")
                 iCnt = iCnt + 1
