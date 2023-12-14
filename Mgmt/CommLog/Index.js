@@ -125,6 +125,7 @@ function MakeLogTable(PagerID) {
     // ━━━━━━━ ページャ処理開始
     // PagerIDが[null: エラー, ある: クッキーの有無で代入]
     if (PagerID == "") {
+        ModalSet("test", "Error", "検索するページを入力してください。", "", "", "戻る", "");
         document.getElementById("error_modal").click();
         return false;
     } else if (GetLogNowPage != "") {
