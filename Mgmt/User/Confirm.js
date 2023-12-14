@@ -89,7 +89,6 @@ function btnRegistrationClick() {
                         //document.querySelector('#ModalBackbtn').addEventListener('click', functionSeni_Index);
                     } else {
                         // 追加しようとしたユーザーが既に登録されていた場合
-                        $('#staticBackdrop3').modal('show');
                         //document.querySelector('#ModalBackbtn').addEventListener('click', functionSeni_Detail);
                     };                    
                 } else {
@@ -133,9 +132,10 @@ function functionSeni_Detail() {
 
 // 該当するデータを削除する
 function btnDeleteClick() {
-    $('#staticBackdrop5').modal('show');
-    document.querySelector('#modal_Yes').addEventListener('click', fnc_Yes);
-    document.querySelector('#modal_No').addEventListener('click', fnc_No);
+    ModalSet("ModalArea", "イベント削除", "削除しますか？", "削除", "btn-outline-danger", "戻る", "fnc_Yes()");
+    $('#ConfirmModal').modal('show');
+    //document.querySelector('#modal_Yes').addEventListener('click', fnc_Yes);
+    //document.querySelector('#modal_No').addEventListener('click', fnc_No);
 }
 
 // 本当に削除してよいかのモーダルで削除ボタンを押下した場合
@@ -162,19 +162,15 @@ function fnc_Yes() {
                     if (data.ErrorMessage == "") {
                         // 削除が完了した場合
                         sessionStorage.removeItem("koushin_mode");
-                        const modal_sentence2 = document.querySelector('#modal_sentence1');
-                        modal_sentence2.textContent = "削除が完了しました。";
-                        $('#staticBackdrop1').modal('show');
+                        ModalSet("ModalArea", "ユーザー削除", "削除が完了しました。", "", "", "戻る", "");
+                        $('#ConfirmModal').modal('show');
                     } else {
                         // ログインしているユーザーを削除しようとした場合
                         location_flag = 1;
-                        const modal_sentence4 = document.querySelector('#modal_sentence3');
-                        modal_sentence4.textContent = "現在ログインしているユーザーのため、削除することが出来ません。";
-                        $('#staticBackdrop3').modal('show');
-                        document.querySelector('#modal_close3').addEventListener('click', functionSeni_Index);
+                        //document.querySelector('#modal_close3').addEventListener('click', functionSeni_Index);
                     }
                     
-                    document.querySelector('#modal_close1').addEventListener('click', functionSeni_Index);
+                    //document.querySelector('#modal_close1').addEventListener('click', functionSeni_Index);
                 } else {
                     alert("エラーが発生しました。");
                 };

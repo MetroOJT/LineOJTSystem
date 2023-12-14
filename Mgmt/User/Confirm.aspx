@@ -15,7 +15,6 @@
         <%=cCom.CmnDspHeader() %>
         <div id="buttonArea" class="row">
             <input type="button" id="registration_button" class="btn btn-outline-primary col-sm" data-bs-toggle="modal" data-bs-target="#ConfirmModal" value="登録" />
-            <%--<input type="button" value="登録" id="registration_button" class="btn btn-outline-primary col-sm" />--%>
             <div class="col-sm"></div>
             <div class="col-sm"></div>
             <input type="button" value="戻る" id="back_button" class="btn btn-outline-secondary col-sm" />
