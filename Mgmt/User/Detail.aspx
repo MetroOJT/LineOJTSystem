@@ -34,7 +34,7 @@
                 <div class="d-flex mt-4" style="width: 500px;">
                     <label class="m-auto" id="label_2">ユーザー名</label>
                     <div class="InputField_div">
-                        <input type="text" id="user_Name" required class="border-0 w-100 form-control" maxlength="20" data-maxlen="20" data-regexp="^.+$"/>
+                        <input type="text" id="user_Name" required class="border-0 w-100 form-control" maxlength="20" data-maxlen="20" data-regexp="^.+$" />
                     </div>
                 </div>
                 <div id="error_message_div_2" style="margin-left: 200px;"></div>

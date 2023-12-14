@@ -247,7 +247,7 @@ Public Class Index : Implements IHttpHandler
 
                 sHTML.Append("<tr class=""" & sRow & """>")
                 sHTML.Append("<td class=""text-center"" id=""UserID" & wCount & """>" & cDB.DRData("wUserID") & "</td>")
-                sHTML.Append("<td class=""text-center UserName"" id=""UserName" & wCount & """ style=""color: #1a0dab; text-decoration:underline; text-decoration-color:#1a0dab;"">" & cDB.DRData("wUserName") & "</td>")
+                sHTML.Append("<td class=""text-center UserName"" id=""UserName" & wCount & """><a href=""Detail.aspx"" onclick=""transition()""> " & cDB.DRData("wUserName") & "</a></td>")
                 sHTML.Append("<td class=""text-center"">" & Admin & "</td>")
                 sHTML.Append("<td class=""text-center"">" & cDB.DRData("wUpdate_Date") & "</td>")
                 sHTML.Append("</tr>")

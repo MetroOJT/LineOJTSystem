@@ -279,7 +279,7 @@ function MakeUserTable(PagerID){
                                         document.getElementById("piend").style.pointerEvents = "none";
                                     }
                                 }
-                                transition(); // 詳細ボタンのid振り分け
+                                //transition(); // 詳細ボタンのid振り分け
                             }
                         } else {
                             document.getElementById("CntArea").innerText = "";
@@ -305,7 +305,8 @@ function transition() {
             const hUserID = document.querySelector(`#UserID${id_number}`).textContent;
             
             sessionStorage.setItem("hUserID", hUserID);
-            location.href = "Detail.aspx";
+            console.log(UserName);
+            //location.href = "Detail.aspx";
         });
     });
 }
