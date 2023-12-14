@@ -395,11 +395,22 @@ function btnDeleteClick() {
         document.querySelector(`#error_message_div_1`).style.marginLeft = "200px";
         document.querySelector(`#error_message_div_1`).textAlign = "left";
     };
-    var User_ID = iUserID;
-    var Password = iPassword;
-    var Password_confirmation = iPassword;
-    var User_Name = iUserName;
-    var Admin_Check = iAdmin;
+    if (typeof iUserID == 'undefined' ) {
+        var User_ID = sessionStorage.getItem("Detail_UserID");
+        var Password = sessionStorage.getItem("Detail_Password");
+        var Password_confirmation = sessionStorage.getItem("Detail_Password");
+        var User_Name = decodeURI(sessionStorage.getItem("Detail_UserName"));
+        var Admin_Check = sessionStorage.getItem("Detail_AdminCheck");
+    } else {
+        var User_ID = iUserID;
+        var Password = iPassword;
+        var Password_confirmation = iPassword;
+        var User_Name = iUserName;
+        var Admin_Check = iAdmin;
+    }
+    
+    
+    console.log(User_ID);
     $.ajax({
         url: Ajax_File,
         method: "POST",
