@@ -181,13 +181,7 @@ function CmnFlatpickr(sFmObj, sToObj, dMinDate, dMaxDate, bTimeFlg) {
 //モーダルを生成する関数
 function ModalSet(Area, title, body, savebtn, savebtnstyle, cancelbtn, onclick) {
     let Modal = "";
-    let id = "";
-    if (Area == "MessageModalArea") {
-        id = "ConfirmMessageModal";
-    } else if (Area == "ModalArea") {
-        id = "ConfirmModal";
-    }
-    Modal += '<div class="modal fade" id="' + id + '" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">'
+    Modal += '<div class="modal fade" id="ConfirmModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">'
     Modal += '    <div class="modal-dialog">'
     Modal += '        <div class="modal-content">'
     Modal += '            <div class="modal-header">'

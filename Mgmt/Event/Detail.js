@@ -89,36 +89,36 @@ function CompareForm() {
 
 }
 
-//モーダルを生成する関数
-function ModalSet(Area, title, body, savebtn, savebtnstyle, cancelbtn, onclick) {
-    let Modal = "";
-    let id = "";
-    if (Area == "MessageModalArea") {
-        id = "ConfirmMessageModal";
-    } else if (Area == "ModalArea") {
-        id = "ConfirmModal";
-    }
-    Modal += '<div class="modal fade" id="' + id + '" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">'
-    Modal += '    <div class="modal-dialog">'
-    Modal += '        <div class="modal-content">'
-    Modal += '            <div class="modal-header">'
-    Modal += '                <h1 class="modal-title fs-5" id="ConfirmModalTitle">' + title + '</h1>'
-    Modal += '            </div>'
-    Modal += '            <div class="modal-body" id="ModalBody">' + body + '</div>'
-    Modal += '            <div class="modal-footer">'
-    if (savebtn != "") {
-        Modal += '                <button type="button" id="ModalSavebtn" class="btn ' + savebtnstyle + '">' + savebtn + '</button>'
-    }
-    Modal += '                <button type="button" id="ModalBackbtn" class="btn btn-outline-secondary" data-bs-dismiss="modal" onclick="ModalbtnCancelClick">' + cancelbtn + '</button>'
-    Modal += '            </div>'
-    Modal += '        </div>'
-    Modal += '    </div>'
-    Modal += '</div>'
-    document.getElementById(Area).innerHTML = Modal;
-    if (savebtn != "") {
-        document.getElementById("ModalSavebtn").setAttribute("onclick", onclick)
-    }
-}
+////モーダルを生成する関数
+//function ModalSet(Area, title, body, savebtn, savebtnstyle, cancelbtn, onclick) {
+//    let Modal = "";
+//    let id = "";
+//    if (Area == "MessageModalArea") {
+//        id = "ConfirmMessageModal";
+//    } else if (Area == "ModalArea") {
+//        id = "ConfirmModal";
+//    }
+//    Modal += '<div class="modal fade" id="' + id + '" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">'
+//    Modal += '    <div class="modal-dialog">'
+//    Modal += '        <div class="modal-content">'
+//    Modal += '            <div class="modal-header">'
+//    Modal += '                <h1 class="modal-title fs-5" id="ConfirmModalTitle">' + title + '</h1>'
+//    Modal += '            </div>'
+//    Modal += '            <div class="modal-body" id="ModalBody">' + body + '</div>'
+//    Modal += '            <div class="modal-footer">'
+//    if (savebtn != "") {
+//        Modal += '                <button type="button" id="ModalSavebtn" class="btn ' + savebtnstyle + '">' + savebtn + '</button>'
+//    }
+//    Modal += '                <button type="button" id="ModalBackbtn" class="btn btn-outline-secondary" data-bs-dismiss="modal" onclick="ModalbtnCancelClick">' + cancelbtn + '</button>'
+//    Modal += '            </div>'
+//    Modal += '        </div>'
+//    Modal += '    </div>'
+//    Modal += '</div>'
+//    document.getElementById(Area).innerHTML = Modal;
+//    if (savebtn != "") {
+//        document.getElementById("ModalSavebtn").setAttribute("onclick", onclick)
+//    }
+//}
 
 //更新するデータをロードする関数
 function EventLoad() {
