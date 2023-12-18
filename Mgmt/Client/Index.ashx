@@ -64,6 +64,8 @@ Public Class Index : Implements IHttpHandler
             '送信データ取得
             sDisplayName = HttpUtility.UrlDecode(context.Request.Item("DisplayName"))
 
+            cDB.BeginTran()
+
             '作業用テーブルの生成
             Dim sTempTable As String = cCom.CmnGet_TableName("LineUserItiran")
             cDB.DeleteTable(sTempTable)
@@ -124,9 +126,10 @@ Public Class Index : Implements IHttpHandler
                 sSQL.Append(" VALUES " & sValues.ToString)
                 iCount = cDB.ExecuteSQL(sSQL.ToString)
             End If
-
+            cDB.CommitTran()
         Catch ex As Exception
             sRet = ex.Message
+            cDB.RollBackTran()
         Finally
             cDB.DrClose()
             cDB.Dispose()
@@ -156,6 +159,9 @@ Public Class Index : Implements IHttpHandler
         Dim hLogIDList As New Hashtable
         Try
             Dim sTempTable As String = cCom.CmnGet_TableName("LineUserItiran")
+
+            cDB.BeginTran()
+
             '最終ログを添付テーブルに結合
             sSQL.Clear()
             sSQL.Append(" SELECT")
@@ -209,8 +215,10 @@ Public Class Index : Implements IHttpHandler
                 sHTML.Append("</div>")
                 hLogIDList.Add(cDB.DRData("SearchID").ToString, cDB.DRData("MaxLogID").ToString)
             Loop
+            cDB.CommitTran()
         Catch ex As Exception
             sRet = ex.Message
+            cDB.RollBackTran()
         Finally
             cDB.DrClose()
             cDB.Dispose()
@@ -252,6 +260,7 @@ Public Class Index : Implements IHttpHandler
             '送信データ取得
             Dim SearchID As Integer = context.Request.Item("SearchID")
 
+            cDB.BeginTran()
             '添付テーブルからデータの取得
             sSQL.Clear()
             sSQL.Append(" SELECT")
@@ -268,7 +277,7 @@ Public Class Index : Implements IHttpHandler
                 sHTML.Append("<img id=""MessageHeaderImg"" src=""" & cDB.DRData("wPictureUrl") & """ Class=""rounded-circle""/>")
                 sHTML.Append("<p id=""MessageHeaderName"">" & cDB.DRData("wDisplayName") & "</p>")
                 sHTML.Append("</div>")
-                cDB.AddWithValue("@Line_UserID", cDB.DRData("wLine_UserID"))
+                cDB.AddWithValue("@Line_UserID1", cDB.DRData("wLine_UserID"))
             End If
 
             '有効なログの読み込み
@@ -279,7 +288,7 @@ Public Class Index : Implements IHttpHandler
             sSQL.Append(" ,Log")
             sSQL.Append(" ,Datetime")
             sSQL.Append(" FROM " & cCom.gctbl_LogMst)
-            sSQL.Append(" WHERE Line_UserID = @Line_UserID")
+            sSQL.Append(" WHERE Line_UserID = @Line_UserID1")
             sSQL.Append("   AND Status = 200")
             sSQL.Append(" ORDER BY LogID")
             cDB.SelectSQL(sSQL.ToString)
@@ -354,8 +363,10 @@ Public Class Index : Implements IHttpHandler
             'フッター用のdiv用意
             sHTML.Append("<div id=""MessageFooter"" class=""row text-break""></div>")
             sHTML.Append("</div>")
+            cDB.CommitTran()
         Catch ex As Exception
             sRet = ex.Message
+            cDB.RollBackTran()
         Finally
             cDB.DrClose()
             cDB.Dispose()
@@ -395,6 +406,8 @@ Public Class Index : Implements IHttpHandler
 
             Dim sTempTable As String = cCom.CmnGet_TableName("LineUserItiran")
 
+            cDB.BeginTran()
+
             '添付テーブルからデータ取得
             sSQL.Clear()
             sSQL.Append(" SELECT")
@@ -405,24 +418,24 @@ Public Class Index : Implements IHttpHandler
 
             If cDB.ReadDr Then
                 'ユーザーの最終ログを取得
-                cDB.AddWithValue("@Line_UserID", cDB.DRData("wLine_UserID"))
+                cDB.AddWithValue("@Line_UserID2", cDB.DRData("wLine_UserID"))
                 sSQL.Clear()
                 sSQL.Append(" SELECT " & cCom.gctbl_LineUserMst & ".Line_UserID, MAX(LogID) AS Last_LogID")
                 sSQL.Append(" FROM " & cCom.gctbl_LineUserMst)
                 sSQL.Append(" JOIN " & cCom.gctbl_LogMst)
                 sSQL.Append(" ON " & cCom.gctbl_LineUserMst & ".Line_UserID = " & cCom.gctbl_LogMst & ".Line_UserID")
-                sSQL.Append(" WHERE " & cCom.gctbl_LineUserMst & ".Line_UserID = @Line_UserID")
+                sSQL.Append(" WHERE " & cCom.gctbl_LineUserMst & ".Line_UserID = @Line_UserID2")
                 sSQL.Append("   AND Status = 200")
                 sSQL.Append(" GROUP BY Line_UserID")
                 cDB.SelectSQL(sSQL.ToString)
                 If cDB.ReadDr Then
                     'LineUserMstのLast_LogIDを更新
                     sLastLogID = cDB.DRData("Last_LogID").ToString
-                    cDB.AddWithValue("@Last_LogID", sLastLogID)
+                    cDB.AddWithValue("@Last_LogID1", sLastLogID)
                     sSQL.Clear()
                     sSQL.Append(" UPDATE " & cCom.gctbl_LineUserMst)
-                    sSQL.Append(" SET Last_LogID = @Last_LogID")
-                    sSQL.Append(" WHERE Line_UserID = @Line_UserID")
+                    sSQL.Append(" SET Last_LogID = @Last_LogID1")
+                    sSQL.Append(" WHERE Line_UserID = @Line_UserID2")
                     cDB.ExecuteSQL(sSQL.ToString)
                 End If
 
@@ -432,7 +445,7 @@ Public Class Index : Implements IHttpHandler
                 sSQL.Append(" Log")
                 sSQL.Append(" ,SendRecv")
                 sSQL.Append(" FROM " & cCom.gctbl_LogMst)
-                sSQL.Append(" WHERE LogID = @Last_LogID")
+                sSQL.Append(" WHERE LogID = @Last_LogID1")
                 cDB.SelectSQL(sSQL.ToString)
                 'メッセージ文を取得
                 If cDB.ReadDr Then
@@ -451,8 +464,10 @@ Public Class Index : Implements IHttpHandler
                     End If
                 End If
             End If
+            cDB.CommitTran()
         Catch ex As Exception
             sRet = ex.Message
+            cDB.RollBackTran()
         Finally
             cDB.DrClose()
             cDB.Dispose()
@@ -493,9 +508,9 @@ Public Class Index : Implements IHttpHandler
             Dim message As String = HttpUtility.UrlDecode(context.Request.Item("message"))
             Dim nowSearchID As Integer = context.Request.Item("nowSearchID")
 
-            cDB.AddWithValue("@SearchID", nowSearchID)
-
             cDB.BeginTran()
+
+            cDB.AddWithValue("@SearchID", nowSearchID)
 
             '添付テーブルからデータ取得
             sSQL.Clear()
@@ -511,11 +526,11 @@ Public Class Index : Implements IHttpHandler
 
                 '仮送信ログを登録
                 cDB.AddWithValue("@Send", "Send")
-                cDB.AddWithValue("@Line_UserID", Line_UserID)
+                cDB.AddWithValue("@Line_UserID3", Line_UserID)
                 sSQL.Clear()
                 sSQL.Append(" INSERT INTO " & cCom.gctbl_LogMst)
                 sSQL.Append(" (SendRecv, Line_UserID, Status, Log, Datetime)")
-                sSQL.Append(" VALUES(@Send, @Line_UserID, 999, 'Log', NOW())")
+                sSQL.Append(" VALUES(@Send, @Line_UserID3, 999, 'Log', NOW())")
                 cDB.ExecuteSQL(sSQL.ToString)
 
                 'PushMessageのWebRequest
@@ -554,12 +569,12 @@ Public Class Index : Implements IHttpHandler
                 sSQL.Append(" SELECT")
                 sSQL.Append(" MAX(LogID) AS Last_LogID")
                 sSQL.Append(" FROM " & cCom.gctbl_LogMst)
-                sSQL.Append(" WHERE Line_UserID = @Line_UserID")
+                sSQL.Append(" WHERE Line_UserID = @Line_UserID3")
                 sSQL.Append(" WHERE Status = 200")
                 cDB.SelectSQL(sSQL.ToString)
                 If cDB.ReadDr Then
                     sLastLogID = cDB.DRData("Last_LogID").ToString
-                    cDB.AddWithValue("@Last_LogID", cDB.DRData("Last_LogID"))
+                    cDB.AddWithValue("@Last_LogID2", cDB.DRData("Last_LogID"))
                 End If
 
                 'Line_UserIDが登録済みか確認
@@ -567,21 +582,21 @@ Public Class Index : Implements IHttpHandler
                 sSQL.Append(" SELECT")
                 sSQL.Append(" *")
                 sSQL.Append(" FROM " & cCom.gctbl_LineUserMst)
-                sSQL.Append(" WHERE Line_UserID = @Line_UserID")
+                sSQL.Append(" WHERE Line_UserID = @Line_UserID3")
                 cDB.SelectSQL(sSQL.ToString)
 
                 '未登録の場合挿入
                 If Not cDB.IsSelectExistRecord() Then
                     sSQL.Clear()
                     sSQL.Append(" INSERT INTO " & cCom.gctbl_LineUserMst)
-                    sSQL.Append(" VALUES (@Line_UserID, NOW(), @Last_LogID)")
+                    sSQL.Append(" VALUES (@Line_UserID3, NOW(), @Last_LogID2)")
                     cDB.ExecuteSQL(sSQL.ToString)
                 Else
                     '登録済みの場合更新
                     sSQL.Clear()
                     sSQL.Append(" UPDATE " & cCom.gctbl_LineUserMst)
-                    sSQL.Append(" SET Last_LogID = @Last_LogID")
-                    sSQL.Append(" WHERE Line_UserID = @Line_UserID")
+                    sSQL.Append(" SET Last_LogID = @Last_LogID2")
+                    sSQL.Append(" WHERE Line_UserID = @Line_UserID3")
                     cDB.ExecuteSQL(sSQL.ToString)
                 End If
 
