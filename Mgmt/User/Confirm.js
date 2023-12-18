@@ -73,24 +73,20 @@ function btnRegistrationClick() {
                             sessionStorage.removeItem('Detail_Password');
                             ModalSet("ModalArea", "ユーザー登録", "登録が完了しました。", "", "", "戻る", "");
                             $('#ConfirmModal').modal('show');
+                            document.querySelector("#ModalBackbtn").addEventListener("click", functionSeni_Index);
                         } else {
                             // 更新が完了した
                             console.log("a");
                             ModalSet("ModalArea", "ユーザー更新", "更新が完了しました。", "", "", "戻る", "");
-                            //const modal_sentence1 = document.querySelector('#modal_sentence1');
-                            //modal_sentence1.textContent = "更新が完了しました。";
                             $('#ConfirmModal').modal('show');
                             sessionStorage.removeItem('koushin_mode');
+                            document.querySelector("#ModalBackbtn").addEventListener("click", functionSeni_Index);
                         };
                         sessionStorage.removeItem('hUserID');
                         if (sessionStorage.getItem("dUser_ID")) {
                             sessionStrorage.removeItem('dUser_ID');
                         }
-                        //document.querySelector('#ModalBackbtn').addEventListener('click', functionSeni_Index);
-                    } else {
-                        // 追加しようとしたユーザーが既に登録されていた場合
-                        //document.querySelector('#ModalBackbtn').addEventListener('click', functionSeni_Detail);
-                    };                    
+                    }                    
                 } else {
                     alert("エラーが発生しました。");
                 };
@@ -134,12 +130,11 @@ function functionSeni_Detail() {
 function btnDeleteClick() {
     ModalSet("ModalArea", "イベント削除", "削除しますか？", "削除", "btn-outline-danger", "戻る", "fnc_Yes()");
     $('#ConfirmModal').modal('show');
-    //document.querySelector('#modal_Yes').addEventListener('click', fnc_Yes);
-    //document.querySelector('#modal_No').addEventListener('click', fnc_No);
 }
 
 // 本当に削除してよいかのモーダルで削除ボタンを押下した場合
 function fnc_Yes() {
+    $('#ConfirmModal').modal('hide');
     const hUserID = sessionStorage.getItem('hUserID');
     $.ajax({
         url: Ajax_File,
@@ -164,13 +159,8 @@ function fnc_Yes() {
                         sessionStorage.removeItem("koushin_mode");
                         ModalSet("ModalArea", "ユーザー削除", "削除が完了しました。", "", "", "戻る", "");
                         $('#ConfirmModal').modal('show');
-                    } else {
-                        // ログインしているユーザーを削除しようとした場合
-                        location_flag = 1;
-                        //document.querySelector('#modal_close3').addEventListener('click', functionSeni_Index);
+                        document.querySelector('#ModalBackbtn').addEventListener('click', functionSeni_Index);
                     }
-                    
-                    //document.querySelector('#modal_close1').addEventListener('click', functionSeni_Index);
                 } else {
                     alert("エラーが発生しました。");
                 };
@@ -179,10 +169,6 @@ function fnc_Yes() {
     })
 };
 
-// 本当に削除してよいかのモーダルでキャンセルボタンを押下した場合
-function fnc_No() {
-    $('#staticBackdrop5').modal('hide');
-};
 
 // 戻るボタンを押下した場合
 function btnBackClick() {
