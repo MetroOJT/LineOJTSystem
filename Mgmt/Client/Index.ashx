@@ -173,6 +173,7 @@ Public Class Index : Implements IHttpHandler
             sSQL.Append(" MAX(LogID) AS MaxLogID")
             sSQL.Append(" ,Line_UserID")
             sSQL.Append(" FROM " & cCom.gctbl_LogMst)
+            sSQL.Append(" WHERE Status = 200")
             sSQL.Append(" GROUP BY Line_UserID")
             sSQL.Append(" ) AS A")
             sSQL.Append(" ON " & sTempTable & ".wLine_UserID = A.Line_UserID")
@@ -411,6 +412,7 @@ Public Class Index : Implements IHttpHandler
                 sSQL.Append(" JOIN " & cCom.gctbl_LogMst)
                 sSQL.Append(" ON " & cCom.gctbl_LineUserMst & ".Line_UserID = " & cCom.gctbl_LogMst & ".Line_UserID")
                 sSQL.Append(" WHERE " & cCom.gctbl_LineUserMst & ".Line_UserID = @Line_UserID")
+                sSQL.Append("   AND Status = 200")
                 sSQL.Append(" GROUP BY Line_UserID")
                 cDB.SelectSQL(sSQL.ToString)
                 If cDB.ReadDr Then
@@ -553,6 +555,7 @@ Public Class Index : Implements IHttpHandler
                 sSQL.Append(" MAX(LogID) AS Last_LogID")
                 sSQL.Append(" FROM " & cCom.gctbl_LogMst)
                 sSQL.Append(" WHERE Line_UserID = @Line_UserID")
+                sSQL.Append(" WHERE Status = 200")
                 cDB.SelectSQL(sSQL.ToString)
                 If cDB.ReadDr Then
                     sLastLogID = cDB.DRData("Last_LogID").ToString
