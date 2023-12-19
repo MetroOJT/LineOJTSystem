@@ -39,12 +39,11 @@ function go_login() {
 
 // ログインボタンクリック
 function btnLoginClick() {
-    var User_ID = encodeURI($("#user_ID").val());
-    var Password = encodeURI($("#user_password").val());
+    var User_ID = $("#user_ID").val();
+    var Password = $("#user_password").val();
     
     const error_div = document.querySelector('.error_div');
     error_div.innerHTML = '';
-
     // 入力値のチェック
     if (User_ID == "" || User_ID.match(/^\s$/)) {
         const error_p = document.createElement('p');
@@ -72,6 +71,8 @@ function btnLoginClick() {
         error_div.appendChild(error_p);
         user_password_button.focus();
     } else {
+        User_ID = encodeURI(User_ID);
+        Password = encodeURI(Password);
         $.ajax({
             url: Ajax_File,
             method: "POST",
