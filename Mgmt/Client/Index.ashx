@@ -75,7 +75,7 @@ Public Class Index : Implements IHttpHandler
             sSQL.Append("CREATE TABLE " & sTempTable)
             sSQL.Append(" (")
             sSQL.Append("  SearchID          INT NOT NULL AUTO_INCREMENT")
-            sSQL.Append("  ,wLine_UserID     VARCHAR(100) NOT NULL")
+            sSQL.Append("  ,wLine_UserID     VARCHAR(100) NOT NULL UNIQUE")
             sSQL.Append("  ,wDisplayName     VARCHAR(100) NOT NULL")
             sSQL.Append("  ,wPictureUrl      VARCHAR(10000) NOT NULL")
             sSQL.Append("  ,PRIMARY KEY (SearchID) ")
@@ -91,7 +91,7 @@ Public Class Index : Implements IHttpHandler
             cDB.SelectSQL(sSQL.ToString)
             sValues.Clear()
 
-            Dim SearchID As Integer = 1
+            Dim hsLine_UserID As HashSet(Of String) = New HashSet(Of String)
             Do Until Not cDB.ReadDr
                 Dim Line_UserID As String = cDB.DRData("Line_UserID")
                 'ユーザ名とアイコン取得用のWebRequest
@@ -109,7 +109,7 @@ Public Class Index : Implements IHttpHandler
                 Dim jGetData As Object = JsonConvert.DeserializeObject(sGetData)
                 Dim displayName As String = jGetData("displayName").ToString
                 Dim pictureUrl As String = jGetData("pictureUrl").ToString
-                If sDisplayName = "" OrElse displayName.Contains(sDisplayName) Then
+                If hsLine_UserID.Add(Line_UserID) OrElse sDisplayName = "" OrElse displayName.Contains(sDisplayName) Then
                     sValues.Append("(" & Chr(39) & Line_UserID & Chr(39) & ", " & Chr(39) & displayName & Chr(39) & ", " & Chr(39) & pictureUrl & Chr(39) & "),")
                 End If
             Loop
@@ -117,14 +117,15 @@ Public Class Index : Implements IHttpHandler
                 sValues.Remove(sValues.Length - 1, 1)
                 '検索結果を挿入
                 sSQL.Clear()
-                sSQL.Append(" INSERT INTO " & sTempTable)
+                sSQL.Append(" INSERT IGNORE INTO " & sTempTable)
                 sSQL.Append(" (")
                 sSQL.Append("  wLine_UserID")
                 sSQL.Append("  ,wDisplayName")
                 sSQL.Append("  ,wPictureUrl")
                 sSQL.Append(" )")
                 sSQL.Append(" VALUES " & sValues.ToString)
-                iCount = cDB.ExecuteSQL(sSQL.ToString)
+                cDB.ExecuteSQL(sSQL.ToString)
+                iCount = hsLine_UserID.Count
             End If
             cDB.CommitTran()
         Catch ex As Exception
