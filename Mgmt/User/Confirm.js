@@ -117,15 +117,6 @@ function functionSeni_Index() {
     window.location.href = "Index.aspx";
 };
 
-// ユーザー登録画面に遷移する
-function functionSeni_Detail() {
-    if (location_flag == 1) {
-        functionSeni_Index();
-    } else {
-        window.location.href = "Detail.aspx";
-    }
-};
-
 // 該当するデータを削除する
 function btnDeleteClick() {
     ModalSet("ModalArea", "イベント削除", "削除しますか？", "削除", "btn-outline-danger", "戻る", "fnc_Yes()");

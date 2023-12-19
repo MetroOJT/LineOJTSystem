@@ -40,7 +40,7 @@ function go_next_3() {
         document.querySelector("#user_password_confirmation").focus();
     }
 }
-console.log(sessionStorage.getItem("Detail_UserID"));
+
 if (sessionStorage.getItem("Detail_UserID")) {
     // ユーザー登録確認画面から戻るボタンを押下されて帰ってきた場合
     document.querySelector("#user_ID").value = sessionStorage.getItem("Detail_UserID");
@@ -267,7 +267,7 @@ function btnRegistrationClick() {
                 error_message_p.id = `p_${c_element}`;
                 error_message_p.style.color = "#dc3545";
 
-                error_message_p.textContent = "ユーザー名は半角数字5桁で入力してください。";
+                error_message_p.textContent = "ユーザー名の1文字目に空白が入力されています。";
                 error_message = error_message_p.textContent;
             } else {
                 // 緑にする

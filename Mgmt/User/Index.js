@@ -166,7 +166,8 @@ function MakeUserTable(PagerID){
         }
         PageID = "";
     } else {
-        $('#exampleModal').modal('show');
+        ModalSet("ModalArea", "Error", "検索するページを入力してください。", "", "", "戻る", "");
+        $('#ConfirmModal').modal('show');
     }
     if (PagerID == 0) {
         $.ajax({

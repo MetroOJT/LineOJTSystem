@@ -58,58 +58,6 @@
                 <div class="invalid-feedback">Required.</div>
             </div>
         </div>
-        <%--<!-- Modal -->
-        新規登録・更新・削除が完了したときのモーダル
-        <div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="staticBackdropLabel1">成功</h1>
-                    </div>
-                    <div class="modal-body" id="modal_sentence1">
-                        新規登録が完了しました。
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="modal_close1">閉じる</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Modal -->
-        追加したいユーザーのユーザーIDが既にあったときのモーダル--
-        <div class="modal fade" id="staticBackdrop3" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="staticBackdropLabel3">失敗</h1>
-                    </div>
-                    <div class="modal-body" id="modal_sentence3">
-                        そのユーザーIDはすでに登録されています。
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="modal_close3">閉じる</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Modal -->
-        削除をしていいのかを問うモーダル
-        <div class="modal fade" id="staticBackdrop5" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="staticBackdropLabel5">確認</h1>
-                    </div>
-                    <div class="modal-body">
-                        本当に削除しますか？
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-danger col-sm" data-bs-dismiss="modal" id="modal_Yes">削除</button>
-                        <button type="button" class="btn btn-outline-secondary col-sm" data-bs-dismiss="modal" id="modal_No">キャンセル</button>
-                    </div>
-                </div>
-            </div>
-        </div>--%>
         <div id="ModalArea"></div>
     <%=cCom.CmnDspFooter() %>
     </form>
