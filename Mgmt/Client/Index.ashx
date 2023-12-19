@@ -109,7 +109,7 @@ Public Class Index : Implements IHttpHandler
                 Dim jGetData As Object = JsonConvert.DeserializeObject(sGetData)
                 Dim displayName As String = jGetData("displayName").ToString
                 Dim pictureUrl As String = jGetData("pictureUrl").ToString
-                If hsLine_UserID.Add(Line_UserID) OrElse sDisplayName = "" OrElse displayName.Contains(sDisplayName) Then
+                If hsLine_UserID.Add(Line_UserID) AndAlso (sDisplayName = "" OrElse displayName.Contains(sDisplayName)) Then
                     sValues.Append("(" & Chr(39) & Line_UserID & Chr(39) & ", " & Chr(39) & displayName & Chr(39) & ", " & Chr(39) & pictureUrl & Chr(39) & "),")
                 End If
             Loop
@@ -571,7 +571,7 @@ Public Class Index : Implements IHttpHandler
                 sSQL.Append(" MAX(LogID) AS Last_LogID")
                 sSQL.Append(" FROM " & cCom.gctbl_LogMst)
                 sSQL.Append(" WHERE Line_UserID = @Line_UserID3")
-                sSQL.Append(" WHERE Status = 200")
+                sSQL.Append(" AND Status = 200")
                 cDB.SelectSQL(sSQL.ToString)
                 If cDB.ReadDr Then
                     sLastLogID = cDB.DRData("Last_LogID").ToString
