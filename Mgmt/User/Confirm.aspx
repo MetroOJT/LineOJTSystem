@@ -23,35 +23,35 @@
             <div class="mx-auto m-2 mt-4">
                 <div class="d-flex">
                     <label class="m-auto">ユーザーID</label>
-                    <div class="InputField_div">
+                    <div class="InputField_div" style="border-color: #dee2e6; border-radius: 0.375rem">
                         <input type="text" id="user_ID" readonly required="required" class="border-0 w-100 form-control" maxlength="20" data-regexp="^[0-9]{5}$" />
                     </div>
                     <div class="invalid-feedback">Required.</div>
                 </div>
                 <div class="d-flex mt-4">
                     <label class="m-auto">ユーザー名</label>
-                    <div class="InputField_div">
+                    <div class="InputField_div" style="border-color: #dee2e6; border-radius: 0.375rem">
                         <input type="text" id="user_Name" readonly required="required" class="border-0 w-100 form-control" maxlength="20" data-regexp="^[0-9]{5}$" />
                     </div>
                     <div class="invalid-feedback">Required.</div>
                 </div>
                 <div class="d-flex mt-4">
                     <label class="m-auto">管理者</label>
-                    <div class="InputField_div">
+                    <div class="InputField_div" style="border-color: #dee2e6; border-radius: 0.375rem">
                         <input type="text" id="Admin_input" readonly required="required" class="border-0 w-100 form-control" maxlength="20" data-regexp="^[0-9]{5}$" />
                     </div>
                     <div class="invalid-feedback">Required.</div>
                 </div>
                 <div class="d-flex mt-4">
                     <label class="m-auto">パスワード</label>
-                    <span class="InputField_div">
+                    <span class="InputField_div" style="border-color: #dee2e6; border-radius: 0.375rem">
                         <input type="password" id="user_password" readonly required="required" class="border-0 w-100 form-control" autocomplete="off" maxlength="20" data-maxlen=20 data-regexp="^[0-9a-z]{1,}$"/>
                     </span>
                 </div>
                 <div class="invalid-feedback">Required.</div>
                 <div class="d-flex mt-4">
                     <label class="m-auto">パスワード（確認用）</label>
-                    <span class="InputField_div">
+                    <span class="InputField_div" style="border-color: #dee2e6; border-radius: 0.375rem">
                         <input type="password" id="user_password_confirmation" readonly required="required" class="border-0 w-100 form-control" autocomplete="off" maxlength="20" data-maxlen=20 data-regexp="^[0-9a-z]{1,}$"/>
                     </span>
                 </div>
