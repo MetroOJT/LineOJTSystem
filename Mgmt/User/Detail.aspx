@@ -25,7 +25,7 @@
 
                 <div class="d-flex" style="width: 500px;">
                     <label class="m-auto" id="label_1">ユーザーID</label>
-                    <div class="InputField_div">
+                    <div class="InputField_div" style="border-color: #dee2e6; border-radius: 0.375rem">
                         <input type="text" id="user_ID" required  class="border-0 w-100 form-control" maxlength="5" data-regexp="^[0-9]{5}$" />
                     </div>
                 </div>
@@ -33,7 +33,7 @@
 
                 <div class="d-flex mt-4" style="width: 500px;">
                     <label class="m-auto" id="label_2">ユーザー名</label>
-                    <div class="InputField_div">
+                    <div class="InputField_div" style="border-color: #dee2e6; border-radius: 0.375rem">
                         <input type="text" id="user_Name" required class="border-0 w-100 form-control" maxlength="20" data-maxlen="20" data-regexp="^.+$" />
                     </div>
                 </div>
@@ -56,7 +56,7 @@
 
                 <div class="d-flex mt-4" style="width: 500px;">
                     <label class="m-auto" id="label_4">パスワード</label>
-                    <span class="InputField_div">
+                    <span class="InputField_div" style="border-color: #dee2e6; border-radius: 0.375rem">
                         <input type="password" id="user_password" required " class="border-0 w-100 form-control" autocomplete="off" maxlength="20" data-regexp="^[0-9a-zA-Z]{8,20}$"/>
                         <span id="buttonEye_1" class="fa fa-eye-slash"></span>
                     </span>
@@ -65,7 +65,7 @@
 
                 <div class="d-flex mt-4" style="width: 500px;">
                     <label class="m-auto" id="label_5">パスワード（確認用）</label>
-                    <span class="InputField_div">
+                    <span class="InputField_div" style="border-color: #dee2e6; border-radius: 0.375rem">
                         <input type="password" id="user_password_confirmation" required  class="border-0 w-100 form-control" autocomplete="off" maxlength="20" data-maxlen=20 data-regexp="^[0-9a-zA-Z]{8,20}$"/>
                         <span id="buttonEye_2" class="fa fa-eye-slash"></span>
                     </span>

@@ -19,15 +19,15 @@
             <div class="mx-auto m-2 mt-4">
                 <div class="d-flex">
                     <label class="m-auto">ユーザーID</label>
-                    <div class="InputField_div">
-                        <input type="text" id="user_ID" required="required" class="border-0 w-100 form-contro" maxlength="20"/>
+                    <div class="InputField_div" style="border-color: #dee2e6; border-radius: 0.375rem">
+                        <input type="text" id="user_ID" required="required" class="border-0 w-100 form-contro" maxlength="20" style="border-radius: 0.375rem;"/>
                     </div>
                     <div class="invalid-feedback">Required.</div>
                 </div>
                 <div class="d-flex mt-2">
                     <label class="m-auto">パスワード</label>
-                    <div class="InputField_div">
-                        <input type="password" id="user_password" required="required" class="border-0 w-100" autocomplete="off" maxlength="20" />
+                    <div class="InputField_div" style="border-color: #dee2e6; border-radius: 0.375rem">
+                        <input type="password" id="user_password" required="required" class="border-0 w-100" autocomplete="off" maxlength="20" style="border-radius: 0.375rem;"/>
                         <span id="buttonEye" class="fa fa-eye-slash"></span>
                     </div>
                     <div class="invalid-feedback">Required.</div>
