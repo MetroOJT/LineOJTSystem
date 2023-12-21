@@ -312,27 +312,28 @@ Public Class Index : Implements IHttpHandler
                     Dim jMessages As Object
                     Dim jMessage As Object = Nothing
                     jMessages = jLog("messages")
-                    jMessage = jMessages.Last()
-                    sMessage.Clear()
-                    sMessage.Append(jMessage("text").ToString)
-                    sLastMessage = sMessage.ToString
-                    sLastLogID = cDB.DRData("LogID")
-                    sHTML.Append("<div class=""row"">")
-                    sHTML.Append("<div class=""col-6""></div>")
-                    sHTML.Append("<div class=""col-6 text-end"">")
-                    sHTML.Append("<div class=""border MessageTextArea"" style=""background:rgba(76,199,100,0.5);"">")
-                    '改行終わりの場合、有効にするために半角スペース挿入
-                    If sMessage.ToString.Substring(sMessage.Length - 1) = vbLf Then
-                        sMessage.Append("&thinsp;")
-                    End If
-                    sHTML.Append("<span class=""MessageText text-start text-break"">" & sMessage.ToString & "</span>")
-                    sHTML.Append("</div>")
-                    sHTML.Append("</div>")
-                    sHTML.Append("</div>")
-                    sHTML.Append("<div class=""row"">")
-                    sHTML.Append("<div class=""col-6""></div>")
-                    sHTML.Append("<div class=""col-6 text-end"">" & dLogDatetime.ToString("hh:mm") & "</div>")
-                    sHTML.Append("</div>")
+                    For Each jMessage In jMessages
+                        sMessage.Clear()
+                        sMessage.Append(jMessage("text").ToString)
+                        sLastMessage = sMessage.ToString
+                        sLastLogID = cDB.DRData("LogID")
+                        sHTML.Append("<div class=""row"">")
+                        sHTML.Append("<div class=""col-6""></div>")
+                        sHTML.Append("<div class=""col-6 text-end"">")
+                        sHTML.Append("<div class=""border MessageTextArea"" style=""background:rgba(76,199,100,0.5);"">")
+                        '改行終わりの場合、有効にするために半角スペース挿入
+                        If sMessage.ToString.Substring(sMessage.Length - 1) = vbLf Then
+                            sMessage.Append("&thinsp;")
+                        End If
+                        sHTML.Append("<span class=""MessageText text-start text-break"">" & sMessage.ToString & "</span>")
+                        sHTML.Append("</div>")
+                        sHTML.Append("</div>")
+                        sHTML.Append("</div>")
+                        sHTML.Append("<div class=""row"">")
+                        sHTML.Append("<div class=""col-6""></div>")
+                        sHTML.Append("<div class=""col-6 text-end"">" & dLogDatetime.ToString("hh:mm") & "</div>")
+                        sHTML.Append("</div>")
+                    Next
                 ElseIf cDB.DRData("SendRecv").ToString = "Recv" Then
                     '左側白メッセージ
                     Dim eventsObj As Object = jLog("events")(0)
