@@ -125,7 +125,7 @@ Public Class Index : Implements IHttpHandler
 
             If cDB.ReadDr Then
                 If cDB.DRData("SameUserID") <> 0 Then
-                    sErrorMessage = "そのユーザーIDはすでに登録されています。"
+                    sErrorMessage = "このユーザーIDは既に登録されています。"
                 End If
             End If
         Catch ex As Exception
