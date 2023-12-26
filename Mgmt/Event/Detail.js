@@ -258,14 +258,14 @@ function SavebtnClick() {
     let KeywordCheckFlag;
     let flag = true;
 
-    EventName = $("#txtEventName").val();
+    EventName = $("#txtEventName").val().trim();
     EventStatus = "";
     if ($("input[name=EventStatus]:checked").is(':checked')) {
         EventStatus = $('input[name="EventStatus"]:checked').val();
     };
     ScheduleFm = $("#txtScheduleFm").val();
     ScheduleTo = $("#txtScheduleTo").val();
-    Keyword = $("#txtKeyword").val();
+    Keyword = $("#txtKeyword").val().trim();
     Messages = [];
     work = "";
 
@@ -331,7 +331,7 @@ function SavebtnClick() {
         document.getElementById("Schedule-invalid-feedback").textContent = "";
     }
 
-    if (EventName.trim() == "") {
+    if (EventName == "") {
         $("#EventName-invalid-feedback").text("イベント名を入力してください。");
         flag = false;
     }
@@ -344,7 +344,7 @@ function SavebtnClick() {
         flag = false;
     }
 
-    if (Keyword.trim() == "") {
+    if (Keyword == "") {
         $("#Keyword-invalid-feedback").text("キーワードを入力してください。");
         flag = false;
     }
@@ -433,6 +433,8 @@ function Modalsavebtnclick() {
                         } else {
                             document.getElementById("ModalBody").textContent = "更新が完了しました。";
                         }
+                        document.getElementById("txtEventName").value = EventName;
+                        document.getElementById("txtKeyword").value = Keyword;
 
                         //更新・登録したEventIDをセッション変数としてセットする
                         sessionStorage.setItem("EventID", data.EventID)
